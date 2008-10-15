@@ -40,15 +40,6 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Permission extends /*Nette::*/Object implements IAuthorizator
 {
-	/** Set type: all */
-	const ALL = NULL;
-
-	/** Permission type: allow */
-	const ALLOW = TRUE;
-
-	/** Permission type: deny */
-	const DENY = FALSE;
-
 	/** Rule operation: add */
 	const ADD = TRUE;
 
@@ -135,7 +126,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	/**
 	 * Returns TRUE if the Role exists in the list.
 	 * @param  string
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasRole($role)
 	{
@@ -148,7 +139,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * Throws exception the Role doesn't exist in the list.
 	 * @param  string
 	 * @throws Exception
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function needRole($role)
 	{
@@ -193,7 +184,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string
 	 * @param  boolean
 	 * @throws Exception
-	 * @return boolean
+	 * @return bool
 	 */
 	public function roleInheritsFrom($role, $inherit, $onlyParents = FALSE)
 	{
@@ -320,7 +311,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	/**
 	 * Returns TRUE if the Resource exists in the list.
 	 * @param  string
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasResource($resource)
 	{
@@ -333,7 +324,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * Throws exception the Resource doesn't exist in the list.
 	 * @param  string
 	 * @throws Exception
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function needResource($resource)
 	{
@@ -356,7 +347,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string
 	 * @param  boolean
 	 * @throws Exception
-	 * @return boolean
+	 * @return bool
 	 */
 	public function resourceInheritsFrom($resource, $inherit, $onlyParent = FALSE)
 	{
@@ -671,7 +662,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string|self::ALL  role
 	 * @param  string|self::ALL  resource
 	 * @param  string|self::ALL  privilege
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
 	{
@@ -741,7 +732,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 *
 	 * @param  string  role
 	 * @param  string  resource
-	 * @return boolean|NULL
+	 * @return bool|NULL
 	 */
 	protected function roleDFSAllPrivileges($role, $resource)
 	{
@@ -778,7 +769,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string  role
 	 * @param  string  resource
 	 * @param  array   dfs
-	 * @return boolean|NULL
+	 * @return bool|NULL
 	 */
 	protected function roleDFSVisitAllPrivileges($role, $resource, &$dfs)
 	{
@@ -813,7 +804,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string  role
 	 * @param  string  resource
 	 * @param  string  privilege
-	 * @return boolean|NULL
+	 * @return bool|NULL
 	 */
 	protected function roleDFSOnePrivilege($role, $resource, $privilege)
 	{
@@ -851,7 +842,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string  resource
 	 * @param  string  privilege
 	 * @param  array   dfs
-	 * @return boolean|NULL
+	 * @return bool|NULL
 	 */
 	protected function roleDFSVisitOnePrivilege($role, $resource, $privilege, &$dfs)
 	{
@@ -1008,7 +999,7 @@ interface IPermissionAssertion
 	 * @param  string  role
 	 * @param  string  resource
 	 * @param  string  privilege
-	 * @return boolean
+	 * @return bool
 	 */
 	public function assert(Permission $acl, $role = Permission::ALL, $resource = Permission::ALL, $privilege = Permission::ALL);
 }
