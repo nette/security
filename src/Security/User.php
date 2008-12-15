@@ -113,7 +113,8 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	final public function isAuthenticated()
 	{
-		return $this->getSession()->authenticated;
+		$session = $this->getSessionNamespace(FALSE);
+		return $session && $session->authenticated;
 	}
 
 
@@ -124,7 +125,8 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	final public function getIdentity()
 	{
-		return $this->getSession()->identity;
+		$session = $this->getSessionNamespace(FALSE);
+		return $session ? $session->identity : NULL;
 	}
 
 
@@ -190,7 +192,7 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	public function setExpiration($seconds, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$session = $this->getSession();
+		$session = $this->getSessionNamespace(TRUE);
 		if ($seconds > 0) {
 			if ($seconds <= /*Nette\*/Tools::YEAR) {
 				$seconds += time();
@@ -214,7 +216,8 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	final public function isExpired()
 	{
-		return (bool) $this->getSession()->expired;
+		$session = $this->getSessionNamespace(FALSE);
+		return $session && $session->expired;
 	}
 
 
@@ -223,43 +226,51 @@ class User extends /*Nette\*/Object implements IUser
 	 * Returns and initializes $this->session.
 	 * @return SessionNamespace
 	 */
-	protected function getSession()
+	protected function getSessionNamespace($need)
 	{
-		if ($this->session === NULL) {
-			$this->session = $session = Environment::getSession('Nette.Web.User/' . $this->namespace);
-			$session->warnOnUndefined = FALSE;
+		if ($this->session !== NULL) {
+			return $this->session;
+		}
 
-			if (!($session->identity instanceof /*Nette\Security\*/IIdentity)) {
-				unset($session->identity);
-			}
+		$sessionHandler = $this->getSession();
+		if (!$need && !$sessionHandler->exists()) {
+			return NULL;
+		}
 
-			if (!is_bool($session->authenticated)) {
+		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
+		$session->warnOnUndefined = FALSE;
+
+		if (!($session->identity instanceof /*Nette\Security\*/IIdentity)) {
+			unset($session->identity);
+		}
+
+		if (!is_bool($session->authenticated)) {
+			$session->authenticated = FALSE;
+		}
+
+		if ($session->authenticated && isset($session->expireTime)) {
+			if ($session->expireTime < time()) {
 				$session->authenticated = FALSE;
-			}
-
-			if ($session->authenticated && isset($session->expireTime)) {
-				if ($session->expireTime < time()) {
-					$session->authenticated = FALSE;
-					if ($session->expireIdentity) {
-						unset($session->identity);
-					} else {
-						$session->expired = TRUE;
-					}
+				if ($session->expireIdentity) {
+					unset($session->identity);
 				} else {
-					$session->expireTime = time() + $session->expireDelta; // sliding expiration
+					$session->expired = TRUE;
 				}
+			} else {
+				$session->expireTime = time() + $session->expireDelta; // sliding expiration
 			}
+		}
 
-			if ($session->authenticated && $session->expireBrowser) {
-				if ($session->authKey !== Environment::getHttpRequest()->getCookie('nette-authkey')) {
-					$session->authenticated = FALSE;
-					unset($session->authKey);
-					if ($session->expireIdentity) {
-						unset($session->identity);
-					}
+		if ($session->authenticated && $session->expireBrowser) {
+			if ($session->authKey !== $this->getHttpRequest()->getCookie('nette-authkey')) {
+				$session->authenticated = FALSE;
+				unset($session->authKey);
+				if ($session->expireIdentity) {
+					unset($session->identity);
 				}
 			}
 		}
+
 		return $this->session;
 	}
 
@@ -273,22 +284,22 @@ class User extends /*Nette\*/Object implements IUser
 	protected function setAuthenticated($state)
 	{
 		$state = ($state === TRUE);
-		$session = $this->getSession();
-		if ($session->authenticated === $state) return;
+		if ($this->isAuthenticated() === $state) return;
 
+		$session = $this->getSessionNamespace(TRUE);
 		$session->authenticated = $state;
 		$session->expired = FALSE;
 
 		if ($state) {
 			$session->expireBrowser = TRUE;
 			$session->authTime = time(); // informative value
-			$session->authKey = Environment::getHttpRequest()->getCookie('nette-authkey');
+			$session->authKey = $this->getHttpRequest()->getCookie('nette-authkey');
 
 			if (!$session->authKey) {
 				$session->authKey = (string) lcg_value();
 
-				$params = Environment::getSession()->getCookieParams();
-				Environment::getHttpResponse()->setCookie(
+				$params = $this->getSession()->getCookieParams();
+				$this->getHttpResponse()->setCookie(
 					'nette-authkey',
 					$session->authKey,
 					HttpResponse::BROWSER,
@@ -307,7 +318,7 @@ class User extends /*Nette\*/Object implements IUser
 
 	protected function setIdentity(/*Nette\Security\*/IIdentity $identity = NULL)
 	{
-		$this->session->identity = $identity;
+		$this->getSessionNamespace(TRUE)->identity = $identity;
 	}
 
 
@@ -322,15 +333,12 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	public function getRoles()
 	{
-		if (!$this->getSession()->authenticated) {
+		if (!$this->isAuthenticated()) {
 			return array($this->guestRole);
 		}
 
-		if (!$this->getSession()->identity) {
-			return array($this->authenticatedRole);
-		}
-
-		return $this->getSession()->identity->getRoles();
+		$identity = $this->getIdentity();
+		return $identity ? $identity->getRoles() : array($this->authenticatedRole);
 	}
 
 
@@ -392,6 +400,41 @@ class User extends /*Nette\*/Object implements IUser
 			$this->authorizationHandler = Environment::getService('Nette\Security\IAuthorizator');
 		}
 		return $this->authorizationHandler;
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * Returns session handler.
+	 * @return Nette\Web\Session
+	 */
+	protected function getSession()
+	{
+		return Environment::getSession();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\IHttpRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return Environment::getHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\IHttpResponse
+	 */
+	protected function getHttpResponse()
+	{
+		return Environment::getHttpResponse();
 	}
 
 }
