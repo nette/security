@@ -40,8 +40,8 @@ require_once dirname(__FILE__) . '/../FreezableObject.php';
  */
 class Identity extends /*Nette\*/FreezableObject implements IIdentity
 {
-	/** @var string */
-	private $name;
+	/** @var mixed */
+	private $id;
 
 	/** @var array */
 	private $roles;
@@ -51,13 +51,13 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 
 
 	/**
-	 * @param  string  identity name
+	 * @param  mixed   identity ID
 	 * @param  mixed   roles
 	 * @param  array   user data
 	 */
-	public function __construct($name, $roles = NULL, $data = NULL)
+	public function __construct($id, $roles = NULL, $data = NULL)
 	{
-		$this->setName($name);
+		$this->setId($id);
 		$this->setRoles((array) $roles);
 		$this->data = (array) $data;
 	}
@@ -65,26 +65,26 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 
 
 	/**
-	 * Sets the name of user.
-	 * @param  string
+	 * Sets the ID of user.
+	 * @param  mixed
 	 * @return Identity  provides a fluent interface
 	 */
-	public function setName($name)
+	public function setId($id)
 	{
 		$this->updating();
-		$this->name = (string) $name;
+		$this->id = $id;
 		return $this;
 	}
 
 
 
 	/**
-	 * Returns the name of user.
-	 * @return string
+	 * Returns the ID of user.
+	 * @return mixed
 	 */
-	public function getName()
+	public function getId()
 	{
-		return $this->name;
+		return $this->id;
 	}
 
 
@@ -134,7 +134,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	public function __set($key, $value)
 	{
 		$this->updating();
-		if ($key === 'name' || $key === 'roles') {
+		if ($key === 'id' || $key === 'roles') {
 			parent::__set($key, $value);
 
 		} else {
@@ -151,7 +151,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	 */
 	public function &__get($key)
 	{
-		if ($key === 'name' || $key === 'roles') {
+		if ($key === 'id' || $key === 'roles') {
 			return parent::__get($key);
 
 		} else {
