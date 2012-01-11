@@ -29,7 +29,8 @@ class User extends Nette\Object
 	/** @deprecated */
 	const MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY,
-		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
+		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED,
+		CLEAR_IDENTITY = IUserStorage::CLEAR_IDENTITY;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -82,7 +83,7 @@ class User extends Nette\Object
 	 */
 	public function login($id = NULL, $password = NULL)
 	{
-		$this->logout(TRUE);
+		$this->logout(IUserStorage::CLEAR_IDENTITY);
 		if (!$id instanceof IIdentity) {
 			$id = $this->getAuthenticator()->authenticate(func_get_args());
 		}
@@ -94,16 +95,16 @@ class User extends Nette\Object
 
 	/**
 	 * Logs out the user from the current session.
-	 * @param  bool  clear the identity from persistent storage?
+	 * @param  int  clear the identity from persistent storage?
 	 * @return void
 	 */
-	public function logout($clearIdentity = FALSE)
+	public function logout($flags = NULL)
 	{
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
 			$this->storage->setAuthenticated(FALSE);
 		}
-		if ($clearIdentity) {
+		if ($flags === TRUE || ($flags & IUserStorage::CLEAR_IDENTITY)) {
 			$this->storage->setIdentity(NULL);
 		}
 	}
@@ -167,13 +168,13 @@ class User extends Nette\Object
 	/**
 	 * Enables log out after inactivity.
 	 * @param  string|int|DateTime number of seconds or timestamp
-	 * @param  bool  log out when the browser is closed?
-	 * @param  bool  clear the identity from persistent storage?
+	 * @param  int  log out when the browser is closed? | clear the identity from persistent storage?
 	 * @return self
 	 */
-	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
+	public function setExpiration($time, $flags = IUserStorage::BROWSER_CLOSED, $clearIdentity = FALSE)
 	{
-		$flags = ($whenBrowserIsClosed ? IUserStorage::BROWSER_CLOSED : 0) | ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
+		$flags = ($flags === TRUE ? IUserStorage::BROWSER_CLOSED : $flags) // back compatibility
+			| ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
 		$this->storage->setExpiration($time, $flags);
 		return $this;
 	}
