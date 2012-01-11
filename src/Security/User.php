@@ -9,11 +9,9 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Http;
+namespace Nette\Security;
 
-use Nette,
-	Nette\Security\IAuthenticator,
-	Nette\Security\IAuthorizator;
+use Nette;
 
 
 
@@ -23,21 +21,16 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read bool $loggedIn
- * @property-read Nette\Security\IIdentity $identity
+ * @property-read IIdentity $identity
  * @property-read mixed $id
- * @property   Nette\Security\IAuthenticator $authenticator
+ * @property   IAuthenticator $authenticator
  * @property   string $namespace
  * @property-read int $logoutReason
  * @property-read array $roles
- * @property   Nette\Security\IAuthorizator $authorizator
+ * @property   IAuthorizator $authorizator
  */
-class User extends Nette\Object implements IUser
+class User extends Nette\Object
 {
-	/** @deprecated */
-	const MANUAL = IUserStorage::MANUAL,
-		INACTIVITY = IUserStorage::INACTIVITY,
-		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
-
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
 
@@ -50,13 +43,13 @@ class User extends Nette\Object implements IUser
 	/** @var array of function(User $sender); Occurs when the user is logged out */
 	public $onLoggedOut;
 
-	/** @var UserStorage Session storage for current user */
+	/** @var IUserStorage Session storage for current user */
 	private $storage;
 
-	/** @var Nette\Security\IAuthenticator */
+	/** @var IAuthenticator */
 	private $authenticator;
 
-	/** @var Nette\Security\IAuthorizator */
+	/** @var IAuthorizator */
 	private $authorizator;
 
 	/** @var Nette\DI\IContainer */
@@ -64,10 +57,20 @@ class User extends Nette\Object implements IUser
 
 
 
-	public function __construct(UserStorage $storage, Nette\DI\IContainer $context)
+	public function __construct(IUserStorage $storage, Nette\DI\IContainer $context)
 	{
 		$this->storage = $storage;
-		$this->context = $context; // with Nette\Security\IAuthenticator, Nette\Security\IAuthorizator
+		$this->context = $context; // with IAuthenticator, IAuthorizator
+	}
+
+
+
+	/**
+	 * @return IUserStorage
+	 */
+	final public function getStorage()
+	{
+		return $this->storage;
 	}
 
 
@@ -81,7 +84,7 @@ class User extends Nette\Object implements IUser
 	 * @param  mixed optional parameter (e.g. username)
 	 * @param  mixed optional parameter (e.g. password)
 	 * @return void
-	 * @throws Nette\Security\AuthenticationException if authentication was not successful
+	 * @throws AuthenticationException if authentication was not successful
 	 */
 	public function login($username = NULL, $password = NULL)
 	{
@@ -122,7 +125,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return Nette\Security\IIdentity
+	 * @return IIdentity
 	 */
 	final public function getIdentity()
 	{
@@ -145,7 +148,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Sets authentication handler.
-	 * @param  Nette\Security\IAuthenticator
+	 * @param  IAuthenticator
 	 * @return User  provides a fluent interface
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
@@ -158,7 +161,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Returns authentication handler.
-	 * @return Nette\Security\IAuthenticator
+	 * @return IAuthenticator
 	 */
 	final public function getAuthenticator()
 	{
@@ -272,7 +275,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Sets authorization handler.
-	 * @param  Nette\Security\IAuthorizator
+	 * @param  IAuthorizator
 	 * @return User  provides a fluent interface
 	 */
 	public function setAuthorizator(IAuthorizator $handler)
@@ -285,7 +288,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Returns current authorization handler.
-	 * @return Nette\Security\IAuthorizator
+	 * @return IAuthorizator
 	 */
 	final public function getAuthorizator()
 	{
