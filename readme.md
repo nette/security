@@ -1,6 +1,9 @@
 Nette Security: Access Control
 ==============================
 
+[![Downloads this Month](https://img.shields.io/packagist/dm/nette/security.svg)](https://packagist.org/packages/nette/security)
+[![Build Status](https://travis-ci.org/nette/security.svg?branch=master)](https://travis-ci.org/nette/security)
+
 - user login and logout
 - verifying user privileges
 - securing against vulnerabilities
@@ -360,7 +363,3 @@ Multiple applications may work on the same server, session, etc., each with sepa
 ```php
 $user->setNamespace('forum');
 ```
-
------
-
-[![Build Status](https://secure.travis-ci.org/nette/security.png?branch=master)](http://travis-ci.org/nette/security)
