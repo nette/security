@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\SimpleAuthenticator and roles
- *
- * @author     David Matejka
  */
 
 use Nette\Security\SimpleAuthenticator,

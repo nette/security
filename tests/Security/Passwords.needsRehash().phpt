@@ -2,8 +2,6 @@
 
 /**
  * Test: Nette\Security\Passwords::needsRehash()
- *
- * @author     David Grudl
  * @phpversion 5.3.7
  */
 
