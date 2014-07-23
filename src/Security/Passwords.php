@@ -54,7 +54,7 @@ class Passwords
 	public static function verify($password, $hash)
 	{
 		return preg_match('#^\$2y\$(?P<cost>\d\d)\$(?P<salt>.{22})#', $hash, $m)
-			&& $m['cost'] > 3 && $m['cost'] < 31
+			&& $m['cost'] >= 4 && $m['cost'] <= 31
 			&& self::hash($password, $m) === $hash;
 	}
 
