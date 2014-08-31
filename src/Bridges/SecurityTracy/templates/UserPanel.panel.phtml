@@ -3,11 +3,11 @@
 namespace Nette\Bridges\SecurityTracy;
 
 use Nette,
-	Tracy;
+	Tracy\Dumper;
 
 ?>
 <div class="nette-UserPanel">
 	<h1><?php if ($user->isLoggedIn()): ?>Logged in<?php else: ?>Unlogged<?php endif ?></h1>
 
-	<?php if ($user->getIdentity()): echo Tracy\Dumper::toHtml($user->getIdentity()); else: ?><p>no identity</p><?php endif ?>
+	<?php if ($user->getIdentity()): echo Dumper::toHtml($user->getIdentity(), array(Dumper::LIVE => TRUE)); else: ?><p>no identity</p><?php endif ?>
 </div>
