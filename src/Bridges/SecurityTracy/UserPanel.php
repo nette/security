@@ -34,6 +34,10 @@ class UserPanel extends Nette\Object implements Tracy\IBarPanel
 	 */
 	public function getTab()
 	{
+		if (headers_sent()) {
+			return;
+		}
+
 		ob_start();
 		$user = $this->user;
 		require __DIR__ . '/templates/UserPanel.tab.phtml';
