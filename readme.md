@@ -263,11 +263,11 @@ $acl->addRole('administrator', 'registered'); // and administrator inherits from
 
 Trivial, isn't it? This ensures all the properties of the parents will be inheritted by their children.
 
-Do note the method `getRoleParents()`, which returns an array of all parent roles, and the method `roleIntheritsFrom()`, which checks whether a role extends another. Their usage:
+Do note the method `getRoleParents()`, which returns an array of all direct parent roles, and the method `roleIntheritsFrom()`, which checks whether a role extends another. Their usage:
 
 ```php
 $acl->roleInheritsFrom('administrator', 'guest'); // TRUE
-$acl->getRoleParents('administrator'); // array('guest', 'registered')
+$acl->getRoleParents('administrator'); // array('registered') - only direct parents
 ```
 
 Now is the right time to define the set of resources that the users may acccess:
