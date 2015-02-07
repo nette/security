@@ -31,3 +31,11 @@ test(function() {
 	$id = new Identity('12345678901234567890');
 	Assert::same('12345678901234567890', $id->getId());
 });
+
+
+test(function() {
+	$id = new Identity(12, NULL, array('password' => 'xxx'));
+
+	Assert::same(array(), $id->getData());
+	Assert::same(NULL, $id->password);
+});
