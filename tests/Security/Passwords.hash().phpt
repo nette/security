@@ -2,7 +2,6 @@
 
 /**
  * Test: Nette\Security\Passwords::hash()
- * @phpversion 5.3.7
  */
 
 use Nette\Security\Passwords,

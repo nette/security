@@ -11,7 +11,7 @@ use Nette;
 
 
 /**
- * Passwords tools. Requires PHP >= 5.3.7.
+ * Passwords tools.
  *
  * @author     David Grudl
  */
@@ -31,9 +31,7 @@ class Passwords
 		$cost = isset($options['cost']) ? (int) $options['cost'] : self::BCRYPT_COST;
 		$salt = isset($options['salt']) ? (string) $options['salt'] : Nette\Utils\Random::generate(22, '0-9A-Za-z./');
 
-		if (PHP_VERSION_ID < 50307) {
-			throw new Nette\NotSupportedException(__METHOD__ . ' requires PHP >= 5.3.7.');
-		} elseif (($len = strlen($salt)) < 22) {
+		if (($len = strlen($salt)) < 22) {
 			throw new Nette\InvalidArgumentException("Salt must be 22 characters long, $len given.");
 		} elseif ($cost < 4 || $cost > 31) {
 			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $cost given.");
