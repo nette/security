@@ -21,10 +21,10 @@ $acl->addRole('administrator');
 $acl->allow('guest', NULL, 'view');
 
 // Staff inherits view privilege from guest, but also needs additional privileges
-$acl->allow('staff', NULL, array('edit', 'submit', 'revise'));
+$acl->allow('staff', NULL, ['edit', 'submit', 'revise']);
 
 // Editor inherits view, edit, submit, and revise privileges, but also needs additional privileges
-$acl->allow('editor', NULL, array('publish', 'archive', 'delete'));
+$acl->allow('editor', NULL, ['publish', 'archive', 'delete']);
 
 // Administrator inherits nothing but is allowed all privileges
 $acl->allow('administrator');
@@ -93,12 +93,12 @@ $acl->addRole('marketing', 'staff');
 // Refine the privilege sets for more specific needs
 
 // Allow marketing to publish and archive newsletters
-$acl->allow('marketing', 'newsletter', array('publish', 'archive'));
+$acl->allow('marketing', 'newsletter', ['publish', 'archive']);
 
 // Allow marketing to publish and archive latest news
 $acl->addResource('news');
 $acl->addResource('latest', 'news');
-$acl->allow('marketing', 'latest', array('publish', 'archive'));
+$acl->allow('marketing', 'latest', ['publish', 'archive']);
 
 // Deny staff (and marketing, by inheritance) rights to revise latest news
 $acl->deny('staff', 'latest', 'revise');
@@ -142,7 +142,7 @@ Assert::false( $acl->isAllowed('editor', 'announcement', 'archive') );
 // Remove some previous permission specifications
 
 // Marketing can no longer publish and archive newsletters
-$acl->removeAllow('marketing', 'newsletter', array('publish', 'archive'));
+$acl->removeAllow('marketing', 'newsletter', ['publish', 'archive']);
 
 // Marketing can no longer archive the latest news
 $acl->removeAllow('marketing', 'latest', 'archive');

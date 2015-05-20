@@ -200,11 +200,11 @@ class User extends Nette\Object
 	public function getRoles()
 	{
 		if (!$this->isLoggedIn()) {
-			return array($this->guestRole);
+			return [$this->guestRole];
 		}
 
 		$identity = $this->getIdentity();
-		return $identity && $identity->getRoles() ? $identity->getRoles() : array($this->authenticatedRole);
+		return $identity && $identity->getRoles() ? $identity->getRoles() : [$this->authenticatedRole];
 	}
 
 

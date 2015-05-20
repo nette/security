@@ -28,7 +28,7 @@ class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 	 * @param  array  list of pairs username => password
 	 * @param  array  list of pairs username => role[]
 	 */
-	public function __construct(array $userlist, array $usersRoles = array())
+	public function __construct(array $userlist, array $usersRoles = [])
 	{
 		$this->userlist = $userlist;
 		$this->usersRoles = $usersRoles;

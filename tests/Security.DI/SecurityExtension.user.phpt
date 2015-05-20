@@ -19,7 +19,7 @@ $compiler->addExtension('foo', new HttpExtension);
 $compiler->addExtension('bar', new SessionExtension);
 $compiler->addExtension('security', new SecurityExtension);
 
-eval($compiler->compile(array(), 'Container1'));
+eval($compiler->compile([], 'Container1'));
 $container = new Container1;
 
 Assert::type('Nette\Http\UserStorage', $container->getService('security.userStorage'));

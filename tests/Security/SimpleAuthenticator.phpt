@@ -11,25 +11,25 @@ use Nette\Security\SimpleAuthenticator,
 require __DIR__ . '/../bootstrap.php';
 
 
-$users = array(
+$users = [
 	'john' => 'password123!',
 	'admin' => 'admin',
-);
+];
 
 $authenticator = new SimpleAuthenticator($users);
 
-$identity = $authenticator->authenticate(array('john', 'password123!'));
+$identity = $authenticator->authenticate(['john', 'password123!']);
 Assert::type( 'Nette\Security\IIdentity', $identity );
 Assert::equal('john', $identity->getId());
 
-$identity = $authenticator->authenticate(array('admin', 'admin'));
+$identity = $authenticator->authenticate(['admin', 'admin']);
 Assert::type( 'Nette\Security\IIdentity', $identity );
 Assert::equal('admin', $identity->getId());
 
 Assert::exception(function() use ($authenticator) {
-	$authenticator->authenticate(array('admin', 'wrong password'));
+	$authenticator->authenticate(['admin', 'wrong password']);
 }, 'Nette\Security\AuthenticationException', 'Invalid password.');
 
 Assert::exception(function() use ($authenticator) {
-	$authenticator->authenticate(array('nobody', 'password'));
+	$authenticator->authenticate(['nobody', 'password']);
 }, 'Nette\Security\AuthenticationException', "User 'nobody' not found.");

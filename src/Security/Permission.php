@@ -26,25 +26,25 @@ use Nette;
 class Permission extends Nette\Object implements IAuthorizator
 {
 	/** @var array  Role storage */
-	private $roles = array();
+	private $roles = [];
 
 	/** @var array  Resource storage */
-	private $resources = array();
+	private $resources = [];
 
 	/** @var array  Access Control List rules; whitelist (deny everything to all) by default */
-	private $rules = array(
-		'allResources' => array(
-			'allRoles' => array(
-				'allPrivileges' => array(
+	private $rules = [
+		'allResources' => [
+			'allRoles' => [
+				'allPrivileges' => [
 					'type' => self::DENY,
 					'assert' => NULL,
-				),
-				'byPrivilege' => array(),
-			),
-			'byRole' => array(),
-		),
-		'byResource' => array(),
-	);
+				],
+				'byPrivilege' => [],
+			],
+			'byRole' => [],
+		],
+		'byResource' => [],
+	];
 
 	/** @var mixed */
 	private $queriedRole, $queriedResource;
@@ -69,11 +69,11 @@ class Permission extends Nette\Object implements IAuthorizator
 			throw new Nette\InvalidStateException("Role '$role' already exists in the list.");
 		}
 
-		$roleParents = array();
+		$roleParents = [];
 
 		if ($parents !== NULL) {
 			if (!is_array($parents)) {
-				$parents = array($parents);
+				$parents = [$parents];
 			}
 
 			foreach ($parents as $parent) {
@@ -83,10 +83,10 @@ class Permission extends Nette\Object implements IAuthorizator
 			}
 		}
 
-		$this->roles[$role] = array(
+		$this->roles[$role] = [
 			'parents'  => $roleParents,
-			'children' => array(),
-		);
+			'children' => [],
+		];
 
 		return $this;
 	}
@@ -222,7 +222,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 */
 	public function removeAllRoles()
 	{
-		$this->roles = array();
+		$this->roles = [];
 
 		foreach ($this->rules['allResources']['byRole'] as $roleCurrent => $rules) {
 			unset($this->rules['allResources']['byRole'][$roleCurrent]);
@@ -263,10 +263,10 @@ class Permission extends Nette\Object implements IAuthorizator
 			$this->resources[$parent]['children'][$resource] = TRUE;
 		}
 
-		$this->resources[$resource] = array(
+		$this->resources[$resource] = [
 			'parent'   => $parent,
-			'children' => array()
-		);
+			'children' => []
+		];
 
 		return $this;
 	}
@@ -366,7 +366,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			unset($this->resources[$parent]['children'][$resource]);
 		}
 
-		$removed = array($resource);
+		$removed = [$resource];
 		foreach ($this->resources[$resource]['children'] as $child => $foo) {
 			$this->removeResource($child);
 			$removed[] = $child;
@@ -399,7 +399,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			}
 		}
 
-		$this->resources = array();
+		$this->resources = [];
 		return $this;
 	}
 
@@ -486,11 +486,11 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		// ensure that all specified Roles exist; normalize input to array of Roles or NULL
 		if ($roles === self::ALL) {
-			$roles = array(self::ALL);
+			$roles = [self::ALL];
 
 		} else {
 			if (!is_array($roles)) {
-				$roles = array($roles);
+				$roles = [$roles];
 			}
 
 			foreach ($roles as $role) {
@@ -500,11 +500,11 @@ class Permission extends Nette\Object implements IAuthorizator
 
 		// ensure that all specified Resources exist; normalize input to array of Resources or NULL
 		if ($resources === self::ALL) {
-			$resources = array(self::ALL);
+			$resources = [self::ALL];
 
 		} else {
 			if (!is_array($resources)) {
-				$resources = array($resources);
+				$resources = [$resources];
 			}
 
 			foreach ($resources as $resource) {
@@ -514,10 +514,10 @@ class Permission extends Nette\Object implements IAuthorizator
 
 		// normalize privileges to array
 		if ($privileges === self::ALL) {
-			$privileges = array();
+			$privileges = [];
 
 		} elseif (!is_array($privileges)) {
-			$privileges = array($privileges);
+			$privileges = [$privileges];
 		}
 
 		if ($toAdd) { // add to the rules
@@ -528,7 +528,7 @@ class Permission extends Nette\Object implements IAuthorizator
 						$rules['allPrivileges']['type'] = $type;
 						$rules['allPrivileges']['assert'] = $assertion;
 						if (!isset($rules['byPrivilege'])) {
-							$rules['byPrivilege'] = array();
+							$rules['byPrivilege'] = [];
 						}
 					} else {
 						foreach ($privileges as $privilege) {
@@ -549,13 +549,13 @@ class Permission extends Nette\Object implements IAuthorizator
 					if (count($privileges) === 0) {
 						if ($resource === self::ALL && $role === self::ALL) {
 							if ($type === $rules['allPrivileges']['type']) {
-								$rules = array(
-									'allPrivileges' => array(
+								$rules = [
+									'allPrivileges' => [
 										'type' => self::DENY,
 										'assert' => NULL
-										),
-									'byPrivilege' => array()
-									);
+										],
+									'byPrivilege' => []
+									];
 							}
 							continue;
 						}
@@ -681,10 +681,10 @@ class Permission extends Nette\Object implements IAuthorizator
 	 */
 	private function searchRolePrivileges($all, $role, $resource, $privilege)
 	{
-		$dfs = array(
-			'visited' => array(),
-			'stack' => array($role),
-		);
+		$dfs = [
+			'visited' => [],
+			'stack' => [$role],
+		];
 
 		while (NULL !== ($role = array_pop($dfs['stack']))) {
 			if (isset($dfs['visited'][$role])) {
@@ -778,7 +778,7 @@ class Permission extends Nette\Object implements IAuthorizator
 				if (!$create) {
 					return $null;
 				}
-				$this->rules['byResource'][$resource] = array();
+				$this->rules['byResource'][$resource] = [];
 			}
 			$visitor = & $this->rules['byResource'][$resource];
 		}
@@ -788,7 +788,7 @@ class Permission extends Nette\Object implements IAuthorizator
 				if (!$create) {
 					return $null;
 				}
-				$visitor['allRoles']['byPrivilege'] = array();
+				$visitor['allRoles']['byPrivilege'] = [];
 			}
 			return $visitor['allRoles'];
 		}
@@ -797,7 +797,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			if (!$create) {
 				return $null;
 			}
-			$visitor['byRole'][$role]['byPrivilege'] = array();
+			$visitor['byRole'][$role]['byPrivilege'] = [];
 		}
 
 		return $visitor['byRole'][$role];

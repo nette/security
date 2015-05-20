@@ -13,7 +13,7 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/MockUserStorage.php';
 
 // Setup environment
-$_COOKIE = array();
+$_COOKIE = [];
 ob_start();
 
 
@@ -43,10 +43,10 @@ class Authenticator implements IAuthenticator
 
 $user = new Nette\Security\User(new MockUserStorage);
 
-$counter = (object) array(
+$counter = (object) [
 	'login' => 0,
 	'logout' => 0,
-);
+];
 
 $user->onLoggedIn[] = function () use ($counter) {
 	$counter->login++;

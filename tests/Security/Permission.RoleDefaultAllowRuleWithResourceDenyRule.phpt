@@ -19,5 +19,5 @@ $acl->addResource('area1');
 $acl->addResource('area2');
 $acl->deny();
 $acl->allow('staff');
-$acl->deny('staff', array('area1', 'area2'));
+$acl->deny('staff', ['area1', 'area2']);
 Assert::false( $acl->isAllowed('staff', 'area1') );

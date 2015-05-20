@@ -15,7 +15,7 @@ require __DIR__ . '/MockUserStorage.php';
 
 
 // Setup environment
-$_COOKIE = array();
+$_COOKIE = [];
 ob_start();
 
 
@@ -36,7 +36,7 @@ class Authenticator implements IAuthenticator
 			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
 		} else {
-			return new Identity('John Doe', array('admin'));
+			return new Identity('John Doe', ['admin']);
 		}
 	}
 
@@ -65,7 +65,7 @@ $user = new Nette\Security\User(new MockUserStorage);
 Assert::false( $user->isLoggedIn() );
 
 
-Assert::same( array('guest'), $user->getRoles() );
+Assert::same( ['guest'], $user->getRoles() );
 Assert::false( $user->isInRole('admin') );
 Assert::true( $user->isInRole('guest') );
 
@@ -78,7 +78,7 @@ $user->setAuthenticator($handler);
 $user->login('john', 'xxx');
 
 Assert::true( $user->isLoggedIn() );
-Assert::same( array('admin'), $user->getRoles() );
+Assert::same( ['admin'], $user->getRoles() );
 Assert::true( $user->isInRole('admin') );
 Assert::false( $user->isInRole('guest') );
 

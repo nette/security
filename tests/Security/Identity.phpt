@@ -12,13 +12,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 test(function() {
-	$id = new Identity(12, 'admin', array('name' => 'John'));
+	$id = new Identity(12, 'admin', ['name' => 'John']);
 
 	Assert::same(12, $id->getId());
 	Assert::same(12, $id->id);
-	Assert::same(array('admin'), $id->getRoles());
-	Assert::same(array('admin'), $id->roles);
-	Assert::same(array('name' => 'John'), $id->getData());
+	Assert::same(['admin'], $id->getRoles());
+	Assert::same(['admin'], $id->roles);
+	Assert::same(['name' => 'John'], $id->getData());
 	Assert::same('John', $id->name);
 });
 

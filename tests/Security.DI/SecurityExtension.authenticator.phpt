@@ -36,21 +36,21 @@ $authenticator = $container->getService('security.authenticator');
 Assert::type('Nette\Security\SimpleAuthenticator', $authenticator);
 Assert::same($authenticator, $container->getService('nette.authenticator'));
 
-$userList = array(
+$userList = [
 	'john' => 'john123',
 	'admin' => 'admin123',
 	'user' => 'user123',
 	'moderator' => 'moderator123',
-);
-$expectedRoles = array(
-	'john' => array(),
-	'admin' => array('admin', 'user'),
-	'user' => array(),
-	'moderator' => array('moderator'),
-);
+];
+$expectedRoles = [
+	'john' => [],
+	'admin' => ['admin', 'user'],
+	'user' => [],
+	'moderator' => ['moderator'],
+];
 
 foreach ($userList as $username => $password) {
-	$identity = $authenticator->authenticate(array($username, $password));
+	$identity = $authenticator->authenticate([$username, $password]);
 	Assert::equal($username, $identity->getId());
 	Assert::equal($expectedRoles[$username], $identity->getRoles());
 }

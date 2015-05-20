@@ -15,10 +15,10 @@ $acl = new Permission;
 $acl->addRole('guest');
 $acl->addRole('member', 'guest');
 $acl->addRole('editor', 'member');
-Assert::same( array('guest', 'member', 'editor'), $acl->getRoles() );
-Assert::same( array(), $acl->getRoleParents('guest') );
-Assert::same( array('guest'), $acl->getRoleParents('member') );
-Assert::same( array('member'), $acl->getRoleParents('editor') );
+Assert::same( ['guest', 'member', 'editor'], $acl->getRoles() );
+Assert::same( [], $acl->getRoleParents('guest') );
+Assert::same( ['guest'], $acl->getRoleParents('member') );
+Assert::same( ['member'], $acl->getRoleParents('editor') );
 
 
 Assert::true( $acl->roleInheritsFrom('member', 'guest', TRUE) );
@@ -30,5 +30,5 @@ Assert::false( $acl->roleInheritsFrom('member', 'editor') );
 Assert::false( $acl->roleInheritsFrom('guest', 'editor') );
 
 $acl->removeRole('member');
-Assert::same( array(), $acl->getRoleParents('editor') );
+Assert::same( [], $acl->getRoleParents('editor') );
 Assert::false( $acl->roleInheritsFrom('editor', 'guest') );

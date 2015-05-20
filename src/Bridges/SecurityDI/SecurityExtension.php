@@ -17,12 +17,12 @@ use Nette;
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
-	public $defaults = array(
+	public $defaults = [
 		'debugger' => TRUE,
-		'users' => array(), // of [user => password] or [user => ['password' => password, 'roles' => [role]]]
-		'roles' => array(), // of [role => parents]
-		'resources' => array(), // of [resource => parents]
-	);
+		'users' => [], // of [user => password] or [user => ['password' => password, 'roles' => [role]]]
+		'roles' => [], // of [role => parents]
+		'resources' => [], // of [resource => parents]
+	];
 
 	/** @var bool */
 	private $debugMode;
@@ -47,23 +47,23 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			->setClass('Nette\Security\User');
 
 		if ($this->debugMode && $config['debugger']) {
-			$user->addSetup('@Tracy\Bar::addPanel', array(
+			$user->addSetup('@Tracy\Bar::addPanel', [
 				new Nette\DI\Statement('Nette\Bridges\SecurityTracy\UserPanel')
-			));
+			]);
 		}
 
 		if ($config['users']) {
-			$usersList = $usersRoles = array();
+			$usersList = $usersRoles = [];
 			foreach ($config['users'] as $username => $data) {
-				$data = is_array($data) ? $data : array('password' => $data);
-				$this->validateConfig(array('password' => NULL, 'roles' => NULL), $data, $this->prefix("security.users.$username"));
+				$data = is_array($data) ? $data : ['password' => $data];
+				$this->validateConfig(['password' => NULL, 'roles' => NULL], $data, $this->prefix("security.users.$username"));
 				$usersList[$username] = $data['password'];
 				$usersRoles[$username] = isset($data['roles']) ? $data['roles'] : NULL;
 			}
 
 			$container->addDefinition($this->prefix('authenticator'))
 				->setClass('Nette\Security\IAuthenticator')
-				->setFactory('Nette\Security\SimpleAuthenticator', array($usersList, $usersRoles));
+				->setFactory('Nette\Security\SimpleAuthenticator', [$usersList, $usersRoles]);
 
 			if ($this->name === 'security') {
 				$container->addAlias('nette.authenticator', $this->prefix('authenticator'));
@@ -76,10 +76,10 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 				->setFactory('Nette\Security\Permission');
 
 			foreach ($config['roles'] as $role => $parents) {
-				$authorizator->addSetup('addRole', array($role, $parents));
+				$authorizator->addSetup('addRole', [$role, $parents]);
 			}
 			foreach ($config['resources'] as $resource => $parents) {
-				$authorizator->addSetup('addResource', array($resource, $parents));
+				$authorizator->addSetup('addResource', [$resource, $parents]);
 			}
 
 			if ($this->name === 'security') {

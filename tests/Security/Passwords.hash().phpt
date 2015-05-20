@@ -19,7 +19,7 @@ Assert::truthy(
 
 Assert::truthy(
 	preg_match('#^\$2y\$05\$123456789012345678901.{32}\z#',
-	$h = Passwords::hash('dg', array('cost' => 5, 'salt' => '1234567890123456789012')))
+	$h = Passwords::hash('dg', ['cost' => 5, 'salt' => '1234567890123456789012']))
 );
 echo $h;
 
@@ -28,13 +28,13 @@ Assert::same( $hash, crypt('dg', $hash) );
 
 
 Assert::exception(function() {
-	Passwords::hash('dg', array('cost' => 3));
+	Passwords::hash('dg', ['cost' => 3]);
 }, 'Nette\InvalidArgumentException', 'Cost must be in range 4-31, 3 given.');
 
 Assert::exception(function() {
-	Passwords::hash('dg', array('cost' => 32));
+	Passwords::hash('dg', ['cost' => 32]);
 }, 'Nette\InvalidArgumentException', 'Cost must be in range 4-31, 32 given.');
 
 Assert::exception(function() {
-	Passwords::hash('dg', array('salt' => 'abc'));
+	Passwords::hash('dg', ['salt' => 'abc']);
 }, 'Nette\InvalidArgumentException', 'Salt must be 22 characters long, 3 given.');
