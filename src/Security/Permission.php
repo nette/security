@@ -84,7 +84,7 @@ class Permission extends Nette\Object implements IAuthorizator
 		}
 
 		$this->roles[$role] = [
-			'parents'  => $roleParents,
+			'parents' => $roleParents,
 			'children' => [],
 		];
 
@@ -264,8 +264,8 @@ class Permission extends Nette\Object implements IAuthorizator
 		}
 
 		$this->resources[$resource] = [
-			'parent'   => $parent,
-			'children' => []
+			'parent' => $parent,
+			'children' => [],
 		];
 
 		return $this;
@@ -552,10 +552,10 @@ class Permission extends Nette\Object implements IAuthorizator
 								$rules = [
 									'allPrivileges' => [
 										'type' => self::DENY,
-										'assert' => NULL
+										'assert' => NULL,
 										],
-									'byPrivilege' => []
-									];
+									'byPrivilege' => [],
+								];
 							}
 							continue;
 						}

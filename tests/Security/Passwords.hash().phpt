@@ -4,8 +4,8 @@
  * Test: Nette\Security\Passwords::hash()
  */
 
-use Nette\Security\Passwords,
-	Tester\Assert;
+use Nette\Security\Passwords;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
@@ -23,17 +23,17 @@ Assert::truthy(
 echo $h;
 
 $hash = Passwords::hash('dg');
-Assert::same( $hash, crypt('dg', $hash) );
+Assert::same($hash, crypt('dg', $hash));
 
 
-Assert::exception(function() {
+Assert::exception(function () {
 	Passwords::hash('dg', ['cost' => 3]);
 }, 'Nette\InvalidArgumentException', 'Cost must be in range 4-31, 3 given.');
 
-Assert::exception(function() {
+Assert::exception(function () {
 	Passwords::hash('dg', ['cost' => 32]);
 }, 'Nette\InvalidArgumentException', 'Cost must be in range 4-31, 32 given.');
 
-Assert::exception(function() {
+Assert::exception(function () {
 	Passwords::hash('dg', ['salt' => 'abc']);
 }, 'Nette\InvalidArgumentException', 'Salt must be 22 characters long, 3 given.');

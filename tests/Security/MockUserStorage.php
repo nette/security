@@ -26,9 +26,10 @@ class MockUserStorage implements Nette\Security\IUserStorage
 	}
 
 	function setExpiration($time, $flags = 0)
-	{}
+	{
+	}
 
 	function getLogoutReason()
-	{}
-
+	{
+	}
 }
