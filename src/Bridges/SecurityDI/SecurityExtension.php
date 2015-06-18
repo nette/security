@@ -48,7 +48,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($this->debugMode && $config['debugger']) {
 			$user->addSetup('@Tracy\Bar::addPanel', array(
-				new Nette\DI\Statement('Nette\Bridges\SecurityTracy\UserPanel')
+				new Nette\DI\Statement('Nette\Bridges\SecurityTracy\UserPanel'),
 			));
 		}
 

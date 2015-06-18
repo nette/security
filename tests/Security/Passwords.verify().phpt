@@ -5,8 +5,8 @@
  * @phpversion 5.3.7
  */
 
-use Nette\Security\Passwords,
-	Tester\Assert;
+use Nette\Security\Passwords;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';

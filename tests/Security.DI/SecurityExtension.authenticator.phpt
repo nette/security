@@ -4,11 +4,11 @@
  * Test: SecurityExtension
  */
 
-use Nette\DI,
-	Nette\Bridges\HttpDI\HttpExtension,
-	Nette\Bridges\HttpDI\SessionExtension,
-	Nette\Bridges\SecurityDI\SecurityExtension,
-	Tester\Assert;
+use Nette\DI;
+use Nette\Bridges\HttpDI\HttpExtension;
+use Nette\Bridges\HttpDI\SessionExtension;
+use Nette\Bridges\SecurityDI\SecurityExtension;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
