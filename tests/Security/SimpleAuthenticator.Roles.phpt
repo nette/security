@@ -4,26 +4,26 @@
  * Test: Nette\Security\SimpleAuthenticator and roles
  */
 
-use Nette\Security\SimpleAuthenticator,
-	Tester\Assert;
+use Nette\Security\SimpleAuthenticator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
 $users = array(
-	'john'  => 'john123',
+	'john' => 'john123',
 	'admin' => 'admin123',
-	'user'  => 'user123',
+	'user' => 'user123',
 );
 $usersRoles = array(
 	'admin' => array('admin', 'user'),
-	'user'  => 'user',
+	'user' => 'user',
 );
 $expectedRoles = array(
 	'admin' => array('admin', 'user'),
-	'user'  => array('user'),
-	'john'  => array(),
+	'user' => array('user'),
+	'john' => array(),
 );
 
 $authenticator = new SimpleAuthenticator($users, $usersRoles);
