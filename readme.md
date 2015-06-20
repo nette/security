@@ -3,6 +3,8 @@ Nette Security: Access Control
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/security.svg)](https://packagist.org/packages/nette/security)
 [![Build Status](https://travis-ci.org/nette/security.svg?branch=master)](https://travis-ci.org/nette/security)
+[![Latest Stable Version](https://poser.pugx.org/nette/security/v/stable)](https://github.com/nette/security/releases)
+[![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/security/blob/master/license.md)
 
 - user login and logout
 - verifying user privileges
