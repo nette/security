@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Trivial implementation of IAuthenticator.
- *
- * @author     David Grudl
  */
 class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 {

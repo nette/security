@@ -13,8 +13,6 @@ use Nette;
 /**
  * User authentication and authorization.
  *
- * @author     David Grudl
- *
  * @property-read bool $loggedIn
  * @property-read IIdentity $identity
  * @property-read mixed $id

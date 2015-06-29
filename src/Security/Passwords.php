@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Passwords tools.
- *
- * @author     David Grudl
  */
 class Passwords
 {

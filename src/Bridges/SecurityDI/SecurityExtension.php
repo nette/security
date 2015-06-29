@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Security extension for Nette DI.
- *
- * @author     David Grudl
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
