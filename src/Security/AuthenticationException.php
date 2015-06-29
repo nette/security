@@ -7,8 +7,6 @@
 
 namespace Nette\Security;
 
-use Nette;
-
 
 /**
  * Authentication exception.

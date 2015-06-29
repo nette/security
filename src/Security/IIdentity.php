@@ -7,8 +7,6 @@
 
 namespace Nette\Security;
 
-use Nette;
-
 
 /**
  * Represents the user of application.
