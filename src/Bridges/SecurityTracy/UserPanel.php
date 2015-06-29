@@ -13,8 +13,6 @@ use Tracy;
 
 /**
  * User panel for Debugger Bar.
- *
- * @author     David Grudl
  */
 class UserPanel extends Nette\Object implements Tracy\IBarPanel
 {

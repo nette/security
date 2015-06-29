@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Interface for persistent storage for user object data.
- *
- * @author David Grudl, Jan Tichý
  */
 interface IUserStorage
 {

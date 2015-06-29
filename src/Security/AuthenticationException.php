@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Authentication exception.
- *
- * @author     David Grudl
  */
 class AuthenticationException extends \Exception
 {

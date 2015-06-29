@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Performs authentication.
- *
- * @author     David Grudl
  */
 interface IAuthenticator
 {
