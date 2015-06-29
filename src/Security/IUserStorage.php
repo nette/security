@@ -7,8 +7,6 @@
 
 namespace Nette\Security;
 
-use Nette;
-
 
 /**
  * Interface for persistent storage for user object data.
