@@ -21,20 +21,17 @@ class Passwords
 	/**
 	 * Computes salted password hash.
 	 * @param  string
-	 * @param  array with cost (4-31), salt (22 chars)
+	 * @param  array with cost (4-31)
 	 * @return string  60 chars long
 	 */
 	public static function hash($password, array $options = NULL)
 	{
 		$cost = isset($options['cost']) ? (int) $options['cost'] : self::BCRYPT_COST;
-		$salt = isset($options['salt']) ? (string) $options['salt'] : Nette\Utils\Random::generate(22, '0-9A-Za-z./');
-
-		if (($len = strlen($salt)) < 22) {
-			throw new Nette\InvalidArgumentException("Salt must be 22 characters long, $len given.");
-		} elseif ($cost < 4 || $cost > 31) {
+		if ($cost < 4 || $cost > 31) {
 			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $cost given.");
 		}
 
+		$salt = Nette\Utils\Random::generate(22, '0-9A-Za-z./');
 		$hash = crypt($password, '$2y$' . ($cost < 10 ? 0 : '') . $cost . '$' . $salt);
 		if (strlen($hash) < 60) {
 			throw new Nette\InvalidStateException('Hash returned by crypt is invalid.');
@@ -51,7 +48,7 @@ class Passwords
 	{
 		return preg_match('#^\$2y\$(?P<cost>\d\d)\$(?P<salt>.{22})#', $hash, $m)
 			&& $m['cost'] >= 4 && $m['cost'] <= 31
-			&& self::hash($password, $m) === $hash;
+			&& crypt($password, $hash) === $hash;
 	}
 
 
