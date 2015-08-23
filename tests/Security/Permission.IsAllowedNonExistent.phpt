@@ -14,9 +14,9 @@ require __DIR__ . '/../bootstrap.php';
 Assert::exception(function () {
 	$acl = new Permission;
 	$acl->isAllowed('nonexistent');
-}, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");
+}, Nette\InvalidStateException::class, "Role 'nonexistent' does not exist.");
 
 Assert::exception(function () {
 	$acl = new Permission;
 	$acl->isAllowed(NULL, 'nonexistent');
-}, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");
+}, Nette\InvalidStateException::class, "Resource 'nonexistent' does not exist.");

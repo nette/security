@@ -15,4 +15,4 @@ Assert::exception(function () {
 	$acl = new Permission;
 	$acl->addResource('area');
 	$acl->addResource('area');
-}, 'Nette\InvalidStateException', "Resource 'area' already exists in the list.");
+}, Nette\InvalidStateException::class, "Resource 'area' already exists in the list.");

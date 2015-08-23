@@ -66,7 +66,7 @@ Assert::null($user->getId());
 Assert::exception(function () use ($user) {
 	// login without handler
 	$user->login('jane', '');
-}, 'Nette\InvalidStateException', 'Authenticator has not been set.');
+}, Nette\InvalidStateException::class, 'Authenticator has not been set.');
 
 $handler = new Authenticator;
 $user->setAuthenticator($handler);
@@ -74,12 +74,12 @@ $user->setAuthenticator($handler);
 Assert::exception(function () use ($user) {
 	// login as jane
 	$user->login('jane', '');
-}, 'Nette\Security\AuthenticationException', 'Unknown user');
+}, Nette\Security\AuthenticationException::class, 'Unknown user');
 
 Assert::exception(function () use ($user) {
 	// login as john
 	$user->login('john', '');
-}, 'Nette\Security\AuthenticationException', 'Password not match');
+}, Nette\Security\AuthenticationException::class, 'Password not match');
 
 // login as john#2
 $user->login('john', 'xxx');

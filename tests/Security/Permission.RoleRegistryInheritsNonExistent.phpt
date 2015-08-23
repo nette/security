@@ -15,8 +15,8 @@ $acl = new Permission;
 $acl->addRole('guest');
 Assert::exception(function () use ($acl) {
 	$acl->roleInheritsFrom('nonexistent', 'guest');
-}, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");
+}, Nette\InvalidStateException::class, "Role 'nonexistent' does not exist.");
 
 Assert::exception(function () use ($acl) {
 	$acl->roleInheritsFrom('guest', 'nonexistent');
-}, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");
+}, Nette\InvalidStateException::class, "Role 'nonexistent' does not exist.");

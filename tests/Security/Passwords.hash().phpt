@@ -28,8 +28,8 @@ Assert::same($hash, crypt('dg', $hash));
 
 Assert::exception(function () {
 	Passwords::hash('dg', ['cost' => 3]);
-}, 'Nette\InvalidArgumentException', 'Cost must be in range 4-31, 3 given.');
+}, Nette\InvalidArgumentException::class, 'Cost must be in range 4-31, 3 given.');
 
 Assert::exception(function () {
 	Passwords::hash('dg', ['cost' => 32]);
-}, 'Nette\InvalidArgumentException', 'Cost must be in range 4-31, 32 given.');
+}, Nette\InvalidArgumentException::class, 'Cost must be in range 4-31, 32 given.');
