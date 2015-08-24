@@ -165,7 +165,7 @@ class User extends Nette\Object
 
 	/**
 	 * Enables log out after inactivity.
-	 * @param  string|int|\DateTime number of seconds or timestamp
+	 * @param  string|int|\DateTimeInterface number of seconds or timestamp
 	 * @param  int  log out when the browser is closed? | clear the identity from persistent storage?
 	 * @return self
 	 */
