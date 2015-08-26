@@ -15,6 +15,7 @@ use Nette;
  */
 class Passwords
 {
+	/** @deprecated */
 	const BCRYPT_COST = 10;
 
 
@@ -24,17 +25,15 @@ class Passwords
 	 * @param  array with cost (4-31)
 	 * @return string  60 chars long
 	 */
-	public static function hash($password, array $options = NULL)
+	public static function hash($password, array $options = [])
 	{
-		$cost = isset($options['cost']) ? (int) $options['cost'] : self::BCRYPT_COST;
-		if ($cost < 4 || $cost > 31) {
-			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $cost given.");
+		if (isset($options['cost']) && ($options['cost'] < 4 || $options['cost'] > 31)) {
+			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $options[cost] given.");
 		}
 
-		$salt = Nette\Utils\Random::generate(22, '0-9A-Za-z./');
-		$hash = crypt($password, '$2y$' . ($cost < 10 ? 0 : '') . $cost . '$' . $salt);
-		if (strlen($hash) < 60) {
-			throw new Nette\InvalidStateException('Hash returned by crypt is invalid.');
+		$hash = password_hash($password, PASSWORD_BCRYPT, $options);
+		if ($hash === FALSE || strlen($hash) < 60) {
+			throw new Nette\InvalidStateException('Hash computed by password_hash is invalid.');
 		}
 		return $hash;
 	}
@@ -46,9 +45,7 @@ class Passwords
 	 */
 	public static function verify($password, $hash)
 	{
-		return preg_match('#^\$2y\$(?P<cost>\d\d)\$(?P<salt>.{22})#', $hash, $m)
-			&& $m['cost'] >= 4 && $m['cost'] <= 31
-			&& crypt($password, $hash) === $hash;
+		return password_verify($password, $hash);
 	}
 
 
@@ -58,11 +55,9 @@ class Passwords
 	 * @param  array with cost (4-31)
 	 * @return bool
 	 */
-	public static function needsRehash($hash, array $options = NULL)
+	public static function needsRehash($hash, array $options = [])
 	{
-		$cost = isset($options['cost']) ? (int) $options['cost'] : self::BCRYPT_COST;
-		return !preg_match('#^\$2y\$(?P<cost>\d\d)\$(?P<salt>.{22})#', $hash, $m)
-			|| $m['cost'] < $cost;
+		return password_needs_rehash($hash, PASSWORD_BCRYPT, $options);
 	}
 
 }

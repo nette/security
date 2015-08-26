@@ -22,8 +22,8 @@ $compiler->addExtension('security', new SecurityExtension);
 eval($compiler->compile([], 'Container1'));
 $container = new Container1;
 
-Assert::type('Nette\Http\UserStorage', $container->getService('security.userStorage'));
-Assert::type('Nette\Security\User', $container->getService('security.user'));
+Assert::type(Nette\Http\UserStorage::class, $container->getService('security.userStorage'));
+Assert::type(Nette\Security\User::class, $container->getService('security.user'));
 
 // aliases
 Assert::same($container->getService('security.userStorage'), $container->getService('nette.userStorage'));

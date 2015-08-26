@@ -15,4 +15,4 @@ $acl = new Permission;
 Assert::exception(function () use ($acl) {
 	$acl->addRole('guest');
 	$acl->addRole('guest');
-}, 'Nette\InvalidStateException', "Role 'guest' already exists in the list.");
+}, Nette\InvalidStateException::class, "Role 'guest' already exists in the list.");

@@ -38,15 +38,15 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		$container = $this->getContainerBuilder();
 
 		$container->addDefinition($this->prefix('userStorage'))
-			->setClass('Nette\Security\IUserStorage')
-			->setFactory('Nette\Http\UserStorage');
+			->setClass(Nette\Security\IUserStorage::class)
+			->setFactory(Nette\Http\UserStorage::class);
 
 		$user = $container->addDefinition($this->prefix('user'))
-			->setClass('Nette\Security\User');
+			->setClass(Nette\Security\User::class);
 
 		if ($this->debugMode && $config['debugger']) {
 			$user->addSetup('@Tracy\Bar::addPanel', [
-				new Nette\DI\Statement('Nette\Bridges\SecurityTracy\UserPanel'),
+				new Nette\DI\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
 			]);
 		}
 
@@ -60,8 +60,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 
 			$container->addDefinition($this->prefix('authenticator'))
-				->setClass('Nette\Security\IAuthenticator')
-				->setFactory('Nette\Security\SimpleAuthenticator', [$usersList, $usersRoles]);
+				->setClass(Nette\Security\IAuthenticator::class)
+				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles]);
 
 			if ($this->name === 'security') {
 				$container->addAlias('nette.authenticator', $this->prefix('authenticator'));
@@ -70,8 +70,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($config['roles'] || $config['resources']) {
 			$authorizator = $container->addDefinition($this->prefix('authorizator'))
-				->setClass('Nette\Security\IAuthorizator')
-				->setFactory('Nette\Security\Permission');
+				->setClass(Nette\Security\IAuthorizator::class)
+				->setFactory(Nette\Security\Permission::class);
 
 			foreach ($config['roles'] as $role => $parents) {
 				$authorizator->addSetup('addRole', [$role, $parents]);

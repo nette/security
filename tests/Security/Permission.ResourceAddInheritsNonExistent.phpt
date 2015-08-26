@@ -14,4 +14,4 @@ require __DIR__ . '/../bootstrap.php';
 $acl = new Permission;
 Assert::exception(function () use ($acl) {
 	$acl->addResource('area', 'nonexistent');
-}, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");
+}, Nette\InvalidStateException::class, "Resource 'nonexistent' does not exist.");
