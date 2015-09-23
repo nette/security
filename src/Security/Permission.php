@@ -16,11 +16,6 @@ use Nette;
  * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
- *
- * @property-read array $roles
- * @property-read array $resources
- * @property-read mixed $queriedRole
- * @property-read mixed $queriedResource
  */
 class Permission extends Nette\Object implements IAuthorizator
 {
