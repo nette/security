@@ -20,7 +20,6 @@ use Nette;
  * @property-read mixed $id
  * @property-read array $roles
  * @property-read int $logoutReason
- * @property-read IUserStorage $storage
  * @property   IAuthenticator $authenticator
  * @property   IAuthorizator $authorizator
  */
