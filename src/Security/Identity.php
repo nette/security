@@ -15,7 +15,6 @@ use Nette;
  *
  * @property   mixed $id
  * @property   array $roles
- * @property-read array $data
  */
 class Identity extends Nette\Object implements IIdentity
 {
