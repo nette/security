@@ -36,7 +36,7 @@ class UserPanel extends Nette\Object implements Tracy\IBarPanel
 			return;
 		}
 
-		ob_start();
+		ob_start(function () {});
 		$user = $this->user;
 		require __DIR__ . '/templates/UserPanel.tab.phtml';
 		return ob_get_clean();
@@ -49,7 +49,7 @@ class UserPanel extends Nette\Object implements Tracy\IBarPanel
 	 */
 	public function getPanel()
 	{
-		ob_start();
+		ob_start(function () {});
 		$user = $this->user;
 		require __DIR__ . '/templates/UserPanel.panel.phtml';
 		return ob_get_clean();
