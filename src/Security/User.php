@@ -21,8 +21,10 @@ use Nette;
  * @property   IAuthenticator $authenticator
  * @property   IAuthorizator $authorizator
  */
-class User extends Nette\Object
+class User
 {
+	use Nette\SmartObject;
+
 	/** @deprecated */
 	const MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY,

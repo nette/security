@@ -16,8 +16,14 @@ use Nette;
  * @property   mixed $id
  * @property   array $roles
  */
-class Identity extends Nette\Object implements IIdentity
+class Identity implements IIdentity
 {
+	use Nette\SmartObject {
+		__get as private parentGet;
+		__set as private parentSet;
+		__isset as private parentIsSet;
+	}
+
 	/** @var mixed */
 	private $id;
 
@@ -103,8 +109,8 @@ class Identity extends Nette\Object implements IIdentity
 	 */
 	public function __set($key, $value)
 	{
-		if (parent::__isset($key)) {
-			parent::__set($key, $value);
+		if ($this->parentIsSet($key)) {
+			$this->parentSet($key, $value);
 
 		} else {
 			$this->data[$key] = $value;
@@ -119,8 +125,8 @@ class Identity extends Nette\Object implements IIdentity
 	 */
 	public function &__get($key)
 	{
-		if (parent::__isset($key)) {
-			return parent::__get($key);
+		if ($this->parentIsSet($key)) {
+			return $this->parentGet($key);
 
 		} else {
 			return $this->data[$key];
@@ -135,19 +141,7 @@ class Identity extends Nette\Object implements IIdentity
 	 */
 	public function __isset($key)
 	{
-		return isset($this->data[$key]) || parent::__isset($key);
-	}
-
-
-	/**
-	 * Removes property.
-	 * @param  string  property name
-	 * @return void
-	 * @throws Nette\MemberAccessException
-	 */
-	public function __unset($name)
-	{
-		Nette\Utils\ObjectMixin::remove($this, $name);
+		return isset($this->data[$key]) || $this->parentIsSet($key);
 	}
 
 }

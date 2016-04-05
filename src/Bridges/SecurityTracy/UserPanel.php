@@ -14,8 +14,10 @@ use Tracy;
 /**
  * User panel for Debugger Bar.
  */
-class UserPanel extends Nette\Object implements Tracy\IBarPanel
+class UserPanel implements Tracy\IBarPanel
 {
+	use Nette\SmartObject;
+
 	/** @var Nette\Security\User */
 	private $user;
 

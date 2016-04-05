@@ -17,8 +17,10 @@ use Nette;
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  */
-class Permission extends Nette\Object implements IAuthorizator
+class Permission implements IAuthorizator
 {
+	use Nette\SmartObject;
+
 	/** @var array  Role storage */
 	private $roles = [];
 
