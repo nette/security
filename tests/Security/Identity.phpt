@@ -19,6 +19,7 @@ test(function () {
 	Assert::same(['admin'], $id->getRoles());
 	Assert::same(['admin'], $id->roles);
 	Assert::same(['name' => 'John'], $id->getData());
+	Assert::same(['name' => 'John'], $id->data);
 	Assert::same('John', $id->name);
 });
 
