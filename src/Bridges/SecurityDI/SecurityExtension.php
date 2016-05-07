@@ -35,13 +35,13 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		$config = $this->validateConfig($this->defaults);
-		$container = $this->getContainerBuilder();
+		$builder = $this->getContainerBuilder();
 
-		$container->addDefinition($this->prefix('userStorage'))
+		$builder->addDefinition($this->prefix('userStorage'))
 			->setClass(Nette\Security\IUserStorage::class)
 			->setFactory(Nette\Http\UserStorage::class);
 
-		$user = $container->addDefinition($this->prefix('user'))
+		$user = $builder->addDefinition($this->prefix('user'))
 			->setClass(Nette\Security\User::class);
 
 		if ($this->debugMode && $config['debugger']) {
@@ -59,17 +59,17 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 				$usersRoles[$username] = isset($data['roles']) ? $data['roles'] : NULL;
 			}
 
-			$container->addDefinition($this->prefix('authenticator'))
+			$builder->addDefinition($this->prefix('authenticator'))
 				->setClass(Nette\Security\IAuthenticator::class)
 				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles]);
 
 			if ($this->name === 'security') {
-				$container->addAlias('nette.authenticator', $this->prefix('authenticator'));
+				$builder->addAlias('nette.authenticator', $this->prefix('authenticator'));
 			}
 		}
 
 		if ($config['roles'] || $config['resources']) {
-			$authorizator = $container->addDefinition($this->prefix('authorizator'))
+			$authorizator = $builder->addDefinition($this->prefix('authorizator'))
 				->setClass(Nette\Security\IAuthorizator::class)
 				->setFactory(Nette\Security\Permission::class);
 
@@ -81,13 +81,13 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 
 			if ($this->name === 'security') {
-				$container->addAlias('nette.authorizator', $this->prefix('authorizator'));
+				$builder->addAlias('nette.authorizator', $this->prefix('authorizator'));
 			}
 		}
 
 		if ($this->name === 'security') {
-			$container->addAlias('user', $this->prefix('user'));
-			$container->addAlias('nette.userStorage', $this->prefix('userStorage'));
+			$builder->addAlias('user', $this->prefix('user'));
+			$builder->addAlias('nette.userStorage', $this->prefix('userStorage'));
 		}
 	}
 
