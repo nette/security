@@ -19,8 +19,8 @@ $compiler->addExtension('foo', new HttpExtension);
 $compiler->addExtension('bar', new SessionExtension);
 $compiler->addExtension('security', new SecurityExtension);
 
-eval($compiler->compile([], 'Container1'));
-$container = new Container1;
+eval($compiler->compile());
+$container = new Container;
 
 Assert::type(Nette\Http\UserStorage::class, $container->getService('security.userStorage'));
 Assert::type(Nette\Security\User::class, $container->getService('security.user'));

@@ -29,8 +29,8 @@ security:
 		moderator: {password: moderator123, roles: moderator}
 ', 'neon'));
 
-eval($compiler->compile($config, 'Container1'));
-$container = new Container1;
+eval($compiler->addConfig($config)->compile());
+$container = new Container;
 
 $authenticator = $container->getService('security.authenticator');
 Assert::type(Nette\Security\SimpleAuthenticator::class, $authenticator);
