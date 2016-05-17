@@ -29,7 +29,7 @@ security:
 		moderator: {password: moderator123, roles: moderator}
 ', 'neon'));
 
-eval($compiler->compile($config, 'Container1'));
+eval(@$compiler->compile($config, 'Container1')); // @ compatibility with DI 2.4
 $container = new Container1;
 
 $authenticator = $container->getService('security.authenticator');
