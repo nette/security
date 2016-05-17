@@ -15,6 +15,7 @@ use Nette;
  *
  * @property   mixed $id
  * @property   array $roles
+ * @property   array $data
  */
 class Identity implements IIdentity
 {
