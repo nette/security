@@ -141,7 +141,7 @@ class User
 
 	/**
 	 * Sets authentication handler.
-	 * @return self
+	 * @return static
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
 	{
@@ -168,7 +168,7 @@ class User
 	 * @param  string|int|\DateTimeInterface number of seconds or timestamp
 	 * @param  bool  log out when the browser is closed?
 	 * @param  bool  clear the identity from persistent storage?
-	 * @return self
+	 * @return static
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
@@ -238,7 +238,7 @@ class User
 
 	/**
 	 * Sets authorization handler.
-	 * @return self
+	 * @return static
 	 */
 	public function setAuthorizator(IAuthorizator $handler)
 	{
