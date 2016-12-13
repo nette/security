@@ -14,12 +14,15 @@ namespace Nette\Security;
 interface IUserStorage
 {
 	/** Log-out reason {@link IUserStorage::getLogoutReason()} */
-	const MANUAL = 0b0001,
-		INACTIVITY = 0b0010,
-		BROWSER_CLOSED = 0b0100;
+	const
+		MANUAL = 0b0001,
+		INACTIVITY = 0b0010;
 
 	/** Log-out behavior */
 	const CLEAR_IDENTITY = 0b1000;
+
+	/** @deprecated */
+	const BROWSER_CLOSED = 0b0100;
 
 	/**
 	 * Sets the authenticated status of this user.
@@ -49,7 +52,7 @@ interface IUserStorage
 	/**
 	 * Enables log out from the persistent storage after inactivity.
 	 * @param  string|int|\DateTimeInterface number of seconds or timestamp
-	 * @param  int Log out when the browser is closed | Clear the identity from persistent storage?
+	 * @param  int Clear the identity from persistent storage?
 	 * @return void
 	 */
 	function setExpiration($time, $flags = 0);

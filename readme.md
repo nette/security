@@ -42,23 +42,20 @@ Simple, right?
 .[note]
 Logging in requires users to have cookies enabled - other methods are not safe!
 
-Besides logging the user out with the `logout()` method, it can be done automatically based on specified time interval or closing the browser window. For this configuration we have to call `setExpiration()` during the login process. As an argument, it takes a relative time in seconds, UNIX timestamp, or textual representation of time. The second argument specifies whether the user should be logged out when the browser is closed.
+Besides logging the user out with the `logout()` method, it can be done automatically based on specified time interval or closing the browser window. For this configuration we have to call `setExpiration()` during the login process. As an argument, it takes a relative time in seconds, UNIX timestamp, or textual representation of time.
 
 ```php
-// login expires after 30 minutes of inactivity or after closing browser
-$user->setExpiration('30 minutes', TRUE);
+// login expires after 30 minutes of inactivity
+$user->setExpiration('30 minutes');
 
 // login expires after two days of inactivity
-$user->setExpiration('2 days', FALSE);
-
-// login expires when a browser is closed, but not sooner (ie. without a time limit)
-$user->setExpiration(0, TRUE);
+$user->setExpiration('2 days');
 ```
 
 .[note]
 Expiration must be set to value equal or lower than the expiration of [sessions].
 
-The reason of last logout can be obtained by method `$user->getLogoutReason()`, which returns one of these constants: `IUserStorage::INACTIVITY` if time expired, `IUserStorage::BROWSER_CLOSED` when user has closed the browser or `IUserStorage::MANUAL` when the `logout()` method was called.
+The reason of last logout can be obtained by method `$user->getLogoutReason()`, which returns one of these constants: `IUserStorage::INACTIVITY` if time expired or `IUserStorage::MANUAL` when the `logout()` method was called.
 
 To make the example above work, we in fact have to create an object that verifies user's name and password. It's called **authenticator**. Its trivial implementation is the class [api:Nette\Security\SimpleAuthenticator], which in its constructor accepts an associative array:
 

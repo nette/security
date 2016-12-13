@@ -26,9 +26,12 @@ class User
 	use Nette\SmartObject;
 
 	/** @deprecated */
-	const MANUAL = IUserStorage::MANUAL,
-		INACTIVITY = IUserStorage::INACTIVITY,
-		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
+	const
+		MANUAL = IUserStorage::MANUAL,
+		INACTIVITY = IUserStorage::INACTIVITY;
+
+	/** @deprecated */
+	const BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -166,14 +169,14 @@ class User
 	/**
 	 * Enables log out after inactivity.
 	 * @param  string|int|\DateTimeInterface number of seconds or timestamp
-	 * @param  bool  log out when the browser is closed?
-	 * @param  bool  clear the identity from persistent storage?
+	 * @param  int|bool  flag IUserStorage::CLEAR_IDENTITY
+	 * @param  bool  clear the identity from persistent storage? (deprecated)
 	 * @return static
 	 */
-	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
+	public function setExpiration($time, $flags = NULL, $clearIdentity = FALSE)
 	{
-		$flags = ($whenBrowserIsClosed ? IUserStorage::BROWSER_CLOSED : 0) | ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
-		$this->storage->setExpiration($time, $flags);
+		$clearIdentity = $clearIdentity || $flags === IUserStorage::CLEAR_IDENTITY;
+		$this->storage->setExpiration($time, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
 		return $this;
 	}
 
