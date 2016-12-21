@@ -168,13 +168,19 @@ class User
 	/**
 	 * Enables log out after inactivity.
 	 * @param  string|int|\DateTimeInterface number of seconds or timestamp
-	 * @param  int|bool  flag IUserStorage::CLEAR_IDENTITY
-	 * @param  bool  clear the identity from persistent storage? (deprecated)
+	 * @param  int  flag IUserStorage::CLEAR_IDENTITY
 	 * @return static
 	 */
-	public function setExpiration($time, $flags = NULL, $clearIdentity = FALSE)
+	public function setExpiration($time, $flags = 0)
 	{
-		$clearIdentity = $clearIdentity || $flags === IUserStorage::CLEAR_IDENTITY;
+		$clearIdentity = $flags === IUserStorage::CLEAR_IDENTITY;
+		if (is_bool($flags)) {
+			trigger_error(__METHOD__ . '() second parameter $whenBrowserIsClosed was removed.', E_USER_DEPRECATED);
+		}
+		if (func_num_args() > 2) {
+			$clearIdentity = $clearIdentity || func_get_arg(2);
+			trigger_error(__METHOD__ . '() third parameter is deprecated, use flag setExpiration($time, IUserStorage::CLEAR_IDENTITY)', E_USER_DEPRECATED);
+		}
 		$this->storage->setExpiration($time, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
 		return $this;
 	}
