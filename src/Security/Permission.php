@@ -519,7 +519,7 @@ class Permission implements IAuthorizator
 		if ($toAdd) { // add to the rules
 			foreach ($resources as $resource) {
 				foreach ($roles as $role) {
-					$rules = & $this->getRules($resource, $role, TRUE);
+					$rules = &$this->getRules($resource, $role, TRUE);
 					if (count($privileges) === 0) {
 						$rules['allPrivileges']['type'] = $type;
 						$rules['allPrivileges']['assert'] = $assertion;
@@ -538,7 +538,7 @@ class Permission implements IAuthorizator
 		} else { // remove from the rules
 			foreach ($resources as $resource) {
 				foreach ($roles as $role) {
-					$rules = & $this->getRules($resource, $role);
+					$rules = &$this->getRules($resource, $role);
 					if ($rules === NULL) {
 						continue;
 					}
@@ -764,11 +764,11 @@ class Permission implements IAuthorizator
 	 * @param  bool
 	 * @return array|NULL
 	 */
-	private function & getRules($resource, $role, $create = FALSE)
+	private function &getRules($resource, $role, $create = FALSE)
 	{
 		$null = NULL;
 		if ($resource === self::ALL) {
-			$visitor = & $this->rules['allResources'];
+			$visitor = &$this->rules['allResources'];
 		} else {
 			if (!isset($this->rules['byResource'][$resource])) {
 				if (!$create) {
@@ -776,7 +776,7 @@ class Permission implements IAuthorizator
 				}
 				$this->rules['byResource'][$resource] = [];
 			}
-			$visitor = & $this->rules['byResource'][$resource];
+			$visitor = &$this->rules['byResource'][$resource];
 		}
 
 		if ($role === self::ALL) {
