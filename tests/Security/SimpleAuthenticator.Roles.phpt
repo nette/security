@@ -4,6 +4,8 @@
  * Test: Nette\Security\SimpleAuthenticator and roles
  */
 
+declare(strict_types=1);
+
 use Nette\Security\SimpleAuthenticator;
 use Tester\Assert;
 

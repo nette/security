@@ -4,6 +4,8 @@
  * Test: Nette\Security\Permission Ensures that ACL-wide rules (all Roles, Resources, and privileges) work properly.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Permission;
 use Tester\Assert;
 

@@ -4,6 +4,8 @@
  * Test: Nette\Security\User authorization.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
 use Nette\Security\IAuthorizator;

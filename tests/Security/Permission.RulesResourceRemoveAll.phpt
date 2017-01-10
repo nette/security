@@ -4,6 +4,8 @@
  * Test: Nette\Security\Permission Ensures that removal of all Resources results in Resource-specific rules being removed.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Permission;
 use Tester\Assert;
 

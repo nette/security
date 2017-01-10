@@ -5,6 +5,8 @@
  * on the entire ACL.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Permission;
 use Tester\Assert;
 

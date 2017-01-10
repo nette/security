@@ -4,6 +4,8 @@
  * Test: Nette\Security\Passwords::needsRehash()
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Passwords;
 use Tester\Assert;
 

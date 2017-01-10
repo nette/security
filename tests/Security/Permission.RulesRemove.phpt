@@ -4,6 +4,8 @@
  * Test: Nette\Security\Permission Ensure that basic rule removal works.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Permission;
 use Tester\Assert;
 

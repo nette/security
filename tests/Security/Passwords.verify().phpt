@@ -4,6 +4,8 @@
  * Test: Nette\Security\Passwords::verify()
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Passwords;
 use Tester\Assert;
 

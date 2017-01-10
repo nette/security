@@ -5,6 +5,8 @@
  * raise undefined index error.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Permission;
 use Tester\Assert;
 

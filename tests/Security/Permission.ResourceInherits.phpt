@@ -4,6 +4,8 @@
  * Test: Nette\Security\Permission Tests basic Resource inheritance.
  */
 
+declare(strict_types=1);
+
 use Nette\Security\Permission;
 use Tester\Assert;
 
