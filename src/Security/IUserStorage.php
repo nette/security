@@ -23,9 +23,6 @@ interface IUserStorage
 	/** Log-out behavior */
 	const CLEAR_IDENTITY = 0b1000;
 
-	/** @deprecated */
-	const BROWSER_CLOSED = 0b0100;
-
 	/**
 	 * Sets the authenticated status of this user.
 	 * @param  bool

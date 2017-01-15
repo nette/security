@@ -32,9 +32,6 @@ class User
 		MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY;
 
-	/** @deprecated */
-	const BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
-
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
 
