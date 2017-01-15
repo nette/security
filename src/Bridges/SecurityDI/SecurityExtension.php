@@ -58,7 +58,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 				$data = is_array($data) ? $data : ['password' => $data];
 				$this->validateConfig(['password' => NULL, 'roles' => NULL], $data, $this->prefix("security.users.$username"));
 				$usersList[$username] = $data['password'];
-				$usersRoles[$username] = isset($data['roles']) ? $data['roles'] : NULL;
+				$usersRoles[$username] = $data['roles'] ?? NULL;
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))
