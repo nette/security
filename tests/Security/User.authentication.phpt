@@ -22,7 +22,7 @@ ob_start();
 class Authenticator implements IAuthenticator
 {
 
-	function authenticate(array $credentials)
+	function authenticate(array $credentials): Nette\Security\IIdentity
 	{
 		list($username, $password) = $credentials;
 		if ($username !== 'john') {

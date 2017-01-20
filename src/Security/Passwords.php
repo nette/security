@@ -21,12 +21,9 @@ class Passwords
 
 
 	/**
-	 * Computes salted password hash.
-	 * @param  string
-	 * @param  array with cost (4-31)
-	 * @return string  60 chars long
+	 * Computes salted password hash. Accepts option 'cost' (4-31)
 	 */
-	public static function hash($password, array $options = [])
+	public static function hash(string $password, array $options = []): string
 	{
 		if (isset($options['cost']) && ($options['cost'] < 4 || $options['cost'] > 31)) {
 			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $options[cost] given.");
@@ -42,21 +39,17 @@ class Passwords
 
 	/**
 	 * Verifies that a password matches a hash.
-	 * @return bool
 	 */
-	public static function verify($password, $hash)
+	public static function verify(string $password, string $hash): bool
 	{
 		return password_verify($password, $hash);
 	}
 
 
 	/**
-	 * Checks if the given hash matches the options.
-	 * @param  string
-	 * @param  array with cost (4-31)
-	 * @return bool
+	 * Checks if the given hash matches the options. Accepts option 'cost' (4-31)
 	 */
-	public static function needsRehash($hash, array $options = [])
+	public static function needsRehash(string $hash, array $options = []): bool
 	{
 		return password_needs_rehash($hash, PASSWORD_BCRYPT, $options);
 	}

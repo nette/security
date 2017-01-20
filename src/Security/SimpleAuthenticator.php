@@ -40,10 +40,9 @@ class SimpleAuthenticator implements IAuthenticator
 	/**
 	 * Performs an authentication against e.g. database.
 	 * and returns IIdentity on success or throws AuthenticationException
-	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */
-	public function authenticate(array $credentials)
+	public function authenticate(array $credentials): IIdentity
 	{
 		[$username, $password] = $credentials;
 		foreach ($this->userlist as $name => $pass) {

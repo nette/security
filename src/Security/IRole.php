@@ -18,8 +18,7 @@ interface IRole
 
 	/**
 	 * Returns a string identifier of the Role.
-	 * @return string
 	 */
-	function getRoleId();
+	function getRoleId(): string;
 
 }

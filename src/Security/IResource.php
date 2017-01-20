@@ -18,8 +18,7 @@ interface IResource
 
 	/**
 	 * Returns a string identifier of the Resource.
-	 * @return string
 	 */
-	function getResourceId();
+	function getResourceId(): string;
 
 }

@@ -32,12 +32,11 @@ class UserPanel implements Tracy\IBarPanel
 
 	/**
 	 * Renders tab.
-	 * @return string
 	 */
-	public function getTab()
+	public function getTab(): ?string
 	{
 		if (headers_sent() && !session_id()) {
-			return;
+			return NULL;
 		}
 
 		ob_start(function () {});
@@ -49,9 +48,8 @@ class UserPanel implements Tracy\IBarPanel
 
 	/**
 	 * Renders panel.
-	 * @return string
 	 */
-	public function getPanel()
+	public function getPanel(): string
 	{
 		ob_start(function () {});
 		$user = $this->user;

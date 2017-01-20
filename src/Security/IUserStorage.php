@@ -25,28 +25,25 @@ interface IUserStorage
 
 	/**
 	 * Sets the authenticated status of this user.
-	 * @param  bool
 	 * @return static
 	 */
-	function setAuthenticated($state);
+	function setAuthenticated(bool $state);
 
 	/**
 	 * Is this user authenticated?
-	 * @return bool
 	 */
-	function isAuthenticated();
+	function isAuthenticated(): bool;
 
 	/**
 	 * Sets the user identity.
 	 * @return static
 	 */
-	function setIdentity(IIdentity $identity = NULL);
+	function setIdentity(?IIdentity $identity);
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return IIdentity|NULL
 	 */
-	function getIdentity();
+	function getIdentity(): ?IIdentity;
 
 	/**
 	 * Enables log out from the persistent storage after inactivity.
@@ -54,12 +51,11 @@ interface IUserStorage
 	 * @param  int  flag IUserStorage::CLEAR_IDENTITY
 	 * @return static
 	 */
-	function setExpiration($time, $flags = 0);
+	function setExpiration($time, int $flags = 0);
 
 	/**
 	 * Why was user logged out?
-	 * @return int|NULL
 	 */
-	function getLogoutReason();
+	function getLogoutReason(): ?int;
 
 }

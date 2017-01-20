@@ -62,10 +62,7 @@ class User
 	}
 
 
-	/**
-	 * @return IUserStorage
-	 */
-	public function getStorage()
+	public function getStorage(): IUserStorage
 	{
 		return $this->storage;
 	}
@@ -78,10 +75,9 @@ class User
 	 * Conducts the authentication process. Parameters are optional.
 	 * @param  mixed optional parameter (e.g. username or IIdentity)
 	 * @param  mixed optional parameter (e.g. password)
-	 * @return void
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($id = NULL, $password = NULL)
+	public function login($id = NULL, $password = NULL): void
 	{
 		$this->logout(TRUE);
 		if (!$id instanceof IIdentity) {
@@ -96,9 +92,8 @@ class User
 	/**
 	 * Logs out the user from the current session.
 	 * @param  bool  clear the identity from persistent storage?
-	 * @return void
 	 */
-	public function logout($clearIdentity = FALSE)
+	public function logout(bool $clearIdentity = FALSE): void
 	{
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
@@ -112,9 +107,8 @@ class User
 
 	/**
 	 * Is this user authenticated?
-	 * @return bool
 	 */
-	public function isLoggedIn()
+	public function isLoggedIn(): bool
 	{
 		return $this->storage->isAuthenticated();
 	}
@@ -122,9 +116,8 @@ class User
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return IIdentity|NULL
 	 */
-	public function getIdentity()
+	public function getIdentity(): ?IIdentity
 	{
 		return $this->storage->getIdentity();
 	}
@@ -154,9 +147,8 @@ class User
 
 	/**
 	 * Returns authentication handler.
-	 * @return IAuthenticator|NULL
 	 */
-	public function getAuthenticator($throw = TRUE)
+	public function getAuthenticator(bool $throw = TRUE): ?IAuthenticator
 	{
 		if ($throw && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
@@ -188,9 +180,8 @@ class User
 
 	/**
 	 * Why was user logged out?
-	 * @return int|NULL
 	 */
-	public function getLogoutReason()
+	public function getLogoutReason(): ?int
 	{
 		return $this->storage->getLogoutReason();
 	}
@@ -201,9 +192,8 @@ class User
 
 	/**
 	 * Returns a list of effective roles that a user has been granted.
-	 * @return array
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
 		if (!$this->isLoggedIn()) {
 			return [$this->guestRole];
@@ -216,10 +206,8 @@ class User
 
 	/**
 	 * Is a user in the specified effective role?
-	 * @param  string
-	 * @return bool
 	 */
-	public function isInRole($role)
+	public function isInRole(string $role): bool
 	{
 		return in_array($role, $this->getRoles(), TRUE);
 	}
@@ -228,11 +216,8 @@ class User
 	/**
 	 * Has a user effective access to the Resource?
 	 * If $resource is NULL, then the query applies to all resources.
-	 * @param  string  resource
-	 * @param  string  privilege
-	 * @return bool
 	 */
-	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
+	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL): bool
 	{
 		foreach ($this->getRoles() as $role) {
 			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
@@ -257,9 +242,8 @@ class User
 
 	/**
 	 * Returns current authorization handler.
-	 * @return IAuthorizator|NULL
 	 */
-	public function getAuthorizator($throw = TRUE)
+	public function getAuthorizator(bool $throw = TRUE): ?IAuthorizator
 	{
 		if ($throw && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');
