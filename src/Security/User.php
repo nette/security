@@ -155,7 +155,7 @@ class User
 
 	/**
 	 * Returns authentication handler.
-	 * @return IAuthenticator
+	 * @return IAuthenticator|NULL
 	 */
 	public function getAuthenticator($need = TRUE)
 	{
@@ -183,7 +183,7 @@ class User
 
 	/**
 	 * Why was user logged out?
-	 * @return int
+	 * @return int|NULL
 	 */
 	public function getLogoutReason()
 	{
@@ -252,7 +252,7 @@ class User
 
 	/**
 	 * Returns current authorization handler.
-	 * @return IAuthorizator
+	 * @return IAuthorizator|NULL
 	 */
 	public function getAuthorizator($need = TRUE)
 	{

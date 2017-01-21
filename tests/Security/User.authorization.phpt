@@ -21,11 +21,7 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-	/**
-	 * @param  array
-	 * @return IIdentity
-	 * @throws Nette\Security\AuthenticationException
-	 */
+
 	function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
@@ -45,12 +41,7 @@ class Authenticator implements IAuthenticator
 
 class Authorizator implements IAuthorizator
 {
-	/**
-	 * @param  string  role
-	 * @param  string  resource
-	 * @param  string  privilege
-	 * @return bool
-	 */
+
 	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
 	{
 		return $role === 'admin' && strpos($resource, 'jany') === FALSE;

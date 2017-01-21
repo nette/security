@@ -407,9 +407,9 @@ class Permission implements IAuthorizator
 	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
 	 *
-	 * @param  string|array|Permission::ALL  roles
-	 * @param  string|array|Permission::ALL  resources
-	 * @param  string|array|Permission::ALL  privileges
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
 	 * @param  callable    assertion
 	 * @return static
 	 */
@@ -424,9 +424,9 @@ class Permission implements IAuthorizator
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
 	 *
-	 * @param  string|array|Permission::ALL  roles
-	 * @param  string|array|Permission::ALL  resources
-	 * @param  string|array|Permission::ALL  privileges
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
 	 * @param  callable    assertion
 	 * @return static
 	 */
@@ -440,9 +440,9 @@ class Permission implements IAuthorizator
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
 	 *
-	 * @param  string|array|Permission::ALL  roles
-	 * @param  string|array|Permission::ALL  resources
-	 * @param  string|array|Permission::ALL  privileges
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
 	 * @return static
 	 */
 	public function removeAllow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
@@ -455,9 +455,9 @@ class Permission implements IAuthorizator
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
 	 *
-	 * @param  string|array|Permission::ALL  roles
-	 * @param  string|array|Permission::ALL  resources
-	 * @param  string|array|Permission::ALL  privileges
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
 	 * @return static
 	 */
 	public function removeDeny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
@@ -471,9 +471,9 @@ class Permission implements IAuthorizator
 	 * Performs operations on Access Control List rules.
 	 * @param  bool  operation add?
 	 * @param  bool  type
-	 * @param  string|array|Permission::ALL  roles
-	 * @param  string|array|Permission::ALL  resources
-	 * @param  string|array|Permission::ALL  privileges
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|Permission::ALL
 	 * @param  callable    assertion
 	 * @throws Nette\InvalidStateException
 	 * @return static
@@ -585,9 +585,9 @@ class Permission implements IAuthorizator
 	 * and its respective parents are checked similarly before the lower-priority parents of
 	 * the Role are checked.
 	 *
-	 * @param  string|Permission::ALL|IRole  role
-	 * @param  string|Permission::ALL|IResource  resource
-	 * @param  string|Permission::ALL  privilege
+	 * @param  string|Permission::ALL|IRole
+	 * @param  string|Permission::ALL|IResource
+	 * @param  string|Permission::ALL
 	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
@@ -720,7 +720,7 @@ class Permission implements IAuthorizator
 	 * @param  string|Permission::ALL
 	 * @param  string|Permission::ALL
 	 * @param  string|Permission::ALL
-	 * @return mixed  NULL if a rule does not exist or assertion fails, otherwise returns ALLOW or DENY
+	 * @return bool|NULL  NULL if a rule does not exist or assertion fails, otherwise returns ALLOW or DENY
 	 */
 	private function getRuleType($resource, $role, $privilege)
 	{

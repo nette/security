@@ -14,11 +14,13 @@ namespace Nette\Security;
 interface IAuthenticator
 {
 	/** Credential key */
-	const USERNAME = 0,
+	const
+		USERNAME = 0,
 		PASSWORD = 1;
 
 	/** Exception error code */
-	const IDENTITY_NOT_FOUND = 1,
+	const
+		IDENTITY_NOT_FOUND = 1,
 		INVALID_CREDENTIAL = 2,
 		FAILURE = 3,
 		NOT_APPROVED = 4;
