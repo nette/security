@@ -107,12 +107,12 @@ class Permission implements IAuthorizator
 	 * @throws Nette\InvalidStateException
 	 * @return void
 	 */
-	private function checkRole($role, $need = TRUE)
+	private function checkRole($role, $throw = TRUE)
 	{
 		if (!is_string($role) || $role === '') {
 			throw new Nette\InvalidArgumentException('Role must be a non-empty string.');
 
-		} elseif ($need && !isset($this->roles[$role])) {
+		} elseif ($throw && !isset($this->roles[$role])) {
 			throw new Nette\InvalidStateException("Role '$role' does not exist.");
 		}
 	}
@@ -287,12 +287,12 @@ class Permission implements IAuthorizator
 	 * @throws Nette\InvalidStateException
 	 * @return void
 	 */
-	private function checkResource($resource, $need = TRUE)
+	private function checkResource($resource, $throw = TRUE)
 	{
 		if (!is_string($resource) || $resource === '') {
 			throw new Nette\InvalidArgumentException('Resource must be a non-empty string.');
 
-		} elseif ($need && !isset($this->resources[$resource])) {
+		} elseif ($throw && !isset($this->resources[$resource])) {
 			throw new Nette\InvalidStateException("Resource '$resource' does not exist.");
 		}
 	}

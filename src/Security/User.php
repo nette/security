@@ -157,9 +157,9 @@ class User
 	 * Returns authentication handler.
 	 * @return IAuthenticator|NULL
 	 */
-	public function getAuthenticator($need = TRUE)
+	public function getAuthenticator($throw = TRUE)
 	{
-		if ($need && !$this->authenticator) {
+		if ($throw && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
 		}
 		return $this->authenticator;
@@ -254,9 +254,9 @@ class User
 	 * Returns current authorization handler.
 	 * @return IAuthorizator|NULL
 	 */
-	public function getAuthorizator($need = TRUE)
+	public function getAuthorizator($throw = TRUE)
 	{
-		if ($need && !$this->authorizator) {
+		if ($throw && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');
 		}
 		return $this->authorizator;
