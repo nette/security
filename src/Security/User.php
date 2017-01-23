@@ -62,7 +62,7 @@ class User
 	}
 
 
-	public function getStorage(): IUserStorage
+	final public function getStorage(): IUserStorage
 	{
 		return $this->storage;
 	}
@@ -93,7 +93,7 @@ class User
 	 * Logs out the user from the current session.
 	 * @param  bool  clear the identity from persistent storage?
 	 */
-	public function logout(bool $clearIdentity = FALSE): void
+	final public function logout(bool $clearIdentity = FALSE): void
 	{
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
@@ -108,7 +108,7 @@ class User
 	/**
 	 * Is this user authenticated?
 	 */
-	public function isLoggedIn(): bool
+	final public function isLoggedIn(): bool
 	{
 		return $this->storage->isAuthenticated();
 	}
@@ -117,7 +117,7 @@ class User
 	/**
 	 * Returns current user identity, if any.
 	 */
-	public function getIdentity(): ?IIdentity
+	final public function getIdentity(): ?IIdentity
 	{
 		return $this->storage->getIdentity();
 	}
@@ -148,7 +148,7 @@ class User
 	/**
 	 * Returns authentication handler.
 	 */
-	public function getAuthenticator(bool $throw = TRUE): ?IAuthenticator
+	final public function getAuthenticator(bool $throw = TRUE): ?IAuthenticator
 	{
 		if ($throw && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
@@ -181,7 +181,7 @@ class User
 	/**
 	 * Why was user logged out?
 	 */
-	public function getLogoutReason(): ?int
+	final public function getLogoutReason(): ?int
 	{
 		return $this->storage->getLogoutReason();
 	}
@@ -207,7 +207,7 @@ class User
 	/**
 	 * Is a user in the specified effective role?
 	 */
-	public function isInRole(string $role): bool
+	final public function isInRole(string $role): bool
 	{
 		return in_array($role, $this->getRoles(), TRUE);
 	}
@@ -243,7 +243,7 @@ class User
 	/**
 	 * Returns current authorization handler.
 	 */
-	public function getAuthorizator(bool $throw = TRUE): ?IAuthorizator
+	final public function getAuthorizator(bool $throw = TRUE): ?IAuthorizator
 	{
 		if ($throw && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');
