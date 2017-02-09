@@ -1,6 +1,7 @@
 {
 	"name": "nette/security",
-	"description": "Nette Security: Access Control Component",
+	"description": "🔑 Provides authentication, authorization and a role-based access control management via ACL (Access Control List)",
+	"keywords": ["nette", "authentication", "authorization", "ACL"],
 	"homepage": "https://nette.org",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
