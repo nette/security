@@ -17,13 +17,13 @@ namespace Nette\Security;
 interface IAuthorizator
 {
 	/** Set type: all */
-	const ALL = NULL;
+	public const ALL = NULL;
 
 	/** Permission type: allow */
-	const ALLOW = TRUE;
+	public const ALLOW = TRUE;
 
 	/** Permission type: deny */
-	const DENY = FALSE;
+	public const DENY = FALSE;
 
 
 	/**

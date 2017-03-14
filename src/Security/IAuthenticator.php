@@ -16,12 +16,12 @@ namespace Nette\Security;
 interface IAuthenticator
 {
 	/** Credential key */
-	const
+	public const
 		USERNAME = 0,
 		PASSWORD = 1;
 
 	/** Exception error code */
-	const
+	public const
 		IDENTITY_NOT_FOUND = 1,
 		INVALID_CREDENTIAL = 2,
 		FAILURE = 3,

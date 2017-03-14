@@ -16,12 +16,12 @@ namespace Nette\Security;
 interface IUserStorage
 {
 	/** Log-out reason {@link IUserStorage::getLogoutReason()} */
-	const
+	public const
 		MANUAL = 0b0001,
 		INACTIVITY = 0b0010;
 
 	/** Log-out behavior */
-	const CLEAR_IDENTITY = 0b1000;
+	public const CLEAR_IDENTITY = 0b1000;
 
 	/**
 	 * Sets the authenticated status of this user.

@@ -28,7 +28,7 @@ class User
 	use Nette\SmartObject;
 
 	/** @deprecated */
-	const
+	public const
 		MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY;
 
