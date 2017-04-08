@@ -42,6 +42,7 @@ class Identity implements IIdentity
 		$this->setId($id);
 		$this->setRoles((array) $roles);
 		$this->data = $data instanceof \Traversable ? iterator_to_array($data) : (array) $data;
+		unset($this->data['password']);
 	}
 
 
