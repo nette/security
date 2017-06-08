@@ -20,8 +20,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 	public $defaults = [
 		'debugger' => TRUE,
 		'users' => [], // of [user => password] or [user => ['password' => password, 'roles' => [role]]]
-		'roles' => [], // of [role => parents]
-		'resources' => [], // of [resource => parents]
+		'roles' => [], // of [role => parent(s)]
+		'resources' => [], // of [resource => parent]
 	];
 
 	/** @var bool */
