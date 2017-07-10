@@ -13,6 +13,13 @@ Nette Security: Access Control
 - how to create custom authenticators and authorizators
 - Access Control List
 
+Install it using Composer:
+
+```
+composer require nette/security
+```
+
+The last stable release requires PHP version 5.6 or newer (is compatible with PHP 7.0 and 7.1). The dev-master version requires PHP 7.1.
 
 Authentication
 ==============
