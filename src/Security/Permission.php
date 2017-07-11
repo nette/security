@@ -43,7 +43,8 @@ class Permission implements IAuthorizator
 	];
 
 	/** @var mixed */
-	private $queriedRole, $queriedResource;
+	private $queriedRole;
+	private $queriedResource;
 
 
 	/********************* roles ****************d*g**/
@@ -611,26 +612,26 @@ class Permission implements IAuthorizator
 
 		do {
 			// depth-first search on $role if it is not 'allRoles' pseudo-parent
-			if ($role !== null && null !== ($result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege))) {
+			if ($role !== null && ($result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege)) !== null) {
 				break;
 			}
 
 			if ($privilege === self::ALL) {
 				if ($rules = $this->getRules($resource, self::ALL)) { // look for rule on 'allRoles' psuedo-parent
 					foreach ($rules['byPrivilege'] as $privilege => $rule) {
-						if (self::DENY === ($result = $this->getRuleType($resource, null, $privilege))) {
+						if (($result = $this->getRuleType($resource, null, $privilege)) === self::DENY) {
 							break 2;
 						}
 					}
-					if (null !== ($result = $this->getRuleType($resource, null, null))) {
+					if (($result = $this->getRuleType($resource, null, null)) !== null) {
 						break;
 					}
 				}
 			} else {
-				if (null !== ($result = $this->getRuleType($resource, null, $privilege))) { // look for rule on 'allRoles' pseudo-parent
+				if (($result = $this->getRuleType($resource, null, $privilege)) !== null) { // look for rule on 'allRoles' pseudo-parent
 					break;
 
-				} elseif (null !== ($result = $this->getRuleType($resource, null, null))) {
+				} elseif (($result = $this->getRuleType($resource, null, null)) !== null) {
 					break;
 				}
 			}
@@ -682,26 +683,26 @@ class Permission implements IAuthorizator
 			'stack' => [$role],
 		];
 
-		while (null !== ($role = array_pop($dfs['stack']))) {
+		while (($role = array_pop($dfs['stack'])) !== null) {
 			if (isset($dfs['visited'][$role])) {
 				continue;
 			}
 			if ($all) {
 				if ($rules = $this->getRules($resource, $role)) {
 					foreach ($rules['byPrivilege'] as $privilege2 => $rule) {
-						if (self::DENY === $this->getRuleType($resource, $role, $privilege2)) {
+						if ($this->getRuleType($resource, $role, $privilege2) === self::DENY) {
 							return self::DENY;
 						}
 					}
-					if (null !== ($type = $this->getRuleType($resource, $role, null))) {
+					if (($type = $this->getRuleType($resource, $role, null)) !== null) {
 						return $type;
 					}
 				}
 			} else {
-				if (null !== ($type = $this->getRuleType($resource, $role, $privilege))) {
+				if (($type = $this->getRuleType($resource, $role, $privilege)) !== null) {
 					return $type;
 
-				} elseif (null !== ($type = $this->getRuleType($resource, $role, null))) {
+				} elseif (($type = $this->getRuleType($resource, $role, null)) !== null) {
 					return $type;
 				}
 			}
@@ -747,7 +748,7 @@ class Permission implements IAuthorizator
 		} elseif ($resource !== self::ALL || $role !== self::ALL || $privilege !== self::ALL) {
 			return null;
 
-		} elseif (self::ALLOW === $rule['type']) {
+		} elseif ($rule['type'] === self::ALLOW) {
 			return self::DENY;
 
 		} else {

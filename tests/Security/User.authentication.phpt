@@ -19,7 +19,7 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-	function authenticate(array $credentials)
+	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
 		if ($username !== 'john') {

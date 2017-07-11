@@ -21,7 +21,7 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-	function authenticate(array $credentials)
+	public function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
 		if ($username !== 'john') {
@@ -39,7 +39,7 @@ class Authenticator implements IAuthenticator
 
 class Authorizator implements IAuthorizator
 {
-	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
+	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
 	{
 		return $role === 'admin' && strpos($resource, 'jany') === false;
 	}
