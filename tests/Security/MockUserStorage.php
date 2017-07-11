@@ -7,36 +7,36 @@ class MockUserStorage implements Nette\Security\IUserStorage
 	private $identity;
 
 
-	function setAuthenticated(bool $state)
+	public function setAuthenticated(bool $state)
 	{
 		$this->auth = $state;
 	}
 
 
-	function isAuthenticated(): bool
+	public function isAuthenticated(): bool
 	{
 		return $this->auth;
 	}
 
 
-	function setIdentity(Nette\Security\IIdentity $identity = null)
+	public function setIdentity(Nette\Security\IIdentity $identity = null)
 	{
 		$this->identity = $identity;
 	}
 
 
-	function getIdentity(): ?Nette\Security\IIdentity
+	public function getIdentity(): ?Nette\Security\IIdentity
 	{
 		return $this->identity;
 	}
 
 
-	function setExpiration($time, int $flags = 0)
+	public function setExpiration($time, int $flags = 0)
 	{
 	}
 
 
-	function getLogoutReason(): ?int
+	public function getLogoutReason(): ?int
 	{
 	}
 }

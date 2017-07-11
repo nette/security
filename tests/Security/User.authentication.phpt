@@ -21,9 +21,9 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-	function authenticate(array $credentials): Nette\Security\IIdentity
+	public function authenticate(array $credentials): Nette\Security\IIdentity
 	{
-		list($username, $password) = $credentials;
+		[$username, $password] = $credentials;
 		if ($username !== 'john') {
 			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 

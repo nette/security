@@ -23,9 +23,9 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-	function authenticate(array $credentials): Nette\Security\IIdentity
+	public function authenticate(array $credentials): Nette\Security\IIdentity
 	{
-		list($username, $password) = $credentials;
+		[$username, $password] = $credentials;
 		if ($username !== 'john') {
 			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 
@@ -41,7 +41,7 @@ class Authenticator implements IAuthenticator
 
 class Authorizator implements IAuthorizator
 {
-	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
+	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
 	{
 		return $role === 'admin' && strpos($resource, 'jany') === false;
 	}

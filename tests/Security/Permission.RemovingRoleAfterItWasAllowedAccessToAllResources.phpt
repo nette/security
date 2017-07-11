@@ -20,7 +20,7 @@ $acl->addRole('test1');
 $acl->addRole('test2');
 $acl->addResource('Test');
 
-$acl->allow(null,'Test','xxx');
+$acl->allow(null, 'Test', 'xxx');
 
 // error test
 $acl->removeRole('test0');
