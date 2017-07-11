@@ -250,5 +250,4 @@ class User
 		}
 		return $this->authorizator;
 	}
-
 }

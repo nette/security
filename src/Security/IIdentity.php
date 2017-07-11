@@ -26,5 +26,4 @@ interface IIdentity
 	 * Returns a list of roles that the user is a member of.
 	 */
 	function getRoles(): array;
-
 }

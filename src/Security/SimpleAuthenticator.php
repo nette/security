@@ -56,5 +56,4 @@ class SimpleAuthenticator implements IAuthenticator
 		}
 		throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
 	}
-
 }

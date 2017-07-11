@@ -57,5 +57,4 @@ interface IUserStorage
 	 * Why was user logged out?
 	 */
 	function getLogoutReason(): ?int;
-
 }

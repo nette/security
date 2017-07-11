@@ -18,6 +18,7 @@ function falseAssertion()
 	return FALSE;
 }
 
+
 function trueAssertion()
 {
 	return TRUE;

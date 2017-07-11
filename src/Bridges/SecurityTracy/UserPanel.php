@@ -56,5 +56,4 @@ class UserPanel implements Tracy\IBarPanel
 		require __DIR__ . '/templates/UserPanel.panel.phtml';
 		return ob_get_clean();
 	}
-
 }

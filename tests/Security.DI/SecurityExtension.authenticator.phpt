@@ -6,10 +6,10 @@
 
 declare(strict_types=1);
 
-use Nette\DI;
 use Nette\Bridges\HttpDI\HttpExtension;
 use Nette\Bridges\HttpDI\SessionExtension;
 use Nette\Bridges\SecurityDI\SecurityExtension;
+use Nette\DI;
 use Tester\Assert;
 
 

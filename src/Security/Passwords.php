@@ -19,7 +19,6 @@ class Passwords
 {
 	use Nette\StaticClass;
 
-
 	/**
 	 * Computes salted password hash. Accepts option 'cost' (4-31)
 	 */
@@ -53,5 +52,4 @@ class Passwords
 	{
 		return password_needs_rehash($hash, PASSWORD_BCRYPT, $options);
 	}
-
 }

@@ -764,5 +764,4 @@ class Permission implements IAuthorizator
 
 		return $visitor['byRole'][$role];
 	}
-
 }

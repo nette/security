@@ -21,7 +21,6 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-
 	function authenticate(array $credentials): Nette\Security\IIdentity
 	{
 		list($username, $password) = $credentials;
@@ -35,7 +34,6 @@ class Authenticator implements IAuthenticator
 			return new Identity('John Doe', 'admin');
 		}
 	}
-
 }
 
 
