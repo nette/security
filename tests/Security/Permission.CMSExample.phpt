@@ -18,57 +18,57 @@ $acl->addRole('editor', 'staff'); // editor inherits permissions from staff
 $acl->addRole('administrator');
 
 // Guest may only view content
-$acl->allow('guest', NULL, 'view');
+$acl->allow('guest', null, 'view');
 
 // Staff inherits view privilege from guest, but also needs additional privileges
-$acl->allow('staff', NULL, ['edit', 'submit', 'revise']);
+$acl->allow('staff', null, ['edit', 'submit', 'revise']);
 
 // Editor inherits view, edit, submit, and revise privileges, but also needs additional privileges
-$acl->allow('editor', NULL, ['publish', 'archive', 'delete']);
+$acl->allow('editor', null, ['publish', 'archive', 'delete']);
 
 // Administrator inherits nothing but is allowed all privileges
 $acl->allow('administrator');
 
 // Access control checks based on above permission sets
 
-Assert::true($acl->isAllowed('guest', NULL, 'view'));
-Assert::false($acl->isAllowed('guest', NULL, 'edit'));
-Assert::false($acl->isAllowed('guest', NULL, 'submit'));
-Assert::false($acl->isAllowed('guest', NULL, 'revise'));
-Assert::false($acl->isAllowed('guest', NULL, 'publish'));
-Assert::false($acl->isAllowed('guest', NULL, 'archive'));
-Assert::false($acl->isAllowed('guest', NULL, 'delete'));
-Assert::false($acl->isAllowed('guest', NULL, 'unknown'));
+Assert::true($acl->isAllowed('guest', null, 'view'));
+Assert::false($acl->isAllowed('guest', null, 'edit'));
+Assert::false($acl->isAllowed('guest', null, 'submit'));
+Assert::false($acl->isAllowed('guest', null, 'revise'));
+Assert::false($acl->isAllowed('guest', null, 'publish'));
+Assert::false($acl->isAllowed('guest', null, 'archive'));
+Assert::false($acl->isAllowed('guest', null, 'delete'));
+Assert::false($acl->isAllowed('guest', null, 'unknown'));
 Assert::false($acl->isAllowed('guest'));
 
-Assert::true($acl->isAllowed('staff', NULL, 'view'));
-Assert::true($acl->isAllowed('staff', NULL, 'edit'));
-Assert::true($acl->isAllowed('staff', NULL, 'submit'));
-Assert::true($acl->isAllowed('staff', NULL, 'revise'));
-Assert::false($acl->isAllowed('staff', NULL, 'publish'));
-Assert::false($acl->isAllowed('staff', NULL, 'archive'));
-Assert::false($acl->isAllowed('staff', NULL, 'delete'));
-Assert::false($acl->isAllowed('staff', NULL, 'unknown'));
+Assert::true($acl->isAllowed('staff', null, 'view'));
+Assert::true($acl->isAllowed('staff', null, 'edit'));
+Assert::true($acl->isAllowed('staff', null, 'submit'));
+Assert::true($acl->isAllowed('staff', null, 'revise'));
+Assert::false($acl->isAllowed('staff', null, 'publish'));
+Assert::false($acl->isAllowed('staff', null, 'archive'));
+Assert::false($acl->isAllowed('staff', null, 'delete'));
+Assert::false($acl->isAllowed('staff', null, 'unknown'));
 Assert::false($acl->isAllowed('staff'));
 
-Assert::true($acl->isAllowed('editor', NULL, 'view'));
-Assert::true($acl->isAllowed('editor', NULL, 'edit'));
-Assert::true($acl->isAllowed('editor', NULL, 'submit'));
-Assert::true($acl->isAllowed('editor', NULL, 'revise'));
-Assert::true($acl->isAllowed('editor', NULL, 'publish'));
-Assert::true($acl->isAllowed('editor', NULL, 'archive'));
-Assert::true($acl->isAllowed('editor', NULL, 'delete'));
-Assert::false($acl->isAllowed('editor', NULL, 'unknown'));
+Assert::true($acl->isAllowed('editor', null, 'view'));
+Assert::true($acl->isAllowed('editor', null, 'edit'));
+Assert::true($acl->isAllowed('editor', null, 'submit'));
+Assert::true($acl->isAllowed('editor', null, 'revise'));
+Assert::true($acl->isAllowed('editor', null, 'publish'));
+Assert::true($acl->isAllowed('editor', null, 'archive'));
+Assert::true($acl->isAllowed('editor', null, 'delete'));
+Assert::false($acl->isAllowed('editor', null, 'unknown'));
 Assert::false($acl->isAllowed('editor'));
 
-Assert::true($acl->isAllowed('administrator', NULL, 'view'));
-Assert::true($acl->isAllowed('administrator', NULL, 'edit'));
-Assert::true($acl->isAllowed('administrator', NULL, 'submit'));
-Assert::true($acl->isAllowed('administrator', NULL, 'revise'));
-Assert::true($acl->isAllowed('administrator', NULL, 'publish'));
-Assert::true($acl->isAllowed('administrator', NULL, 'archive'));
-Assert::true($acl->isAllowed('administrator', NULL, 'delete'));
-Assert::true($acl->isAllowed('administrator', NULL, 'unknown'));
+Assert::true($acl->isAllowed('administrator', null, 'view'));
+Assert::true($acl->isAllowed('administrator', null, 'edit'));
+Assert::true($acl->isAllowed('administrator', null, 'submit'));
+Assert::true($acl->isAllowed('administrator', null, 'revise'));
+Assert::true($acl->isAllowed('administrator', null, 'publish'));
+Assert::true($acl->isAllowed('administrator', null, 'archive'));
+Assert::true($acl->isAllowed('administrator', null, 'delete'));
+Assert::true($acl->isAllowed('administrator', null, 'unknown'));
 Assert::true($acl->isAllowed('administrator'));
 
 // Some checks on specific areas, which inherit access controls from the root ACL node
@@ -105,18 +105,18 @@ $acl->deny('staff', 'latest', 'revise');
 
 // Deny everyone access to archive news announcements
 $acl->addResource('announcement', 'news');
-$acl->deny(NULL, 'announcement', 'archive');
+$acl->deny(null, 'announcement', 'archive');
 
 // Access control checks for the above refined permission sets
 
-Assert::true($acl->isAllowed('marketing', NULL, 'view'));
-Assert::true($acl->isAllowed('marketing', NULL, 'edit'));
-Assert::true($acl->isAllowed('marketing', NULL, 'submit'));
-Assert::true($acl->isAllowed('marketing', NULL, 'revise'));
-Assert::false($acl->isAllowed('marketing', NULL, 'publish'));
-Assert::false($acl->isAllowed('marketing', NULL, 'archive'));
-Assert::false($acl->isAllowed('marketing', NULL, 'delete'));
-Assert::false($acl->isAllowed('marketing', NULL, 'unknown'));
+Assert::true($acl->isAllowed('marketing', null, 'view'));
+Assert::true($acl->isAllowed('marketing', null, 'edit'));
+Assert::true($acl->isAllowed('marketing', null, 'submit'));
+Assert::true($acl->isAllowed('marketing', null, 'revise'));
+Assert::false($acl->isAllowed('marketing', null, 'publish'));
+Assert::false($acl->isAllowed('marketing', null, 'archive'));
+Assert::false($acl->isAllowed('marketing', null, 'delete'));
+Assert::false($acl->isAllowed('marketing', null, 'unknown'));
 Assert::false($acl->isAllowed('marketing'));
 
 Assert::true($acl->isAllowed('marketing', 'newsletter', 'publish'));

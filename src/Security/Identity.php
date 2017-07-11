@@ -40,7 +40,7 @@ class Identity implements IIdentity
 	 * @param  mixed
 	 * @param  iterable
 	 */
-	public function __construct($id, $roles = NULL, $data = NULL)
+	public function __construct($id, $roles = null, $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);

@@ -13,8 +13,8 @@ require __DIR__ . '/../bootstrap.php';
 
 $acl = new Permission;
 Assert::false($acl->isAllowed());
-Assert::false($acl->isAllowed(NULL, NULL, 'somePrivilege'));
+Assert::false($acl->isAllowed(null, null, 'somePrivilege'));
 
 $acl->addRole('guest');
 Assert::false($acl->isAllowed('guest'));
-Assert::false($acl->isAllowed('guest', NULL, 'somePrivilege'));
+Assert::false($acl->isAllowed('guest', null, 'somePrivilege'));

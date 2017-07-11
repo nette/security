@@ -41,11 +41,11 @@ interface IUserStorage
 	 * Sets the user identity.
 	 * @return static
 	 */
-	function setIdentity(IIdentity $identity = NULL);
+	function setIdentity(IIdentity $identity = null);
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return IIdentity|NULL
+	 * @return IIdentity|null
 	 */
 	function getIdentity();
 
@@ -59,7 +59,7 @@ interface IUserStorage
 
 	/**
 	 * Why was user logged out?
-	 * @return int|NULL
+	 * @return int|null
 	 */
 	function getLogoutReason();
 }

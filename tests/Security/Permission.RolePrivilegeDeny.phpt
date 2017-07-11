@@ -14,5 +14,5 @@ require __DIR__ . '/../bootstrap.php';
 $acl = new Permission;
 $acl->addRole('guest');
 $acl->allow('guest');
-$acl->deny('guest', NULL, 'somePrivilege');
-Assert::false($acl->isAllowed('guest', NULL, 'somePrivilege'));
+$acl->deny('guest', null, 'somePrivilege');
+Assert::false($acl->isAllowed('guest', null, 'somePrivilege'));

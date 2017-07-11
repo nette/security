@@ -17,5 +17,5 @@ $acl->addRole('guest');
 $acl->addRole('staff', 'guest');
 $acl->deny();
 $acl->allow('staff');
-$acl->deny('staff', NULL, ['privilege1', 'privilege2']);
-Assert::false($acl->isAllowed('staff', NULL, 'privilege1'));
+$acl->deny('staff', null, ['privilege1', 'privilege2']);
+Assert::false($acl->isAllowed('staff', null, 'privilege1'));

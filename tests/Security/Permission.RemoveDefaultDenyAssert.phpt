@@ -13,12 +13,12 @@ require __DIR__ . '/../bootstrap.php';
 
 function falseAssertion()
 {
-	return FALSE;
+	return false;
 }
 
 
 $acl = new Permission;
-$acl->deny(NULL, NULL, NULL, 'falseAssertion');
+$acl->deny(null, null, null, 'falseAssertion');
 Assert::true($acl->isAllowed());
 $acl->removeDeny();
 Assert::false($acl->isAllowed());

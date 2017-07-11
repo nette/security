@@ -2,7 +2,7 @@
 
 class MockUserStorage implements Nette\Security\IUserStorage
 {
-	private $auth = FALSE;
+	private $auth = false;
 	private $identity;
 
 
@@ -18,7 +18,7 @@ class MockUserStorage implements Nette\Security\IUserStorage
 	}
 
 
-	function setIdentity(Nette\Security\IIdentity $identity = NULL)
+	function setIdentity(Nette\Security\IIdentity $identity = null)
 	{
 		$this->identity = $identity;
 	}

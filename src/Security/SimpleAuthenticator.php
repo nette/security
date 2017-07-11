@@ -47,7 +47,7 @@ class SimpleAuthenticator implements IAuthenticator
 		foreach ($this->userlist as $name => $pass) {
 			if (strcasecmp($name, $username) === 0) {
 				if ((string) $pass === (string) $password) {
-					return new Identity($name, isset($this->usersRoles[$name]) ? $this->usersRoles[$name] : NULL);
+					return new Identity($name, isset($this->usersRoles[$name]) ? $this->usersRoles[$name] : null);
 				} else {
 					throw new AuthenticationException('Invalid password.', self::INVALID_CREDENTIAL);
 				}

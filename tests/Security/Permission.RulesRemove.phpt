@@ -12,10 +12,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-$acl->allow(NULL, NULL, ['privilege1', 'privilege2']);
+$acl->allow(null, null, ['privilege1', 'privilege2']);
 Assert::false($acl->isAllowed());
-Assert::true($acl->isAllowed(NULL, NULL, 'privilege1'));
-Assert::true($acl->isAllowed(NULL, NULL, 'privilege2'));
-$acl->removeAllow(NULL, NULL, 'privilege1');
-Assert::false($acl->isAllowed(NULL, NULL, 'privilege1'));
-Assert::true($acl->isAllowed(NULL, NULL, 'privilege2'));
+Assert::true($acl->isAllowed(null, null, 'privilege1'));
+Assert::true($acl->isAllowed(null, null, 'privilege2'));
+$acl->removeAllow(null, null, 'privilege1');
+Assert::false($acl->isAllowed(null, null, 'privilege1'));
+Assert::true($acl->isAllowed(null, null, 'privilege2'));
