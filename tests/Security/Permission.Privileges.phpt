@@ -14,13 +14,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-$acl->allow(NULL, NULL, ['p1', 'p2', 'p3']);
-Assert::true($acl->isAllowed(NULL, NULL, 'p1'));
-Assert::true($acl->isAllowed(NULL, NULL, 'p2'));
-Assert::true($acl->isAllowed(NULL, NULL, 'p3'));
-Assert::false($acl->isAllowed(NULL, NULL, 'p4'));
-$acl->deny(NULL, NULL, 'p1');
-Assert::false($acl->isAllowed(NULL, NULL, 'p1'));
-$acl->deny(NULL, NULL, ['p2', 'p3']);
-Assert::false($acl->isAllowed(NULL, NULL, 'p2'));
-Assert::false($acl->isAllowed(NULL, NULL, 'p3'));
+$acl->allow(null, null, ['p1', 'p2', 'p3']);
+Assert::true($acl->isAllowed(null, null, 'p1'));
+Assert::true($acl->isAllowed(null, null, 'p2'));
+Assert::true($acl->isAllowed(null, null, 'p3'));
+Assert::false($acl->isAllowed(null, null, 'p4'));
+$acl->deny(null, null, 'p1');
+Assert::false($acl->isAllowed(null, null, 'p1'));
+$acl->deny(null, null, ['p2', 'p3']);
+Assert::false($acl->isAllowed(null, null, 'p2'));
+Assert::false($acl->isAllowed(null, null, 'p3'));

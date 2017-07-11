@@ -54,7 +54,7 @@ class User
 	private $authorizator;
 
 
-	public function __construct(IUserStorage $storage, IAuthenticator $authenticator = NULL, IAuthorizator $authorizator = NULL)
+	public function __construct(IUserStorage $storage, IAuthenticator $authenticator = null, IAuthorizator $authorizator = null)
 	{
 		$this->storage = $storage;
 		$this->authenticator = $authenticator;
@@ -77,14 +77,14 @@ class User
 	 * @param  mixed optional parameter (e.g. password)
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($id = NULL, $password = NULL): void
+	public function login($id = null, $password = null): void
 	{
-		$this->logout(TRUE);
+		$this->logout(true);
 		if (!$id instanceof IIdentity) {
 			$id = $this->getAuthenticator()->authenticate(func_get_args());
 		}
 		$this->storage->setIdentity($id);
-		$this->storage->setAuthenticated(TRUE);
+		$this->storage->setAuthenticated(true);
 		$this->onLoggedIn($this);
 	}
 
@@ -93,14 +93,14 @@ class User
 	 * Logs out the user from the current session.
 	 * @param  bool  clear the identity from persistent storage?
 	 */
-	final public function logout(bool $clearIdentity = FALSE): void
+	final public function logout(bool $clearIdentity = false): void
 	{
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
-			$this->storage->setAuthenticated(FALSE);
+			$this->storage->setAuthenticated(false);
 		}
 		if ($clearIdentity) {
-			$this->storage->setIdentity(NULL);
+			$this->storage->setIdentity(null);
 		}
 	}
 
@@ -130,7 +130,7 @@ class User
 	public function getId()
 	{
 		$identity = $this->getIdentity();
-		return $identity ? $identity->getId() : NULL;
+		return $identity ? $identity->getId() : null;
 	}
 
 
@@ -148,7 +148,7 @@ class User
 	/**
 	 * Returns authentication handler.
 	 */
-	final public function getAuthenticator(bool $throw = TRUE): ?IAuthenticator
+	final public function getAuthenticator(bool $throw = true): ?IAuthenticator
 	{
 		if ($throw && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
@@ -159,7 +159,7 @@ class User
 
 	/**
 	 * Enables log out after inactivity.
-	 * @param  string|NULL like '20 minutes'
+	 * @param  string|null like '20 minutes'
 	 * @param  int  flag IUserStorage::CLEAR_IDENTITY
 	 * @return static
 	 */
@@ -209,23 +209,23 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		return in_array($role, $this->getRoles(), TRUE);
+		return in_array($role, $this->getRoles(), true);
 	}
 
 
 	/**
 	 * Has a user effective access to the Resource?
-	 * If $resource is NULL, then the query applies to all resources.
+	 * If $resource is null, then the query applies to all resources.
 	 */
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL): bool
 	{
 		foreach ($this->getRoles() as $role) {
 			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -243,7 +243,7 @@ class User
 	/**
 	 * Returns current authorization handler.
 	 */
-	final public function getAuthorizator(bool $throw = TRUE): ?IAuthorizator
+	final public function getAuthorizator(bool $throw = true): ?IAuthorizator
 	{
 		if ($throw && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');

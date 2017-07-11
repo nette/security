@@ -85,7 +85,7 @@ Assert::equal(new Identity('John Doe', 'admin'), $user->getIdentity());
 Assert::same('John Doe', $user->getId());
 
 // login as john#3
-$user->logout(TRUE);
+$user->logout(true);
 Assert::same(1, $counter->logout);
 $user->login(new Identity('John Doe', 'admin'));
 Assert::same(2, $counter->login);
@@ -95,7 +95,7 @@ Assert::equal(new Identity('John Doe', 'admin'), $user->getIdentity());
 
 // log out
 // logging out...
-$user->logout(FALSE);
+$user->logout(false);
 Assert::same(2, $counter->logout);
 
 Assert::false($user->isLoggedIn());
@@ -103,7 +103,7 @@ Assert::equal(new Identity('John Doe', 'admin'), $user->getIdentity());
 
 
 // logging out and clearing identity...
-$user->logout(TRUE);
+$user->logout(true);
 Assert::same(2, $counter->logout); // not logged in -> logout event not triggered
 
 Assert::false($user->isLoggedIn());

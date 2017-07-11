@@ -43,7 +43,7 @@ class Authorizator implements IAuthorizator
 {
 	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
 	{
-		return $role === 'admin' && strpos($resource, 'jany') === FALSE;
+		return $role === 'admin' && strpos($resource, 'jany') === false;
 	}
 }
 
@@ -86,6 +86,6 @@ Assert::false($user->isAllowed('sleep_with_jany'));
 
 // log out
 // logging out...
-$user->logout(FALSE);
+$user->logout(false);
 
 Assert::false($user->isAllowed('delete_file'));

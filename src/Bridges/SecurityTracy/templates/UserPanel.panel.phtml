@@ -8,5 +8,5 @@ use Tracy\Dumper;
 <div class="nette-UserPanel">
 	<h1><?php if ($user->isLoggedIn()): ?>Logged in<?php else: ?>Unlogged<?php endif ?></h1>
 
-	<?php if ($user->getIdentity()): echo Dumper::toHtml($user->getIdentity(), [Dumper::LIVE => TRUE]); else: ?><p>no identity</p><?php endif ?>
+	<?php if ($user->getIdentity()): echo Dumper::toHtml($user->getIdentity(), [Dumper::LIVE => true]); else: ?><p>no identity</p><?php endif ?>
 </div>

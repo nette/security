@@ -47,7 +47,7 @@ interface IUserStorage
 
 	/**
 	 * Enables log out from the persistent storage after inactivity.
-	 * @param  string|NULL like '20 minutes'
+	 * @param  string|null like '20 minutes'
 	 * @param  int  flag IUserStorage::CLEAR_IDENTITY
 	 * @return static
 	 */

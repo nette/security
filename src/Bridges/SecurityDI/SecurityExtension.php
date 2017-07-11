@@ -18,7 +18,7 @@ use Nette;
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
 	public $defaults = [
-		'debugger' => TRUE,
+		'debugger' => true,
 		'users' => [], // of [user => password] or [user => ['password' => password, 'roles' => [role]]]
 		'roles' => [], // of [role => parent(s)]
 		'resources' => [], // of [resource => parent]
@@ -28,7 +28,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 	private $debugMode;
 
 
-	public function __construct(bool $debugMode = FALSE)
+	public function __construct(bool $debugMode = false)
 	{
 		$this->debugMode = $debugMode;
 	}
@@ -56,9 +56,9 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$usersList = $usersRoles = [];
 			foreach ($config['users'] as $username => $data) {
 				$data = is_array($data) ? $data : ['password' => $data];
-				$this->validateConfig(['password' => NULL, 'roles' => NULL], $data, $this->prefix("security.users.$username"));
+				$this->validateConfig(['password' => null, 'roles' => null], $data, $this->prefix("security.users.$username"));
 				$usersList[$username] = $data['password'];
-				$usersRoles[$username] = $data['roles'] ?? NULL;
+				$usersRoles[$username] = $data['roles'] ?? null;
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))

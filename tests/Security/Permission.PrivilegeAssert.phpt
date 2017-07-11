@@ -15,19 +15,19 @@ require __DIR__ . '/../bootstrap.php';
 
 function falseAssertion()
 {
-	return FALSE;
+	return false;
 }
 
 
 function trueAssertion()
 {
-	return TRUE;
+	return true;
 }
 
 
 $acl = new Permission;
-$acl->allow(NULL, NULL, 'somePrivilege', 'trueAssertion');
-Assert::true($acl->isAllowed(NULL, NULL, 'somePrivilege'));
+$acl->allow(null, null, 'somePrivilege', 'trueAssertion');
+Assert::true($acl->isAllowed(null, null, 'somePrivilege'));
 
-$acl->allow(NULL, NULL, 'somePrivilege', 'falseAssertion');
-Assert::false($acl->isAllowed(NULL, NULL, 'somePrivilege'));
+$acl->allow(null, null, 'somePrivilege', 'falseAssertion');
+Assert::false($acl->isAllowed(null, null, 'somePrivilege'));

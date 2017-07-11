@@ -15,12 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 $acl = new Permission;
 $acl->addResource('area');
-$acl->allow(NULL, 'area');
-Assert::true($acl->isAllowed(NULL, 'area'));
+$acl->allow(null, 'area');
+Assert::true($acl->isAllowed(null, 'area'));
 $acl->removeResource('area');
 Assert::exception(function () use ($acl) {
-	$acl->isAllowed(NULL, 'area');
+	$acl->isAllowed(null, 'area');
 }, Nette\InvalidStateException::class, "Resource 'area' does not exist.");
 
 $acl->addResource('area');
-Assert::false($acl->isAllowed(NULL, 'area'));
+Assert::false($acl->isAllowed(null, 'area'));

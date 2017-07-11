@@ -20,5 +20,5 @@ Assert::exception(function () {
 
 Assert::exception(function () {
 	$acl = new Permission;
-	$acl->isAllowed(NULL, 'nonexistent');
+	$acl->isAllowed(null, 'nonexistent');
 }, Nette\InvalidStateException::class, "Resource 'nonexistent' does not exist.");

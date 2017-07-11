@@ -36,7 +36,7 @@ class UserPanel implements Tracy\IBarPanel
 	public function getTab(): ?string
 	{
 		if (headers_sent() && !session_id()) {
-			return NULL;
+			return null;
 		}
 
 		ob_start(function () {});

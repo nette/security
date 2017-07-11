@@ -153,7 +153,7 @@ Identity
 Identity presents a set of user information, as returned by autheticator. It's an object implementing [api:Nette\Security\IIdentity] interface, with default implementation [api:Nette\Security\Identity].
 Class has methods `getId()`, that returns users ID (for example primary key for the respective database row), and `getRoles()`, which returns an array of all roles user is in. User data can be access as if they were identity properties.
 
-Identity is not erased when the user is logged out. So, if identity exists, it by itself does not grant that the user is also logged in. If we would like to explicitly delete the identity for some reason, we logout the user by calling `$user->logout(TRUE)`.
+Identity is not erased when the user is logged out. So, if identity exists, it by itself does not grant that the user is also logged in. If we would like to explicitly delete the identity for some reason, we logout the user by calling `$user->logout(true)`.
 
 Service `user` of class [api:Nette\Security\User] keeps the identity in session and uses it to all authorizations.
 Identity can be access with `getIdentity` upon `$user`:
@@ -218,7 +218,7 @@ class MyAuthorizator extends Nette\Object
 
 	function isAllowed($role, $resource, $privilege)
 	{
-		return ...; // returns either TRUE or FALSE
+		return ...; // returns either true or false
 	}
 
 }
@@ -273,7 +273,7 @@ Trivial, isn't it? This ensures all the properties of the parents will be inheri
 Do note the method `getRoleParents()`, which returns an array of all direct parent roles, and the method `roleIntheritsFrom()`, which checks whether a role extends another. Their usage:
 
 ```php
-$acl->roleInheritsFrom('administrator', 'guest'); // TRUE
+$acl->roleInheritsFrom('administrator', 'guest'); // true
 $acl->getRoleParents('administrator'); // array('registered') - only direct parents
 ```
 
@@ -308,27 +308,27 @@ Now when we have created the set of rules, we may simply ask the authorization q
 
 ```php
 // can guest view articles?
-echo $acl->isAllowed('guest', 'article', 'view'); // TRUE
+echo $acl->isAllowed('guest', 'article', 'view'); // true
 // can guest edit an article?
-echo $acl->isAllowed('guest', 'article', 'edit'); // FALSE
+echo $acl->isAllowed('guest', 'article', 'edit'); // false
 // may guest add comments?
-echo $acl->isAllowed('guest', 'comments', 'add'); // FALSE
+echo $acl->isAllowed('guest', 'comments', 'add'); // false
 ```
 
 The same is true for the registered user, though he is allowed to add a comment:
 
 ```php
-echo $acl->isAllowed('registered', 'article', 'view'); // TRUE
-echo $acl->isAllowed('registered', 'comments', 'add'); // TRUE
-echo $acl->isAllowed('registered', 'backend', 'view'); // FALSE
+echo $acl->isAllowed('registered', 'article', 'view'); // true
+echo $acl->isAllowed('registered', 'comments', 'add'); // true
+echo $acl->isAllowed('registered', 'backend', 'view'); // false
 ```
 
 Administrator is allowed to do everything:
 
 ```php
-echo $acl->isAllowed('administrator', 'article', 'view'); // TRUE
-echo $acl->isAllowed('administrator', 'commend', 'add'); // TRUE
-echo $acl->isAllowed('administrator', 'poll', 'edit'); // TRUE
+echo $acl->isAllowed('administrator', 'article', 'view'); // true
+echo $acl->isAllowed('administrator', 'commend', 'add'); // true
+echo $acl->isAllowed('administrator', 'poll', 'edit'); // true
 ```
 
 Admin rules may possibly be defined without any restrictions (without inheriting from any other roles):
@@ -354,11 +354,11 @@ $acl->deny('guest', 'backend');
 
 // example A: role admin has lower weight than role guest
 $acl->addRole('john', array('admin', 'guest'));
-$acl->isAllowed('john', 'backend'); // FALSE
+$acl->isAllowed('john', 'backend'); // false
 
 // example B: role admin has greater weight than role guest
 $acl->addRole('mary', array('guest', 'admin'));
-$acl->isAllowed('mary', 'backend'); // TRUE
+$acl->isAllowed('mary', 'backend'); // true
 ```
 
 

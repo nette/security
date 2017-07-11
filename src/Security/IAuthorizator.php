@@ -17,19 +17,19 @@ namespace Nette\Security;
 interface IAuthorizator
 {
 	/** Set type: all */
-	public const ALL = NULL;
+	public const ALL = null;
 
 	/** Permission type: allow */
-	public const ALLOW = TRUE;
+	public const ALLOW = true;
 
 	/** Permission type: deny */
-	public const DENY = FALSE;
+	public const DENY = false;
 
 	/**
 	 * Performs a role-based authorization.
-	 * @param  string|NULL
-	 * @param  string|NULL
-	 * @param  string|NULL
+	 * @param  string|null
+	 * @param  string|null
+	 * @param  string|null
 	 */
 	function isAllowed($role, $resource, $privilege): bool;
 }

@@ -14,5 +14,5 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-$acl->allow(NULL, NULL, 'somePrivilege');
-Assert::true($acl->isAllowed(NULL, NULL, 'somePrivilege'));
+$acl->allow(null, null, 'somePrivilege');
+Assert::true($acl->isAllowed(null, null, 'somePrivilege'));
