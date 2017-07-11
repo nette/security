@@ -19,5 +19,4 @@ interface IRole
 	 * @return string
 	 */
 	function getRoleId();
-
 }

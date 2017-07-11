@@ -25,5 +25,4 @@ interface IIdentity
 	 * @return array
 	 */
 	function getRoles();
-
 }

@@ -19,5 +19,4 @@ interface IResource
 	 * @return string
 	 */
 	function getResourceId();
-
 }

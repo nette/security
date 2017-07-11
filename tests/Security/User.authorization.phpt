@@ -5,8 +5,8 @@
  */
 
 use Nette\Security\IAuthenticator;
-use Nette\Security\Identity;
 use Nette\Security\IAuthorizator;
+use Nette\Security\Identity;
 use Tester\Assert;
 
 
@@ -21,7 +21,6 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-
 	function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
@@ -35,18 +34,15 @@ class Authenticator implements IAuthenticator
 			return new Identity('John Doe', ['admin']);
 		}
 	}
-
 }
 
 
 class Authorizator implements IAuthorizator
 {
-
 	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
 	{
 		return $role === 'admin' && strpos($resource, 'jany') === FALSE;
 	}
-
 }
 
 

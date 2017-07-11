@@ -19,7 +19,6 @@ ob_start();
 
 class Authenticator implements IAuthenticator
 {
-
 	function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
@@ -33,7 +32,6 @@ class Authenticator implements IAuthenticator
 			return new Identity('John Doe', 'admin');
 		}
 	}
-
 }
 
 

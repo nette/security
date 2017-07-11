@@ -23,7 +23,6 @@ interface IAuthorizator
 	/** Permission type: deny */
 	const DENY = FALSE;
 
-
 	/**
 	 * Performs a role-based authorization.
 	 * @param  string|NULL
@@ -32,5 +31,4 @@ interface IAuthorizator
 	 * @return bool
 	 */
 	function isAllowed($role, $resource, $privilege);
-
 }

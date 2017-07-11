@@ -61,5 +61,4 @@ class Passwords
 	{
 		return password_needs_rehash($hash, PASSWORD_BCRYPT, $options);
 	}
-
 }

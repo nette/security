@@ -142,5 +142,4 @@ class Identity implements IIdentity
 	{
 		return isset($this->data[$key]) || $this->parentIsSet($key);
 	}
-
 }

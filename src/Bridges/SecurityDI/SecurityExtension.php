@@ -90,5 +90,4 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$builder->addAlias('nette.userStorage', $this->prefix('userStorage'));
 		}
 	}
-
 }

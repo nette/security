@@ -32,5 +32,4 @@ interface IAuthenticator
 	 * @throws AuthenticationException
 	 */
 	function authenticate(array $credentials);
-
 }

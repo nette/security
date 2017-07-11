@@ -62,5 +62,4 @@ interface IUserStorage
 	 * @return int|NULL
 	 */
 	function getLogoutReason();
-
 }
