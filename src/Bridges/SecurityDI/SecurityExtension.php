@@ -44,7 +44,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			->setFactory(Nette\Http\UserStorage::class);
 
 		$user = $builder->addDefinition($this->prefix('user'))
-			->setClass(Nette\Security\User::class);
+			->setFactory(Nette\Security\User::class);
 
 		if ($this->debugMode && $config['debugger']) {
 			$user->addSetup('@Tracy\Bar::addPanel', [
