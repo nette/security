@@ -710,7 +710,7 @@ class Permission implements IAuthorizator
 			$rule = $rules['byPrivilege'][$privilege];
 		}
 
-		if ($rule['assert'] === null || Nette\Utils\Callback::invoke($rule['assert'], $this, $role, $resource, $privilege)) {
+		if ($rule['assert'] === null || $rule['assert']($this, $role, $resource, $privilege)) {
 			return $rule['type'];
 
 		} elseif ($resource !== self::ALL || $role !== self::ALL || $privilege !== self::ALL) {
