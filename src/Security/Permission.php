@@ -44,6 +44,7 @@ class Permission implements IAuthorizator
 
 	/** @var mixed */
 	private $queriedRole;
+
 	private $queriedResource;
 
 
