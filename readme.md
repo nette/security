@@ -7,19 +7,32 @@ Nette Security: Access Control
 [![Latest Stable Version](https://poser.pugx.org/nette/security/v/stable)](https://github.com/nette/security/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/security/blob/master/license.md)
 
+
+Introduction
+============
+
+Authentication & Authorization library for Nette.
+
 - user login and logout
 - verifying user privileges
 - securing against vulnerabilities
 - how to create custom authenticators and authorizators
 - Access Control List
 
-Install it using Composer:
+Documentation can be found on the [website](https://doc.nette.org/access-control).
+
+
+Installation
+============
+
+The recommended way to install is via Composer:
 
 ```
 composer require nette/security
 ```
 
-The last stable release requires PHP version 5.6 or newer (is compatible with PHP 7.0 and 7.1). The dev-master version requires PHP 7.1.
+It requires PHP version 5.6 and supports PHP up to 7.2. The dev-master version requires PHP 7.1.
+
 
 Authentication
 ==============
