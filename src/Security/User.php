@@ -48,10 +48,10 @@ class User
 	/** @var IUserStorage Session storage for current user */
 	private $storage;
 
-	/** @var IAuthenticator */
+	/** @var IAuthenticator|null */
 	private $authenticator;
 
-	/** @var IAuthorizator */
+	/** @var IAuthorizator|null */
 	private $authorizator;
 
 
@@ -77,18 +77,18 @@ class User
 
 	/**
 	 * Conducts the authentication process. Parameters are optional.
-	 * @param  mixed optional parameter (e.g. username or IIdentity)
-	 * @param  mixed optional parameter (e.g. password)
+	 * @param  string|IIdentity  username or Identity
+	 * @param  string
 	 * @return void
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($id = null, $password = null)
+	public function login($user, $password = null)
 	{
 		$this->logout(true);
-		if (!$id instanceof IIdentity) {
-			$id = $this->getAuthenticator()->authenticate(func_get_args());
+		if (!$user instanceof IIdentity) {
+			$user = $this->getAuthenticator()->authenticate(func_get_args());
 		}
-		$this->storage->setIdentity($id);
+		$this->storage->setIdentity($user);
 		$this->storage->setAuthenticated(true);
 		$this->onLoggedIn($this);
 	}

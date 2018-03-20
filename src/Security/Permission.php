@@ -409,9 +409,9 @@ class Permission implements IAuthorizator
 	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
 	 *
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
 	 * @param  callable    assertion
 	 * @return static
 	 */
@@ -426,9 +426,9 @@ class Permission implements IAuthorizator
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
 	 *
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
 	 * @param  callable    assertion
 	 * @return static
 	 */
@@ -442,9 +442,9 @@ class Permission implements IAuthorizator
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
 	 *
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
 	 * @return static
 	 */
 	public function removeAllow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
@@ -457,9 +457,9 @@ class Permission implements IAuthorizator
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
 	 *
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
 	 * @return static
 	 */
 	public function removeDeny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
@@ -473,9 +473,9 @@ class Permission implements IAuthorizator
 	 * Performs operations on Access Control List rules.
 	 * @param  bool  operation add?
 	 * @param  bool  type
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
-	 * @param  string|string[]|Permission::ALL
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
+	 * @param  string|string[]|null
 	 * @param  callable    assertion
 	 * @throws Nette\InvalidStateException
 	 * @return static
@@ -587,9 +587,9 @@ class Permission implements IAuthorizator
 	 * and its respective parents are checked similarly before the lower-priority parents of
 	 * the Role are checked.
 	 *
-	 * @param  string|Permission::ALL|IRole
-	 * @param  string|Permission::ALL|IResource
-	 * @param  string|Permission::ALL
+	 * @param  string|null|IRole  $role
+	 * @param  string|null|IResource  $resource
+	 * @param  string|null  $privilege
 	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
@@ -719,9 +719,9 @@ class Permission implements IAuthorizator
 
 	/**
 	 * Returns the rule type associated with the specified Resource, Role, and privilege.
-	 * @param  string|Permission::ALL
-	 * @param  string|Permission::ALL
-	 * @param  string|Permission::ALL
+	 * @param  string|null  $resource
+	 * @param  string|null  $role
+	 * @param  string|null  $privilege
 	 * @return bool|null  null if a rule does not exist or assertion fails, otherwise returns ALLOW or DENY
 	 */
 	private function getRuleType($resource, $role, $privilege)
@@ -761,8 +761,8 @@ class Permission implements IAuthorizator
 	/**
 	 * Returns the rules associated with a Resource and a Role, or null if no such rules exist.
 	 * If the $create parameter is true, then a rule set is first created and then returned to the caller.
-	 * @param  string|Permission::ALL
-	 * @param  string|Permission::ALL
+	 * @param  string|null  $resource
+	 * @param  string|null  $role
 	 * @param  bool
 	 * @return array|null
 	 */
