@@ -27,9 +27,9 @@ interface IAuthorizator
 
 	/**
 	 * Performs a role-based authorization.
-	 * @param  string|null
-	 * @param  string|null
-	 * @param  string|null
+	 * @param  string|null  $role
+	 * @param  string|null  $resource
+	 * @param  string|null  $privilege
 	 */
 	function isAllowed($role, $resource, $privilege): bool;
 }

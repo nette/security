@@ -27,8 +27,8 @@ class SimpleAuthenticator implements IAuthenticator
 
 
 	/**
-	 * @param  array  list of pairs username => password
-	 * @param  array  list of pairs username => role[]
+	 * @param  array  $userlist list of pairs username => password
+	 * @param  array  $usersRoles list of pairs username => role[]
 	 */
 	public function __construct(array $userlist, array $usersRoles = [])
 	{

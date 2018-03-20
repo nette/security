@@ -73,7 +73,7 @@ class User
 
 	/**
 	 * Conducts the authentication process. Parameters are optional.
-	 * @param  string|IIdentity  username or Identity
+	 * @param  string|IIdentity  $user  name or Identity
 	 * @throws AuthenticationException if authentication was not successful
 	 */
 	public function login($user, string $password = null): void
@@ -157,8 +157,8 @@ class User
 
 	/**
 	 * Enables log out after inactivity (like '20 minutes'). Accepts flag IUserStorage::CLEAR_IDENTITY.
-	 * @param  string|null
-	 * @param  int
+	 * @param  string|null  $expire
+	 * @param  int  $flags
 	 * @return static
 	 */
 	public function setExpiration($expire, /*int*/$flags = 0)
