@@ -47,10 +47,10 @@ class User
 	/** @var IUserStorage Session storage for current user */
 	private $storage;
 
-	/** @var IAuthenticator */
+	/** @var IAuthenticator|null */
 	private $authenticator;
 
-	/** @var IAuthorizator */
+	/** @var IAuthorizator|null */
 	private $authorizator;
 
 
@@ -73,17 +73,16 @@ class User
 
 	/**
 	 * Conducts the authentication process. Parameters are optional.
-	 * @param  mixed optional parameter (e.g. username or IIdentity)
-	 * @param  mixed optional parameter (e.g. password)
+	 * @param  string|IIdentity  username or Identity
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($id = null, $password = null): void
+	public function login($user, string $password = null): void
 	{
 		$this->logout(true);
-		if (!$id instanceof IIdentity) {
-			$id = $this->getAuthenticator()->authenticate(func_get_args());
+		if (!$user instanceof IIdentity) {
+			$user = $this->getAuthenticator()->authenticate(func_get_args());
 		}
-		$this->storage->setIdentity($id);
+		$this->storage->setIdentity($user);
 		$this->storage->setAuthenticated(true);
 		$this->onLoggedIn($this);
 	}
@@ -91,7 +90,6 @@ class User
 
 	/**
 	 * Logs out the user from the current session.
-	 * @param  bool  clear the identity from persistent storage?
 	 */
 	final public function logout(bool $clearIdentity = false): void
 	{
@@ -158,14 +156,17 @@ class User
 
 
 	/**
-	 * Enables log out after inactivity.
-	 * @param  string|null like '20 minutes'
-	 * @param  int  flag IUserStorage::CLEAR_IDENTITY
+	 * Enables log out after inactivity (like '20 minutes'). Accepts flag IUserStorage::CLEAR_IDENTITY.
+	 * @param  string|null
+	 * @param  int
 	 * @return static
 	 */
-	public function setExpiration($time, $flags = 0)
+	public function setExpiration($expire, /*int*/$flags = 0)
 	{
 		$clearIdentity = $flags === IUserStorage::CLEAR_IDENTITY;
+		if ($expire !== null && !is_string($expire)) {
+			trigger_error("Expiration should be a string like '20 minutes' etc.", E_USER_DEPRECATED);
+		}
 		if (is_bool($flags)) {
 			trigger_error(__METHOD__ . '() second parameter $whenBrowserIsClosed was removed.', E_USER_DEPRECATED);
 		}
@@ -173,7 +174,7 @@ class User
 			$clearIdentity = $clearIdentity || func_get_arg(2);
 			trigger_error(__METHOD__ . '() third parameter is deprecated, use flag setExpiration($time, IUserStorage::CLEAR_IDENTITY)', E_USER_DEPRECATED);
 		}
-		$this->storage->setExpiration($time, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
+		$this->storage->setExpiration($expire, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
 		return $this;
 	}
 
