@@ -32,7 +32,7 @@ class MockUserStorage implements Nette\Security\IUserStorage
 	}
 
 
-	public function setExpiration($time, int $flags = 0)
+	public function setExpiration(?string $time, int $flags = 0)
 	{
 	}
 

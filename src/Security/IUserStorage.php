@@ -46,12 +46,10 @@ interface IUserStorage
 	function getIdentity(): ?IIdentity;
 
 	/**
-	 * Enables log out from the persistent storage after inactivity.
-	 * @param  string|null like '20 minutes'
-	 * @param  int  flag IUserStorage::CLEAR_IDENTITY
+	 * Enables log out from the persistent storage after inactivity (like '20 minutes'). Accepts flag IUserStorage::CLEAR_IDENTITY.
 	 * @return static
 	 */
-	function setExpiration($time, int $flags = 0);
+	function setExpiration(?string $expire, int $flags = 0);
 
 	/**
 	 * Why was user logged out?
