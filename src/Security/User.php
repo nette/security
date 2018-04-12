@@ -80,7 +80,8 @@ class User
 	{
 		$this->logout(true);
 		if (!$user instanceof IIdentity) {
-			$user = $this->getAuthenticator()->authenticate(func_get_args());
+		    //TODO check $user type
+			$user = $this->getAuthenticator()->authenticate($user, $password);
 		}
 		$this->storage->setIdentity($user);
 		$this->storage->setAuthenticated(true);
