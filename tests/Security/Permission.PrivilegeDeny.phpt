@@ -14,6 +14,9 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
+$acl->addRole('admin');
+$acl->allow('admin');
 $acl->allow();
 $acl->deny(null, null, 'somePrivilege');
 Assert::false($acl->isAllowed(null, null, 'somePrivilege'));
+Assert::false($acl->isAllowed('admin', null, 'somePrivilege'));
