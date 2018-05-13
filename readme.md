@@ -121,7 +121,7 @@ We will create a custom authenticator that will check validity of login credenti
 ```php
 use Nette\Security as NS;
 
-class MyAuthenticator extends Nette\Object implements NS\IAuthenticator
+class MyAuthenticator implements NS\IAuthenticator
 {
 	public $database;
 
@@ -225,8 +225,7 @@ Authorizator decides, whether the user has permission to take some action. It's 
 An implementation skeleton looks like this:
 
 ```php
-class MyAuthorizator extends Nette\Object
-	implements Nette\Security\IAuthorizator
+class MyAuthorizator implements Nette\Security\IAuthorizator
 {
 
 	function isAllowed($role, $resource, $privilege)
