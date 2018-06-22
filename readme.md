@@ -21,6 +21,8 @@ Authentication & Authorization library for Nette.
 
 Documentation can be found on the [website](https://doc.nette.org/access-control).
 
+If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
+
 
 Installation
 ============
