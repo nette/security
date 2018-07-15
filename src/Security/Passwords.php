@@ -29,13 +29,9 @@ class Passwords
 	 */
 	public static function hash($password, array $options = [])
 	{
-		if (isset($options['cost']) && ($options['cost'] < 4 || $options['cost'] > 31)) {
-			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $options[cost] given.");
-		}
-
-		$hash = password_hash($password, PASSWORD_BCRYPT, $options);
-		if ($hash === false || strlen($hash) < 60) {
-			throw new Nette\InvalidStateException('Hash computed by password_hash is invalid.');
+		$hash = @password_hash($password, PASSWORD_BCRYPT, $options); // @ is escalated to exception
+		if (!$hash) {
+			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
 		}
 		return $hash;
 	}
