@@ -15,7 +15,7 @@ use Nette;
  */
 class Passwords
 {
-	use Nette\StaticClass;
+	use Nette\SmartObject;
 
 	/** @deprecated */
 	const BCRYPT_COST = 10;
