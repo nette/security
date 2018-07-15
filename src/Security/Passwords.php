@@ -13,24 +13,40 @@ use Nette;
 
 
 /**
- * Passwords tools.
+ * Password Hashing.
  */
 class Passwords
 {
-	use Nette\StaticClass;
+	use Nette\SmartObject;
+
+	/** @var int */
+	private $algo;
+
+	/** @var array */
+	private $options;
+
 
 	/**
-	 * Computes salted password hash. Accepts option 'cost' (4-31)
+	 * See http://php.net/manual/en/password.constants.php
 	 */
-	public static function hash(string $password, array $options = []): string
+	public function __construct(int $algo = PASSWORD_BCRYPT, array $options = [])
 	{
-		if (isset($options['cost']) && ($options['cost'] < 4 || $options['cost'] > 31)) {
-			throw new Nette\InvalidArgumentException("Cost must be in range 4-31, $options[cost] given.");
-		}
+		$this->algo = $algo;
+		$this->options = $options;
+	}
 
-		$hash = password_hash($password, PASSWORD_BCRYPT, $options);
-		if ($hash === false || strlen($hash) < 60) {
-			throw new Nette\InvalidStateException('Hash computed by password_hash is invalid.');
+
+	/**
+	 * Computes salted password hash.
+	 */
+	public function hash(string $password): string
+	{
+		$hash = isset($this)
+			? @password_hash($password, $this->algo, $this->options) // @ is escalated to exception
+			: @password_hash($password, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x
+
+		if (!$hash) {
+			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
 		}
 		return $hash;
 	}
@@ -39,17 +55,19 @@ class Passwords
 	/**
 	 * Verifies that a password matches a hash.
 	 */
-	public static function verify(string $password, string $hash): bool
+	public function verify(string $password, string $hash): bool
 	{
 		return password_verify($password, $hash);
 	}
 
 
 	/**
-	 * Checks if the given hash matches the options. Accepts option 'cost' (4-31)
+	 * Checks if the given hash matches the options.
 	 */
-	public static function needsRehash(string $hash, array $options = []): bool
+	public function needsRehash(string $hash): bool
 	{
-		return password_needs_rehash($hash, PASSWORD_BCRYPT, $options);
+		return isset($this)
+			? password_needs_rehash($hash, $this->algo, $this->options)
+			: password_needs_rehash($hash, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x
 	}
 }

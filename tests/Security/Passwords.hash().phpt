@@ -14,24 +14,16 @@ require __DIR__ . '/../bootstrap.php';
 
 
 Assert::truthy(
-	preg_match('#^\$2.\$\d\d\$.{53}\z#',
-	Passwords::hash(''))
+	preg_match('#^\$2.\$\d\d\$.{53}\z#', (new Passwords)->hash(''))
 );
 
 Assert::truthy(
-	preg_match('#^\$2y\$05\$.{53}\z#',
-	$h = Passwords::hash('dg', ['cost' => 5]))
+	preg_match('#^\$2y\$05\$.{53}\z#', (new Passwords(PASSWORD_BCRYPT, ['cost' => 5]))->hash('dg'))
 );
-echo $h;
 
-$hash = Passwords::hash('dg');
+$hash = (new Passwords(PASSWORD_BCRYPT))->hash('dg');
 Assert::same($hash, crypt('dg', $hash));
 
-
 Assert::exception(function () {
-	Passwords::hash('dg', ['cost' => 3]);
-}, Nette\InvalidArgumentException::class, 'Cost must be in range 4-31, 3 given.');
-
-Assert::exception(function () {
-	Passwords::hash('dg', ['cost' => 32]);
-}, Nette\InvalidArgumentException::class, 'Cost must be in range 4-31, 32 given.');
+	(new Passwords(PASSWORD_BCRYPT, ['cost' => 3]))->hash('dg');
+}, Nette\InvalidStateException::class, 'Computed hash is invalid. password_hash(): Invalid bcrypt cost parameter specified: 3');
