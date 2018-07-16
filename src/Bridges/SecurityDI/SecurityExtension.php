@@ -39,6 +39,9 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		$config = $this->validateConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
+		$builder->addDefinition($this->prefix('passwords'))
+			->setFactory(Nette\Security\Passwords::class);
+
 		$builder->addDefinition($this->prefix('userStorage'))
 			->setClass(Nette\Security\IUserStorage::class)
 			->setFactory(Nette\Http\UserStorage::class);
