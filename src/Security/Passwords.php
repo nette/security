@@ -29,7 +29,7 @@ class Passwords
 	/**
 	 * See http://php.net/manual/en/password.constants.php
 	 */
-	public function __construct(int $algo = PASSWORD_BCRYPT, array $options = [])
+	public function __construct(int $algo = PASSWORD_DEFAULT, array $options = [])
 	{
 		$this->algo = $algo;
 		$this->options = $options;

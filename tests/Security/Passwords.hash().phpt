@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 Assert::truthy(
-	preg_match('#^\$2.\$\d\d\$.{53}\z#', (new Passwords)->hash(''))
+	preg_match('#^\$.{50,}\z#', (new Passwords)->hash(''))
 );
 
 Assert::truthy(
