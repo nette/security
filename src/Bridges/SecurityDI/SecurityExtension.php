@@ -18,7 +18,7 @@ use Nette;
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
 	public $defaults = [
-		'debugger' => true,
+		'debugger' => null,
 		'users' => [], // of [user => password] or [user => ['password' => password, 'roles' => [role]]]
 		'roles' => [], // of [role => parent(s)]
 		'resources' => [], // of [resource => parent]
@@ -30,6 +30,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 	public function __construct(bool $debugMode = false)
 	{
+		$this->defaults['debugger'] = interface_exists(\Tracy\IBarPanel::class);
 		$this->debugMode = $debugMode;
 	}
 
