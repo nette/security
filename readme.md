@@ -61,7 +61,6 @@ $user->logout();
 
 Simple, right?
 
-.[note]
 Logging in requires users to have cookies enabled - other methods are not safe!
 
 Besides logging the user out with the `logout()` method, it can be done automatically based on specified time interval or closing the browser window. For this configuration we have to call `setExpiration()` during the login process. As an argument, it takes a relative time in seconds, UNIX timestamp, or textual representation of time.
@@ -74,12 +73,11 @@ $user->setExpiration('30 minutes');
 $user->setExpiration('2 days');
 ```
 
-.[note]
-Expiration must be set to value equal or lower than the expiration of [sessions].
+Expiration must be set to value equal or lower than the expiration of sessions.
 
 The reason of last logout can be obtained by method `$user->getLogoutReason()`, which returns one of these constants: `IUserStorage::INACTIVITY` if time expired or `IUserStorage::MANUAL` when the `logout()` method was called.
 
-To make the example above work, we in fact have to create an object that verifies user's name and password. It's called **authenticator**. Its trivial implementation is the class [api:Nette\Security\SimpleAuthenticator], which in its constructor accepts an associative array:
+To make the example above work, we in fact have to create an object that verifies user's name and password. It's called **authenticator**. Its trivial implementation is the class Nette\Security\SimpleAuthenticator, which in its constructor accepts an associative array:
 
 ```php
 $authenticator = new Nette\Security\SimpleAuthenticator(array(
@@ -89,7 +87,7 @@ $authenticator = new Nette\Security\SimpleAuthenticator(array(
 $user->setAuthenticator($authenticator);
 ```
 
-If the login credentials are not valid, authenticator throws an [api:Nette\Security\AuthenticationException]:
+If the login credentials are not valid, authenticator throws an Nette\Security\AuthenticationException:
 
 ```php
 try {
@@ -103,22 +101,21 @@ try {
 }
 ```
 
-We usually configure authenticator inside a [config file |configuring], which only creates the object if it's requested by the application. The example above would be set in `config.neon` as follows:
+We usually configure authenticator inside a config file, which only creates the object if it's requested by the application. The example above would be set in `config.neon` as follows:
 
 ```
-common:
-	services:
-		authenticator: Nette\Security\SimpleAuthenticator([
-				john: IJ^%4dfh54*
-				kathy: 12345
-			])
+services:
+	authenticator: Nette\Security\SimpleAuthenticator([
+			john: IJ^%4dfh54*
+			kathy: 12345
+		])
 ```
 
 
 Custom authenticator
 --------------------
 
-We will create a custom authenticator that will check validity of login credentials against a database table. Every authenticator must be an implementation of [api:Nette\Security\IAuthenticator], with its only method `authenticate()`. Its only purpose is to return an [identity | #identity] or to throw an `Nette\Security\AuthenticationException`. Framework defines few error codes, that can be used to determine the reason login was not successful, such as self-explaining `IAuthenticator::IDENTITY_NOT_FOUND` or `IAuthenticator::INVALID_CREDENTIAL`.
+We will create a custom authenticator that will check validity of login credentials against a database table. Every authenticator must be an implementation of Nette\Security\IAuthenticator, with its only method `authenticate()`. Its only purpose is to return an identity or to throw an `Nette\Security\AuthenticationException`. Framework defines few error codes, that can be used to determine the reason login was not successful, such as self-explaining `IAuthenticator::IDENTITY_NOT_FOUND` or `IAuthenticator::INVALID_CREDENTIAL`.
 
 ```php
 use Nette\Security as NS;
@@ -151,7 +148,7 @@ class MyAuthenticator implements NS\IAuthenticator
 }
 ```
 
-Class `MyAuthenticator` communicates with the database using [Nette\Database |database] layer and works with table `users`,  where it grabs `username` and hash of `password` in the appropriate columns. If the password check is successful, it returns new identity with user ID and role, which we will mention [later | #roles];
+Class `MyAuthenticator` communicates with the database using Nette\Database layer and works with table `users`,  where it grabs `username` and hash of `password` in the appropriate columns. If the password check is successful, it returns new identity with user ID and role, which we will mention later;
 
 This authenticator would be configured in the `config.neon` file like this:
 
@@ -165,12 +162,12 @@ common:
 Identity
 --------
 
-Identity presents a set of user information, as returned by autheticator. It's an object implementing [api:Nette\Security\IIdentity] interface, with default implementation [api:Nette\Security\Identity].
+Identity presents a set of user information, as returned by autheticator. It's an object implementing Nette\Security\IIdentity interface, with default implementation Nette\Security\Identity.
 Class has methods `getId()`, that returns users ID (for example primary key for the respective database row), and `getRoles()`, which returns an array of all roles user is in. User data can be access as if they were identity properties.
 
 Identity is not erased when the user is logged out. So, if identity exists, it by itself does not grant that the user is also logged in. If we would like to explicitly delete the identity for some reason, we logout the user by calling `$user->logout(true)`.
 
-Service `user` of class [api:Nette\Security\User] keeps the identity in session and uses it to all authorizations.
+Service `user` of class Nette\Security\User keeps the identity in session and uses it to all authorizations.
 Identity can be access with `getIdentity` upon `$user`:
 
 ```php
@@ -217,7 +214,7 @@ As you already know, logging user out does not erase his identity. Therefore the
 Authorizator
 ------------
 
-Authorizator decides, whether the user has permission to take some action. It's an implementation of [api:Nette\Security\IAuthorizator] interface with only one method `isAllowed()`. Purpose of this method is to determine, whether given role has the permission to perform certain *operation* with specific *resource*.
+Authorizator decides, whether the user has permission to take some action. It's an implementation of Nette\Security\IAuthorizator interface with only one method `isAllowed()`. Purpose of this method is to determine, whether given role has the permission to perform certain *operation* with specific *resource*.
 
 - **role** is a user attribute - for example moderator, editor, visitor, registered user, administrator, ...
 - **resource** is a logical unit of the application - article, page, user, menu item, poll, presenter, ...
@@ -253,7 +250,6 @@ if ($user->isAllowed('file', 'delete')) { // is user allowed to delete a resourc
 }
 ```
 
-.[note]
 Do not confuse two different methods `isAllowed`: one belongs to the authorizator and the other one to the `User` class, where first argument is not `$role`.
 
 Because user may have many roles, he is granted the permission only if at least one of roles has the permission. Both arguments are optional and their default value is *everything*.
@@ -261,7 +257,7 @@ Because user may have many roles, he is granted the permission only if at least 
 
 Permission ACL
 --------------
-Nette Framework has a complete authorizator, class [api:Nette\Security\Permission] which offers a light weight and flexible ACL((Access Control List)) layer for permission and access control. When we work with this class, we define roles, resources and individual privileges. Roles and resources may form hierarchies, as shown in the following example:
+Nette Framework has a complete authorizator, class Nette\Security\Permission which offers a light weight and flexible ACL((Access Control List)) layer for permission and access control. When we work with this class, we define roles, resources and individual privileges. Roles and resources may form hierarchies, as shown in the following example:
 
 - `guest`: visitor that is not logged in, allowed to read and browse public part of the web, ie. articles, comments, and to vote in a poll
 
