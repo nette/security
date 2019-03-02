@@ -107,7 +107,7 @@ class Permission implements IAuthorizator
 	 */
 	private function checkRole(string $role, bool $throw = true): void
 	{
-		if (!is_string($role) || $role === '') {
+		if ($role === '') {
 			throw new Nette\InvalidArgumentException('Role must be a non-empty string.');
 
 		} elseif ($throw && !isset($this->roles[$role])) {
@@ -272,7 +272,7 @@ class Permission implements IAuthorizator
 	 */
 	private function checkResource(string $resource, bool $throw = true): void
 	{
-		if (!is_string($resource) || $resource === '') {
+		if ($resource === '') {
 			throw new Nette\InvalidArgumentException('Resource must be a non-empty string.');
 
 		} elseif ($throw && !isset($this->resources[$resource])) {
