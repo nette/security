@@ -15,7 +15,7 @@ use Nette;
 /**
  * Access control list (ACL) functionality and privileges management.
  *
- * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
+ * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (https://www.zend.com), new BSD license
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  */
