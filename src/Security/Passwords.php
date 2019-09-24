@@ -19,7 +19,7 @@ class Passwords
 {
 	use Nette\SmartObject;
 
-	/** @var int */
+	/** @var int|string  string since PHP 7.4 */
 	private $algo;
 
 	/** @var array */
@@ -29,7 +29,7 @@ class Passwords
 	/**
 	 * See https://php.net/manual/en/password.constants.php
 	 */
-	public function __construct(int $algo = PASSWORD_DEFAULT, array $options = [])
+	public function __construct($algo = PASSWORD_DEFAULT, array $options = [])
 	{
 		$this->algo = $algo;
 		$this->options = $options;
