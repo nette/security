@@ -168,9 +168,7 @@ class User
 	}
 
 
-	/**
-	 * Does the authentication exist?
-	 */
+	/** @deprecated */
 	final public function hasAuthenticator(): bool
 	{
 		return (bool) $this->authenticator;
@@ -288,9 +286,7 @@ class User
 	}
 
 
-	/**
-	 * Does the authorization exist?
-	 */
+	/** @deprecated */
 	final public function hasAuthorizator(): bool
 	{
 		return (bool) $this->authorizator;
