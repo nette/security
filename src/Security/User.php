@@ -149,12 +149,21 @@ class User
 	final public function getAuthenticator(): ?IAuthenticator
 	{
 		if (func_num_args()) {
-			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use hasAuthenticator()', E_USER_DEPRECATED);
+			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthenticatorIfExists()', E_USER_DEPRECATED);
 			$throw = func_get_arg(0);
 		}
 		if (($throw ?? true) && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
 		}
+		return $this->authenticator;
+	}
+
+
+	/**
+	 * Returns authentication handler.
+	 */
+	final public function getAuthenticatorIfExists(): ?IAuthenticator
+	{
 		return $this->authenticator;
 	}
 
@@ -260,12 +269,21 @@ class User
 	final public function getAuthorizator(): ?IAuthorizator
 	{
 		if (func_num_args()) {
-			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use hasAuthorizator()', E_USER_DEPRECATED);
+			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthorizatorIfExists()', E_USER_DEPRECATED);
 			$throw = func_get_arg(0);
 		}
 		if (($throw ?? true) && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');
 		}
+		return $this->authorizator;
+	}
+
+
+	/**
+	 * Returns current authorization handler.
+	 */
+	final public function getAuthorizatorIfExists(): ?IAuthorizator
+	{
 		return $this->authorizator;
 	}
 
