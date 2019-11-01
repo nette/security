@@ -15,7 +15,6 @@ namespace Nette\Security;
  */
 interface IIdentity
 {
-
 	/**
 	 * Returns the ID of user.
 	 * @return mixed

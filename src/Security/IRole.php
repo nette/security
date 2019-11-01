@@ -15,7 +15,6 @@ namespace Nette\Security;
  */
 interface IRole
 {
-
 	/**
 	 * Returns a string identifier of the Role.
 	 */

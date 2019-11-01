@@ -15,7 +15,6 @@ namespace Nette\Security;
  */
 interface IResource
 {
-
 	/**
 	 * Returns a string identifier of the Resource.
 	 */
