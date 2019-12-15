@@ -39,10 +39,10 @@ class UserPanel implements Tracy\IBarPanel
 			return null;
 		}
 
-		ob_start(function () {});
-		$user = $this->user;
-		require __DIR__ . '/templates/UserPanel.tab.phtml';
-		return ob_get_clean();
+		return Nette\Utils\Helpers::capture(function () {
+			$user = $this->user;
+			require __DIR__ . '/templates/UserPanel.tab.phtml';
+		});
 	}
 
 
@@ -51,9 +51,9 @@ class UserPanel implements Tracy\IBarPanel
 	 */
 	public function getPanel(): string
 	{
-		ob_start(function () {});
-		$user = $this->user;
-		require __DIR__ . '/templates/UserPanel.panel.phtml';
-		return ob_get_clean();
+		return Nette\Utils\Helpers::capture(function () {
+			$user = $this->user;
+			require __DIR__ . '/templates/UserPanel.panel.phtml';
+		});
 	}
 }
