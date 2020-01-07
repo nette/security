@@ -3,7 +3,7 @@
 	"description": "🔑 Nette Security: provides authentication, authorization and a role-based access control management via ACL (Access Control List)",
 	"keywords": ["nette", "authentication", "authorization", "ACL"],
 	"homepage": "https://nette.org",
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
 			"name": "David Grudl",
