@@ -53,6 +53,12 @@ class User
 	/** @var IAuthorizator|null */
 	private $authorizator;
 
+	/** @var IIdentity|null|false  false means undefined */
+	private $identity = false;
+
+	/** @var bool|null */
+	private $authenticated;
+
 
 	public function __construct(IUserStorage $storage, IAuthenticator $authenticator = null, IAuthorizator $authorizator = null)
 	{
@@ -84,6 +90,8 @@ class User
 		}
 		$this->storage->setIdentity($user);
 		$this->storage->setAuthenticated(true);
+		$this->identity = $user;
+		$this->authenticated = true;
 		$this->onLoggedIn($this);
 	}
 
@@ -96,9 +104,11 @@ class User
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
 			$this->storage->setAuthenticated(false);
+			$this->authenticated = false;
 		}
 		if ($clearIdentity) {
 			$this->storage->setIdentity(null);
+			$this->identity = null;
 		}
 	}
 
@@ -108,7 +118,10 @@ class User
 	 */
 	final public function isLoggedIn(): bool
 	{
-		return $this->storage->isAuthenticated();
+		if ($this->authenticated === null) {
+			$this->authenticated = $this->storage->isAuthenticated();
+		}
+		return $this->authenticated;
 	}
 
 
@@ -117,7 +130,10 @@ class User
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
-		return $this->storage->getIdentity();
+		if ($this->identity === false) {
+			$this->identity = $this->storage->getIdentity();
+		}
+		return $this->identity;
 	}
 
 
