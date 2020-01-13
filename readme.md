@@ -123,10 +123,12 @@ use Nette\Security as NS;
 class MyAuthenticator implements NS\IAuthenticator
 {
 	public $database;
+	public $passwords;
 
-	function __construct(Nette\Database\Connection $database)
+	function __construct(Nette\Database\Connection $database, NS\Passwords $passwords)
 	{
 		$this->database = $database;
+		$this->passwords = $password;
 	}
 
 	function authenticate(array $credentials)
@@ -139,7 +141,7 @@ class MyAuthenticator implements NS\IAuthenticator
 			throw new NS\AuthenticationException('User not found.');
 		}
 
-		if (!NS\Passwords::verify($password, $row->password)) {
+		if (!$passwords->verify($password, $row->password)) {
 			throw new NS\AuthenticationException('Invalid password.');
 		}
 
