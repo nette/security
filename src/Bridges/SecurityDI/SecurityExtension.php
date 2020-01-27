@@ -35,9 +35,10 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			'users' => Expect::arrayOf(
 				Expect::anyOf(
 					Expect::string(), // user => password
-					Expect::structure([ // user => password + roles
+					Expect::structure([ // user => password + roles + data
 						'password' => Expect::string(),
 						'roles' => Expect::anyOf(Expect::string(), Expect::listOf('string')),
+						'data' => Expect::array(),
 					])->castTo('array')
 				)
 			),
@@ -69,17 +70,18 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($config->users) {
-			$usersList = $usersRoles = [];
+			$usersList = $usersRoles = $usersData = [];
 			foreach ($config->users as $username => $data) {
 				$data = is_array($data) ? $data : ['password' => $data];
-				$this->validateConfig(['password' => null, 'roles' => null], $data, $this->prefix("security.users.$username"));
+				$this->validateConfig(['password' => null, 'roles' => null, 'data' => []], $data, $this->prefix("security.users.$username"));
 				$usersList[$username] = $data['password'];
 				$usersRoles[$username] = $data['roles'] ?? null;
+				$usersData[$username] = $data['data'] ?? [];
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))
 				->setType(Nette\Security\IAuthenticator::class)
-				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles]);
+				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles, $usersData]);
 
 			if ($this->name === 'security') {
 				$builder->addAlias('nette.authenticator', $this->prefix('authenticator'));
