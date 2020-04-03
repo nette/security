@@ -3,3 +3,5 @@ includes:
 
 parameters:
 	treatPhpDocTypesAsCertain: false
+	ignoreErrors:
+		- '#Variable \$this in isset\(\) always exists and is not nullable\.#'
