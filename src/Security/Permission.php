@@ -597,20 +597,17 @@ class Permission implements IAuthorizator
 						break;
 					}
 				}
-			} else {
-				if (($result = $this->getRuleType($resource, null, $privilege)) !== null) { // look for rule on 'allRoles' pseudo-parent
-					break;
-
-				} elseif (($result = $this->getRuleType($resource, null, null)) !== null) {
-					break;
-				}
+			} elseif (($result = $this->getRuleType($resource, null, $privilege)) !== null) { // look for rule on 'allRoles' pseudo-parent
+				break;
+			} elseif (($result = $this->getRuleType($resource, null, null)) !== null) {
+				break;
 			}
 
 			$resource = $this->resources[$resource]['parent']; // try next Resource
 		} while (true);
 
 		$this->queriedRole = $this->queriedResource = null;
-		return $result;
+		return $result ?? false;
 	}
 
 
