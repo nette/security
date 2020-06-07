@@ -41,6 +41,10 @@ class Passwords
 	 */
 	public function hash(string $password): string
 	{
+		if ($password === '') {
+			throw new Nette\InvalidArgumentException('Password can not be empty.');
+		}
+
 		$hash = isset($this)
 			? @password_hash($password, $this->algo, $this->options) // @ is escalated to exception
 			: @password_hash($password, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x

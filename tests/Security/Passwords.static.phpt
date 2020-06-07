@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 // deprecated static usage
 Assert::error(function () {
-	Passwords::hash('');
+	Passwords::hash('my-password');
 }, E_DEPRECATED, 'Non-static method Nette\Security\Passwords::hash() should not be called statically');
 
 Assert::truthy(

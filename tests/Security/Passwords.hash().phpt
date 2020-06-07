@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 Assert::truthy(
-	preg_match('#^\$.{50,}\z#', (new Passwords)->hash(''))
+	preg_match('#^\$.{50,}\z#', (new Passwords)->hash('my-password'))
 );
 
 Assert::truthy(
@@ -27,3 +27,7 @@ Assert::same($hash, crypt('dg', $hash));
 Assert::exception(function () {
 	(new Passwords(PASSWORD_BCRYPT, ['cost' => 3]))->hash('dg');
 }, Nette\InvalidStateException::class, 'Computed hash is invalid. password_hash(): Invalid bcrypt cost parameter specified: 3');
+
+Assert::exception(function () {
+	(new Passwords)->hash('');
+}, Nette\InvalidArgumentException::class, 'Password can not be empty.');
