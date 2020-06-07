@@ -9,7 +9,7 @@ Nette Security: Access Control
 
 
 Introduction
-============
+------------
 
 Authentication & Authorization library for Nette.
 
@@ -25,7 +25,7 @@ If you like Nette, **[please make a donation now](https://nette.org/donate)**. T
 
 
 Installation
-============
+------------
 
 The recommended way to install is via Composer:
 
@@ -37,7 +37,7 @@ It requires PHP version 7.1 and supports PHP up to 7.4.
 
 
 Authentication
-==============
+--------------
 
 Authentication means **user login**, ie. the process during which user's identity is verified. User usually identifies himself using username and password.
 
@@ -80,10 +80,10 @@ The reason of last logout can be obtained by method `$user->getLogoutReason()`, 
 To make the example above work, we in fact have to create an object that verifies user's name and password. It's called **authenticator**. Its trivial implementation is the class Nette\Security\SimpleAuthenticator, which in its constructor accepts an associative array:
 
 ```php
-$authenticator = new Nette\Security\SimpleAuthenticator(array(
+$authenticator = new Nette\Security\SimpleAuthenticator([
 	'john' => 'IJ^%4dfh54*',
 	'kathy' => '12345', // Kathy, this is a very weak password!
-));
+]);
 $user->setAuthenticator($authenticator);
 ```
 
@@ -103,12 +103,12 @@ try {
 
 We usually configure authenticator inside a config file, which only creates the object if it's requested by the application. The example above would be set in `config.neon` as follows:
 
-```
+```yaml
 services:
 	authenticator: Nette\Security\SimpleAuthenticator([
-			john: IJ^%4dfh54*
-			kathy: 12345
-		])
+        john: IJ^%4dfh54*
+        kathy: 12345
+    ])
 ```
 
 
@@ -154,7 +154,7 @@ Class `MyAuthenticator` communicates with the database using Nette\Database laye
 
 This authenticator would be configured in the `config.neon` file like this:
 
-```
+```yaml
 services:
 	authenticator: MyAuthenticator
 ```
@@ -173,7 +173,7 @@ Identity can be access with `getIdentity` upon `$user`:
 
 ```php
 if ($user->isLoggedIn()) {
-	echo 'User logged in: ', $user->getIdentity()->getId();
+	echo 'User logged in: ' . $user->getIdentity()->getId();
 } else {
 	echo 'User is not logged in';
 }
@@ -227,12 +227,10 @@ An implementation skeleton looks like this:
 ```php
 class MyAuthorizator implements Nette\Security\IAuthorizator
 {
-
 	function isAllowed($role, $resource, $privilege)
 	{
 		return ...; // returns either true or false
 	}
-
 }
 ```
 
@@ -320,8 +318,10 @@ Now when we have created the set of rules, we may simply ask the authorization q
 ```php
 // can guest view articles?
 echo $acl->isAllowed('guest', 'article', 'view'); // true
+
 // can guest edit an article?
 echo $acl->isAllowed('guest', 'article', 'edit'); // false
+
 // may guest add comments?
 echo $acl->isAllowed('guest', 'comments', 'add'); // false
 ```
@@ -374,10 +374,12 @@ $acl->isAllowed('mary', 'backend'); // true
 
 
 Multiple applications in one scope
-==================================
+----------------------------------
 
 Multiple applications may work on the same server, session, etc., each with separated authentication logic. We just have to set a unique namespace for each:
 
 ```php
 $user->setNamespace('forum');
 ```
+
+[Continue...](https://doc.nette.org/en/3.0/access-control)
