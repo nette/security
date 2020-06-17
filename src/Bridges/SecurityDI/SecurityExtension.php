@@ -74,7 +74,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$usersList = $usersRoles = $usersData = [];
 			foreach ($config->users as $username => $data) {
 				$data = is_array($data) ? $data : ['password' => $data];
-				$this->validateConfig(['password' => null, 'roles' => null, 'data' => []], $data, $this->prefix("security.users.$username"));
 				$usersList[$username] = $data['password'];
 				$usersRoles[$username] = $data['roles'] ?? null;
 				$usersData[$username] = $data['data'] ?? [];
