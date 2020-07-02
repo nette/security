@@ -301,6 +301,16 @@ class User
 		return $this->authorizator;
 	}
 
+	/**
+	 * Clear identity cache.
+	 * @return $this
+	 */
+	final public function refresh()
+	{
+		$this->identity = false;
+		return $this;
+	}
+
 
 	/** @deprecated */
 	final public function hasAuthorizator(): bool
