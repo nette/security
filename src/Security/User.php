@@ -309,6 +309,7 @@ class User
 	final public function refresh()
 	{
 		$this->identity = false;
+		$this->authenticated = null;
 		return $this;
 	}
 
