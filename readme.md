@@ -22,7 +22,7 @@ Documentation can be found on the [website](https://doc.nette.org/access-control
 
 In the examples, we will use an object of class [Nette\Security\User](https://api.nette.org/3.0/Nette/Security/User.html), which represents the current user.
 
-It requires PHP version 7.1 and supports PHP up to 8.0.
+It requires PHP version 7.2 and supports PHP up to 8.0.
 
 Authentication
 ==============
