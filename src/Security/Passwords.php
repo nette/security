@@ -27,7 +27,8 @@ class Passwords
 
 
 	/**
-	 * See https://php.net/manual/en/password.constants.php
+	 * Chooses which secure algorithm is used for hashing and how to configure it.
+	 * @see https://php.net/manual/en/password.constants.php
 	 */
 	public function __construct($algo = PASSWORD_DEFAULT, array $options = [])
 	{
@@ -37,7 +38,7 @@ class Passwords
 
 
 	/**
-	 * Computes salted password hash.
+	 * Computes password´s hash. The result contains the algorithm ID and its settings, cryptographical salt and the hash itself.
 	 */
 	public function hash(string $password): string
 	{
@@ -57,7 +58,7 @@ class Passwords
 
 
 	/**
-	 * Verifies that a password matches a hash.
+	 * Finds out, whether the given password matches the given hash.
 	 */
 	public function verify(string $password, string $hash): bool
 	{
@@ -66,7 +67,7 @@ class Passwords
 
 
 	/**
-	 * Checks if the given hash matches the options.
+	 * Finds out if the hash matches the options given in constructor.
 	 */
 	public function needsRehash(string $hash): bool
 	{
