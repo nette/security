@@ -13,7 +13,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-test(function () {
+test('', function () {
 	$id = new Identity(12, 'admin', ['name' => 'John']);
 
 	Assert::same(12, $id->getId());
@@ -26,7 +26,7 @@ test(function () {
 });
 
 
-test(function () {
+test('', function () {
 	$id = new Identity('12');
 	Assert::same(12, $id->getId());
 
