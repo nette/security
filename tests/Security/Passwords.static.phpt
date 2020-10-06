@@ -2,6 +2,7 @@
 
 /**
  * Test: Nette\Security\Passwords deprecated static usage
+ * @phpVersion < 8
  */
 
 declare(strict_types=1);
