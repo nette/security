@@ -31,7 +31,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 	public function getConfigSchema(): Nette\Schema\Schema
 	{
 		return Expect::structure([
-			'debugger' => Expect::bool(interface_exists(\Tracy\IBarPanel::class)),
+			'debugger' => Expect::bool(),
 			'users' => Expect::arrayOf(
 				Expect::anyOf(
 					Expect::string(), // user => password
@@ -63,12 +63,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		$user = $builder->addDefinition($this->prefix('user'))
 			->setFactory(Nette\Security\User::class);
-
-		if ($this->debugMode && $config->debugger) {
-			$user->addSetup('@Tracy\Bar::addPanel', [
-				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
-			]);
-		}
 
 		if ($config->users) {
 			$usersList = $usersRoles = $usersData = [];
@@ -108,6 +102,21 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		if ($this->name === 'security') {
 			$builder->addAlias('user', $this->prefix('user'));
 			$builder->addAlias('nette.userStorage', $this->prefix('userStorage'));
+		}
+	}
+
+
+	public function beforeCompile()
+	{
+		$builder = $this->getContainerBuilder();
+
+		if (
+			$this->debugMode &&
+			($this->config->debugger ?? $builder->getByType(\Tracy\Bar::class))
+		) {
+			$builder->getDefinition($this->prefix('user'))->addSetup('@Tracy\Bar::addPanel', [
+				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
+			]);
 		}
 	}
 }
