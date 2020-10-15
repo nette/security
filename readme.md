@@ -13,6 +13,8 @@ Nette Security: Access Control
 - how to create custom authenticators and authorizators
 - Access Control List
 
+It requires PHP version 5.6 and supports PHP up to 8.0.
+
 
 Authentication
 ==============
