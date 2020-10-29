@@ -53,15 +53,18 @@ class User
 	/** @var IAuthorizator|null */
 	private $authorizator;
 
-	/** @var IIdentity|null|false  false means undefined */
+	/** @var IIdentity|false|null  false means undefined */
 	private $identity = false;
 
 	/** @var bool|null */
 	private $authenticated;
 
 
-	public function __construct(IUserStorage $storage, IAuthenticator $authenticator = null, IAuthorizator $authorizator = null)
-	{
+	public function __construct(
+		IUserStorage $storage,
+		IAuthenticator $authenticator = null,
+		IAuthorizator $authorizator = null
+	) {
 		$this->storage = $storage;
 		$this->authenticator = $authenticator;
 		$this->authorizator = $authorizator;

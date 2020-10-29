@@ -389,8 +389,12 @@ class Permission implements IAuthorizator
 	 * @param  string|string[]|null  $privileges
 	 * @return static
 	 */
-	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, callable $assertion = null)
-	{
+	public function allow(
+		$roles = self::ALL,
+		$resources = self::ALL,
+		$privileges = self::ALL,
+		callable $assertion = null
+	) {
 		$this->setRule(true, self::ALLOW, $roles, $resources, $privileges, $assertion);
 		return $this;
 	}
@@ -405,8 +409,12 @@ class Permission implements IAuthorizator
 	 * @param  string|string[]|null  $privileges
 	 * @return static
 	 */
-	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, callable $assertion = null)
-	{
+	public function deny(
+		$roles = self::ALL,
+		$resources = self::ALL,
+		$privileges = self::ALL,
+		callable $assertion = null
+	) {
 		$this->setRule(true, self::DENY, $roles, $resources, $privileges, $assertion);
 		return $this;
 	}
@@ -521,7 +529,7 @@ class Permission implements IAuthorizator
 									'allPrivileges' => [
 										'type' => self::DENY,
 										'assert' => null,
-										],
+									],
 									'byPrivilege' => [],
 								];
 							}
@@ -557,8 +565,8 @@ class Permission implements IAuthorizator
 	 * and its respective parents are checked similarly before the lower-priority parents of
 	 * the Role are checked.
 	 *
-	 * @param  string|null|IRole  $role
-	 * @param  string|null|IResource  $resource
+	 * @param  string|IRole|null  $role
+	 * @param  string|IResource|null  $resource
 	 * @param  string|null  $privilege
 	 * @throws Nette\InvalidStateException
 	 */
@@ -582,7 +590,10 @@ class Permission implements IAuthorizator
 
 		do {
 			// depth-first search on $role if it is not 'allRoles' pseudo-parent
-			if ($role !== null && ($result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege)) !== null) {
+			if (
+				$role !== null
+				&& ($result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege)) !== null
+			) {
 				break;
 			}
 
