@@ -7,7 +7,6 @@ Nette Security: Access Control
 [![Latest Stable Version](https://poser.pugx.org/nette/security/v/stable)](https://github.com/nette/security/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/security/blob/master/license.md)
 
-
 Introduction
 ============
 
@@ -22,6 +21,8 @@ Authentication & Authorization library for Nette.
 Documentation can be found on the [website](https://doc.nette.org/access-control). If you like it, **[please make a donation now](https://github.com/sponsors/dg)**. Thank you!
 
 In the examples, we will use an object of class [Nette\Security\User](https://api.nette.org/3.0/Nette/Security/User.html), which represents the current user.
+
+It requires PHP version 7.1 and supports PHP up to 8.0.
 
 Authentication
 ==============
