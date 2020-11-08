@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use Nette\Security\IIdentity;
+use Nette\Security\Role;
 use Nette\Security\SimpleIdentity;
 use Tester\Assert;
 
@@ -31,7 +32,7 @@ class Authenticator implements Nette\Security\Authenticator
 			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
 		} else {
-			return new SimpleIdentity('John Doe', 'admin');
+			return new SimpleIdentity('John Doe', ['admin', new TesterRole]);
 		}
 	}
 }
@@ -45,6 +46,13 @@ class Authorizator implements Nette\Security\Authorizator
 	}
 }
 
+class TesterRole implements Role
+{
+	public function getRoleId(): string
+	{
+		return 'tester';
+	}
+}
 
 $user = new Nette\Security\User(null, null, null, new MockUserStorage);
 
@@ -54,6 +62,7 @@ Assert::false($user->isLoggedIn());
 
 Assert::same(['guest'], $user->getRoles());
 Assert::false($user->isInRole('admin'));
+Assert::false($user->isInRole('tester'));
 Assert::true($user->isInRole('guest'));
 
 
@@ -65,8 +74,9 @@ $user->setAuthenticator($handler);
 $user->login('john', 'xxx');
 
 Assert::true($user->isLoggedIn());
-Assert::same(['admin'], $user->getRoles());
+Assert::equal(['admin', new TesterRole], $user->getRoles());
 Assert::true($user->isInRole('admin'));
+Assert::true($user->isInRole('tester'));
 Assert::false($user->isInRole('guest'));
 
 
