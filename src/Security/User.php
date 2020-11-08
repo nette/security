@@ -249,7 +249,17 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		return in_array($role, $this->getRoles(), true);
+		$roles = [];
+
+		foreach ($this->getRoles() as $assignedRole) {
+			if ($assignedRole instanceof IRole) {
+				$roles[] = $assignedRole->getRoleId();
+			} else {
+				$roles[] = $assignedRole;
+			}
+		}
+
+		return in_array($role, $roles, true);
 	}
 
 
