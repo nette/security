@@ -7,7 +7,6 @@
 declare(strict_types=1);
 
 use Nette\Security\IAuthenticator;
-use Nette\Security\IAuthorizator;
 use Nette\Security\Identity;
 use Tester\Assert;
 
@@ -39,7 +38,7 @@ class Authenticator implements IAuthenticator
 }
 
 
-class Authorizator implements IAuthorizator
+class Authorizator implements Nette\Security\Authorizator
 {
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
 	{

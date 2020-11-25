@@ -21,7 +21,7 @@ use Nette;
  * @property-read array $roles
  * @property-read int $logoutReason
  * @property   IAuthenticator $authenticator
- * @property   IAuthorizator $authorizator
+ * @property   Authorizator $authorizator
  */
 class User
 {
@@ -50,7 +50,7 @@ class User
 	/** @var IAuthenticator|null */
 	private $authenticator;
 
-	/** @var IAuthorizator|null */
+	/** @var Authorizator|null */
 	private $authorizator;
 
 	/** @var IIdentity|null */
@@ -63,7 +63,7 @@ class User
 	public function __construct(
 		IUserStorage $storage,
 		IAuthenticator $authenticator = null,
-		IAuthorizator $authorizator = null
+		Authorizator $authorizator = null
 	) {
 		$this->storage = $storage;
 		$this->authenticator = $authenticator;
@@ -270,7 +270,7 @@ class User
 	 * Has a user effective access to the Resource?
 	 * If $resource is null, then the query applies to all resources.
 	 */
-	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL): bool
+	public function isAllowed($resource = Authorizator::ALL, $privilege = Authorizator::ALL): bool
 	{
 		foreach ($this->getRoles() as $role) {
 			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
@@ -286,7 +286,7 @@ class User
 	 * Sets authorization handler.
 	 * @return static
 	 */
-	public function setAuthorizator(IAuthorizator $handler)
+	public function setAuthorizator(Authorizator $handler)
 	{
 		$this->authorizator = $handler;
 		return $this;
@@ -296,7 +296,7 @@ class User
 	/**
 	 * Returns current authorization handler.
 	 */
-	final public function getAuthorizator(): ?IAuthorizator
+	final public function getAuthorizator(): ?Authorizator
 	{
 		if (func_num_args()) {
 			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthorizatorIfExists()', E_USER_DEPRECATED);
@@ -312,7 +312,7 @@ class User
 	/**
 	 * Returns current authorization handler.
 	 */
-	final public function getAuthorizatorIfExists(): ?IAuthorizator
+	final public function getAuthorizatorIfExists(): ?Authorizator
 	{
 		return $this->authorizator;
 	}

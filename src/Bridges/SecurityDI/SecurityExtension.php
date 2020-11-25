@@ -84,7 +84,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($config->roles || $config->resources) {
 			$authorizator = $builder->addDefinition($this->prefix('authorizator'))
-				->setType(Nette\Security\IAuthorizator::class)
+				->setType(Nette\Security\Authorizator::class)
 				->setFactory(Nette\Security\Permission::class);
 
 			foreach ($config->roles as $role => $parents) {
