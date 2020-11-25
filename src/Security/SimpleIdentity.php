@@ -19,7 +19,7 @@ use Nette;
  * @property   array $roles
  * @property   array $data
  */
-class Identity implements IIdentity
+class SimpleIdentity implements IIdentity
 {
 	use Nette\SmartObject {
 		__get as private parentGet;
