@@ -13,8 +13,7 @@ use Nette;
 
 
 /**
- * Default implementation of IIdentity.
- *
+ * @deprecated  use Nette\Security\SimpleIdentity
  * @property   mixed $id
  * @property   array $roles
  * @property   array $data
