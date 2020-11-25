@@ -58,7 +58,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			->setFactory(Nette\Security\Passwords::class);
 
 		$builder->addDefinition($this->prefix('userStorage'))
-			->setType(Nette\Security\IUserStorage::class)
+			->setType(Nette\Security\UserStorage::class)
 			->setFactory(Nette\Http\UserStorage::class);
 
 		$user = $builder->addDefinition($this->prefix('user'))
@@ -74,7 +74,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))
-				->setType(Nette\Security\IAuthenticator::class)
+				->setType(Nette\Security\Authenticator::class)
 				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles, $usersData]);
 
 			if ($this->name === 'security') {
@@ -84,7 +84,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($config->roles || $config->resources) {
 			$authorizator = $builder->addDefinition($this->prefix('authorizator'))
-				->setType(Nette\Security\IAuthorizator::class)
+				->setType(Nette\Security\Authorizator::class)
 				->setFactory(Nette\Security\Permission::class);
 
 			foreach ($config->roles as $role => $parents) {

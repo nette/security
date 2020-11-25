@@ -20,8 +20,8 @@ use Nette;
  * @property-read mixed $id
  * @property-read array $roles
  * @property-read int $logoutReason
- * @property   IAuthenticator $authenticator
- * @property   IAuthorizator $authorizator
+ * @property   Authenticator $authenticator
+ * @property   Authorizator $authorizator
  */
 class User
 {
@@ -29,8 +29,8 @@ class User
 
 	/** @deprecated */
 	public const
-		MANUAL = IUserStorage::MANUAL,
-		INACTIVITY = IUserStorage::INACTIVITY;
+		MANUAL = UserStorage::MANUAL,
+		INACTIVITY = UserStorage::INACTIVITY;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -44,13 +44,13 @@ class User
 	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
 	public $onLoggedOut;
 
-	/** @var IUserStorage Session storage for current user */
+	/** @var UserStorage Session storage for current user */
 	private $storage;
 
-	/** @var IAuthenticator|null */
+	/** @var Authenticator|null */
 	private $authenticator;
 
-	/** @var IAuthorizator|null */
+	/** @var Authorizator|null */
 	private $authorizator;
 
 	/** @var IIdentity|false|null  false means undefined */
@@ -61,9 +61,9 @@ class User
 
 
 	public function __construct(
-		IUserStorage $storage,
-		IAuthenticator $authenticator = null,
-		IAuthorizator $authorizator = null
+		UserStorage $storage,
+		Authenticator $authenticator = null,
+		Authorizator $authorizator = null
 	) {
 		$this->storage = $storage;
 		$this->authenticator = $authenticator;
@@ -71,7 +71,7 @@ class User
 	}
 
 
-	final public function getStorage(): IUserStorage
+	final public function getStorage(): UserStorage
 	{
 		return $this->storage;
 	}
@@ -155,7 +155,7 @@ class User
 	 * Sets authentication handler.
 	 * @return static
 	 */
-	public function setAuthenticator(IAuthenticator $handler)
+	public function setAuthenticator(Authenticator $handler)
 	{
 		$this->authenticator = $handler;
 		return $this;
@@ -165,7 +165,7 @@ class User
 	/**
 	 * Returns authentication handler.
 	 */
-	final public function getAuthenticator(): ?IAuthenticator
+	final public function getAuthenticator(): ?Authenticator
 	{
 		if (func_num_args()) {
 			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthenticatorIfExists()', E_USER_DEPRECATED);
@@ -181,7 +181,7 @@ class User
 	/**
 	 * Returns authentication handler.
 	 */
-	final public function getAuthenticatorIfExists(): ?IAuthenticator
+	final public function getAuthenticatorIfExists(): ?Authenticator
 	{
 		return $this->authenticator;
 	}
@@ -195,14 +195,14 @@ class User
 
 
 	/**
-	 * Enables log out after inactivity (like '20 minutes'). Accepts flag IUserStorage::CLEAR_IDENTITY.
+	 * Enables log out after inactivity (like '20 minutes'). Accepts flag UserStorage::CLEAR_IDENTITY.
 	 * @param  string|null  $expire
 	 * @param  int  $flags
 	 * @return static
 	 */
 	public function setExpiration($expire, /*int*/$flags = 0)
 	{
-		$clearIdentity = $flags === IUserStorage::CLEAR_IDENTITY;
+		$clearIdentity = $flags === UserStorage::CLEAR_IDENTITY;
 		if ($expire !== null && !is_string($expire)) {
 			trigger_error("Expiration should be a string like '20 minutes' etc.", E_USER_DEPRECATED);
 		}
@@ -211,9 +211,9 @@ class User
 		}
 		if (func_num_args() > 2) {
 			$clearIdentity = $clearIdentity || func_get_arg(2);
-			trigger_error(__METHOD__ . '() third parameter is deprecated, use flag setExpiration($time, IUserStorage::CLEAR_IDENTITY)', E_USER_DEPRECATED);
+			trigger_error(__METHOD__ . '() third parameter is deprecated, use flag setExpiration($time, UserStorage::CLEAR_IDENTITY)', E_USER_DEPRECATED);
 		}
-		$this->storage->setExpiration($expire, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
+		$this->storage->setExpiration($expire, $clearIdentity ? UserStorage::CLEAR_IDENTITY : 0);
 		return $this;
 	}
 
@@ -257,7 +257,7 @@ class User
 	 * Has a user effective access to the Resource?
 	 * If $resource is null, then the query applies to all resources.
 	 */
-	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL): bool
+	public function isAllowed($resource = Authorizator::ALL, $privilege = Authorizator::ALL): bool
 	{
 		foreach ($this->getRoles() as $role) {
 			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
@@ -273,7 +273,7 @@ class User
 	 * Sets authorization handler.
 	 * @return static
 	 */
-	public function setAuthorizator(IAuthorizator $handler)
+	public function setAuthorizator(Authorizator $handler)
 	{
 		$this->authorizator = $handler;
 		return $this;
@@ -283,7 +283,7 @@ class User
 	/**
 	 * Returns current authorization handler.
 	 */
-	final public function getAuthorizator(): ?IAuthorizator
+	final public function getAuthorizator(): ?Authorizator
 	{
 		if (func_num_args()) {
 			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthorizatorIfExists()', E_USER_DEPRECATED);
@@ -299,7 +299,7 @@ class User
 	/**
 	 * Returns current authorization handler.
 	 */
-	final public function getAuthorizatorIfExists(): ?IAuthorizator
+	final public function getAuthorizatorIfExists(): ?Authorizator
 	{
 		return $this->authorizator;
 	}

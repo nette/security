@@ -13,10 +13,13 @@ namespace Nette\Security;
 /**
  * Represents role, an object that may request access to an IResource.
  */
-interface IRole
+interface Role
 {
 	/**
 	 * Returns a string identifier of the Role.
 	 */
 	function getRoleId(): string;
 }
+
+
+interface_exists(IRole::class);

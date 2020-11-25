@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-use Nette\Security\IAuthenticator;
+use Nette\Security\Authenticator as IAuthenticator;
 use Nette\Security\Identity;
 use Tester\Assert;
 

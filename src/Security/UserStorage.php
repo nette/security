@@ -13,9 +13,9 @@ namespace Nette\Security;
 /**
  * Interface for persistent storage for user object data.
  */
-interface IUserStorage
+interface UserStorage
 {
-	/** Log-out reason {@link IUserStorage::getLogoutReason()} */
+	/** Log-out reason {@link UserStorage::getLogoutReason()} */
 	public const
 		MANUAL = 0b0001,
 		INACTIVITY = 0b0010;
@@ -46,7 +46,7 @@ interface IUserStorage
 	function getIdentity(): ?IIdentity;
 
 	/**
-	 * Enables log out from the persistent storage after inactivity (like '20 minutes'). Accepts flag IUserStorage::CLEAR_IDENTITY.
+	 * Enables log out from the persistent storage after inactivity (like '20 minutes'). Accepts flag UserStorage::CLEAR_IDENTITY.
 	 * @return static
 	 */
 	function setExpiration(?string $expire, int $flags = 0);
@@ -56,3 +56,6 @@ interface IUserStorage
 	 */
 	function getLogoutReason(): ?int;
 }
+
+
+interface_exists(IUserStorage::class);

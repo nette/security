@@ -13,7 +13,7 @@ namespace Nette\Security;
 /**
  * Performs authentication.
  */
-interface IAuthenticator
+interface Authenticator
 {
 	/** Credential key */
 	public const
@@ -34,3 +34,6 @@ interface IAuthenticator
 	 */
 	function authenticate(array $credentials): IIdentity;
 }
+
+
+interface_exists(IAuthenticator::class);

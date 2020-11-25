@@ -13,9 +13,9 @@ use Nette;
 
 
 /**
- * Trivial implementation of IAuthenticator.
+ * Trivial implementation of Authenticator.
  */
-class SimpleAuthenticator implements IAuthenticator
+class SimpleAuthenticator implements Authenticator
 {
 	use Nette\SmartObject;
 
