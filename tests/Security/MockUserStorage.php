@@ -40,5 +40,6 @@ class MockUserStorage implements Nette\Security\IUserStorage
 
 	public function getLogoutReason(): ?int
 	{
+		return null;
 	}
 }

@@ -59,6 +59,9 @@ class User
 	/** @var bool|null */
 	private $authenticated;
 
+	/** @var int|null */
+	private $logoutReason;
+
 
 	public function __construct(
 		IUserStorage $storage,
@@ -99,6 +102,7 @@ class User
 		$this->storage->setIdentity($this->identity);
 		$this->storage->setAuthenticated(true);
 		$this->authenticated = true;
+		$this->logoutReason = null;
 		$this->onLoggedIn($this);
 	}
 
@@ -112,6 +116,7 @@ class User
 			$this->onLoggedOut($this);
 			$this->storage->setAuthenticated(false);
 			$this->authenticated = false;
+			$this->logoutReason = self::MANUAL;
 		}
 		if ($clearIdentity) {
 			$this->storage->setIdentity(null);
@@ -148,6 +153,7 @@ class User
 	{
 		$this->identity = $this->storage->getIdentity();
 		$this->authenticated = $this->identity && $this->storage->isAuthenticated();
+		$this->logoutReason = $this->storage->getLogoutReason();
 	}
 
 
@@ -164,7 +170,7 @@ class User
 
 	final public function refreshStorage(): void
 	{
-		$this->identity = $this->authenticated = null;
+		$this->identity = $this->authenticated = $this->logoutReason = null;
 	}
 
 
@@ -240,7 +246,7 @@ class User
 	 */
 	final public function getLogoutReason(): ?int
 	{
-		return $this->storage->getLogoutReason();
+		return $this->logoutReason;
 	}
 
 
