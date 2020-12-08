@@ -53,7 +53,12 @@ class SimpleIdentity implements IIdentity
 	 */
 	public function setId($id)
 	{
-		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
+		if (is_numeric($id) && !is_float($tmp = $id * 1)) {
+			$id = $tmp;
+		} elseif (!is_scalar($id) || is_bool($id)) {
+			throw new \InvalidArgumentException('Identity identifier must be int, float or string, but type "' . gettype($id) . '" given.');
+		}
+		$this->id = $id;
 		return $this;
 	}
 
