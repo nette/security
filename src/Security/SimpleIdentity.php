@@ -55,7 +55,7 @@ class SimpleIdentity implements IIdentity
 	{
 		if (is_numeric($id) && !is_float($tmp = $id * 1)) {
 			$id = $tmp;
-		} elseif (!is_scalar($id) || is_bool($id)) {
+		} elseif (!is_string($id) && !is_int($id)) {
 			throw new Nette\InvalidArgumentException('Identity identifier must be int, float or string, but type "' . gettype($id) . '" given.');
 		}
 		$this->id = $id;
