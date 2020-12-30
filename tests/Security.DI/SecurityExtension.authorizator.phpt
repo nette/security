@@ -32,7 +32,7 @@ security:
 		article: item
 ', 'neon'));
 
-eval($compiler->addConfig($config)->compile());
+@eval($compiler->addConfig($config)->compile()); // @ is deprecated
 $container = new Container;
 
 $authorizator = $container->getService('security.authorizator');
