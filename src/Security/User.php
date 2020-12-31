@@ -158,6 +158,12 @@ class User
 	}
 
 
+	final public function refreshStorage(): void
+	{
+		$this->identity = $this->authenticated = null;
+	}
+
+
 	/**
 	 * Sets authentication handler.
 	 * @return static
