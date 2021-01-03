@@ -88,12 +88,16 @@ class User
 	public function login($user, string $password = null): void
 	{
 		$this->logout(true);
-		if (!$user instanceof IIdentity) {
-			$user = $this->getAuthenticator()->authenticate(func_get_args());
+		if ($user instanceof IIdentity) {
+			$this->identity = $user;
+		} else {
+			$authenticator = $this->getAuthenticator();
+			$this->identity = $authenticator instanceof Authenticator
+				? $authenticator->authenticate($user, $password)
+				: $authenticator->authenticate(func_get_args());
 		}
-		$this->storage->setIdentity($user);
+		$this->storage->setIdentity($this->identity);
 		$this->storage->setAuthenticated(true);
-		$this->identity = $user;
 		$this->authenticated = true;
 		$this->onLoggedIn($this);
 	}
