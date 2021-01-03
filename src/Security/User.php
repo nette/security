@@ -53,8 +53,8 @@ class User
 	/** @var IAuthorizator|null */
 	private $authorizator;
 
-	/** @var IIdentity|false|null  false means undefined */
-	private $identity = false;
+	/** @var IIdentity|null */
+	private $identity;
 
 	/** @var bool|null */
 	private $authenticated;
@@ -122,7 +122,7 @@ class User
 	final public function isLoggedIn(): bool
 	{
 		if ($this->authenticated === null) {
-			$this->authenticated = $this->storage->isAuthenticated();
+			$this->getStoredData();
 		}
 		return $this->authenticated;
 	}
@@ -133,10 +133,17 @@ class User
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
-		if ($this->identity === false) {
-			$this->identity = $this->storage->getIdentity();
+		if ($this->authenticated === null) {
+			$this->getStoredData();
 		}
 		return $this->identity;
+	}
+
+
+	private function getStoredData(): void
+	{
+		$this->identity = $this->storage->getIdentity();
+		$this->authenticated = $this->identity && $this->storage->isAuthenticated();
 	}
 
 
