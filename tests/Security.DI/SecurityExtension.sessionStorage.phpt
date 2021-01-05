@@ -31,4 +31,6 @@ security:
 eval($compiler->addConfig($config)->compile());
 $container = new Container;
 
-Assert::type(Nette\Bridges\SecurityHttp\SessionStorage::class, $container->getService('security.userStorage'));
+$storage = $container->getService('security.userStorage');
+$user = $container->getService('security.user');
+Assert::type(Nette\Bridges\SecurityHttp\SessionStorage::class, $storage);
