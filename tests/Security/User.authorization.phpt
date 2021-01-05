@@ -46,7 +46,7 @@ class Authorizator implements Nette\Security\Authorizator
 }
 
 
-$user = new Nette\Security\User(new MockUserStorage);
+$user = new Nette\Security\User(null, null, null, new MockUserStorage);
 
 // guest
 Assert::false($user->isLoggedIn());

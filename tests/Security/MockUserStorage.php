@@ -2,44 +2,34 @@
 
 declare(strict_types=1);
 
-class MockUserStorage implements Nette\Security\IUserStorage
+class MockUserStorage implements Nette\Security\UserStorage
 {
 	private $auth = false;
 
 	private $identity;
 
 
-	public function setAuthenticated(bool $state)
+	public function saveAuthentication(Nette\Security\IIdentity $identity): void
 	{
-		$this->auth = $state;
-	}
-
-
-	public function isAuthenticated(): bool
-	{
-		return $this->auth;
-	}
-
-
-	public function setIdentity(Nette\Security\IIdentity $identity = null)
-	{
+		$this->auth = true;
 		$this->identity = $identity;
 	}
 
 
-	public function getIdentity(): ?Nette\Security\IIdentity
+	public function clearAuthentication(bool $clearIdentity): void
 	{
-		return $this->identity;
+		$this->auth = false;
+		$this->identity = $clearIdentity ? null : $this->identity;
 	}
 
 
-	public function setExpiration(?string $time, int $flags = 0)
+	public function getState(): array
 	{
+		return [$this->auth, $this->identity, null];
 	}
 
 
-	public function getLogoutReason(): ?int
+	public function setExpiration(?string $expire, bool $clearIdentity): void
 	{
-		return null;
 	}
 }

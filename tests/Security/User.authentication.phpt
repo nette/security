@@ -36,7 +36,7 @@ class Authenticator implements Nette\Security\Authenticator
 }
 
 
-$user = new Nette\Security\User(new MockUserStorage);
+$user = new Nette\Security\User(null, null, null, new MockUserStorage);
 
 $counter = (object) [
 	'login' => 0,

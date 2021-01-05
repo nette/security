@@ -11,7 +11,7 @@ namespace Nette\Security;
 
 
 /**
- * Interface for persistent storage for user object data.
+ * @deprecated  use Nette\Security\UserStorage
  */
 interface IUserStorage
 {

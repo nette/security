@@ -12,7 +12,7 @@ use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
+require __DIR__ . '/MockUserStorage.legacy.php';
 
 // Setup environment
 $_COOKIE = [];
