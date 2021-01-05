@@ -57,6 +57,9 @@ final class SessionStorage implements Nette\Security\UserStorage
 		$section->authenticated = false;
 		$section->reason = self::LOGOUT_MANUAL;
 		$section->authTime = null;
+		if ($clearIdentity === true) {
+			$section->identity = null;
+		}
 
 		// Session Fixation defence
 		$this->sessionHandler->regenerateId();
