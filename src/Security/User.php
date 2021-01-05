@@ -107,10 +107,13 @@ class User
 				: $authenticator->authenticate(func_get_args());
 		}
 
+		$id = $this->authenticator instanceof IdentityHandler
+			? $this->authenticator->sleepIdentity($this->identity)
+			: $this->identity;
 		if ($this->storage instanceof UserStorage) {
-			$this->storage->saveAuthentication($this->identity);
+			$this->storage->saveAuthentication($id);
 		} else {
-			$this->storage->setIdentity($this->identity);
+			$this->storage->setIdentity($id);
 			$this->storage->setAuthenticated(true);
 		}
 
@@ -171,16 +174,21 @@ class User
 	private function getStoredData(): void
 	{
 		if ($this->storage instanceof UserStorage) {
-			(function (bool $state, ?IIdentity $identity, ?int $reason) {
-				$this->identity = $identity;
-				$this->authenticated = $this->identity && $state;
+			(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
+				$identity = $id;
+				$this->authenticated = $state;
 				$this->logoutReason = $reason;
 			})(...$this->storage->getState());
 		} else {
-			$this->identity = $this->storage->getIdentity();
-			$this->authenticated = $this->identity && $this->storage->isAuthenticated();
+			$identity = $this->storage->getIdentity();
+			$this->authenticated = $this->storage->isAuthenticated();
 			$this->logoutReason = $this->storage->getLogoutReason();
 		}
+
+		$this->identity = $identity && $this->authenticator instanceof IdentityHandler
+			? $this->authenticator->wakeupIdentity($identity)
+			: $identity;
+		$this->authenticated = $this->authenticated && $this->identity;
 	}
 
 
