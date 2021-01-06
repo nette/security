@@ -21,6 +21,8 @@ final class CookieStorage implements Nette\Security\UserStorage
 {
 	use Nette\SmartObject;
 
+	private const MIN_LENGTH = 13;
+
 	/** @var Http\IRequest */
 	private $request;
 
@@ -49,9 +51,13 @@ final class CookieStorage implements Nette\Security\UserStorage
 
 	public function saveAuthentication(IIdentity $identity): void
 	{
+		$uid = (string) $identity->getId();
+		if (strlen($uid) < self::MIN_LENGTH) {
+			throw new \LogicException('UID is too short.');
+		}
 		$this->response->setCookie(
 			$this->cookieName,
-			$identity->getId(),
+			$uid,
 			$this->cookieExpiration,
 			null,
 			$this->cookieDomain
@@ -72,7 +78,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	public function getState(): array
 	{
 		$uid = $this->request->getCookie($this->cookieName);
-		$identity = is_string($uid)
+		$identity = is_string($uid) && strlen($uid) >= self::MIN_LENGTH
 			? new Nette\Security\SimpleIdentity($uid)
 			: null;
 		return [(bool) $identity, $identity, null];
