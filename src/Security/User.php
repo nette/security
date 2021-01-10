@@ -103,7 +103,7 @@ class User
 		} else {
 			$authenticator = $this->getAuthenticator();
 			$this->identity = $authenticator instanceof Authenticator
-				? $authenticator->authenticate($user, $password)
+				? $authenticator->authenticate(...func_get_args())
 				: $authenticator->authenticate(func_get_args());
 		}
 
