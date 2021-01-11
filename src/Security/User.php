@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Security;
 
 use Nette;
+use Nette\Utils\Arrays;
 
 
 /**
@@ -39,10 +40,10 @@ class User
 	public $authenticatedRole = 'authenticated';
 
 	/** @var callable[]  function (User $sender): void; Occurs when the user is successfully logged in */
-	public $onLoggedIn;
+	public $onLoggedIn = [];
 
 	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
-	public $onLoggedOut;
+	public $onLoggedOut = [];
 
 	/** @var UserStorage|IUserStorage  Session storage for current user */
 	private $storage;
@@ -119,7 +120,7 @@ class User
 
 		$this->authenticated = true;
 		$this->logoutReason = null;
-		$this->onLoggedIn($this);
+		Arrays::invoke($this->onLoggedIn, $this);
 	}
 
 
@@ -129,7 +130,7 @@ class User
 	final public function logout(bool $clearIdentity = false): void
 	{
 		if ($this->isLoggedIn()) {
-			$this->onLoggedOut($this);
+			Arrays::invoke($this->onLoggedOut, $this);
 		}
 
 		$this->authenticated = false;
