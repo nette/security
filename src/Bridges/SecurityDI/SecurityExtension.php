@@ -42,8 +42,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 					])->castTo('array')
 				)
 			),
-			'roles' => Expect::arrayOf('string|array|null')->deprecated(), // role => parent(s)
-			'resources' => Expect::arrayOf('string|null')->deprecated(), // resource => parent
+			'roles' => Expect::arrayOf('string|array|null'), // role => parent(s)
+			'resources' => Expect::arrayOf('string|null'), // resource => parent
 			'authentication' => Expect::structure([
 				'storage' => Expect::anyOf('session', 'cookie')->default('session'),
 				'expiration' => Expect::string()->dynamic(),
