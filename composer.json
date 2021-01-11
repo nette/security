@@ -26,8 +26,7 @@
 		"phpstan/phpstan-nette": "^0.12"
 	},
 	"conflict": {
-		"nette/di": "<3.0-stable",
-		"nette/schema": "<1.1"
+		"nette/di": "<3.0-stable"
 	},
 	"autoload": {
 		"classmap": ["src/"]
