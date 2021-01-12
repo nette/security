@@ -129,12 +129,7 @@ class User
 	 */
 	final public function logout(bool $clearIdentity = false): void
 	{
-		if ($this->isLoggedIn()) {
-			Arrays::invoke($this->onLoggedOut, $this);
-		}
-
-		$this->authenticated = false;
-		$this->identity = $clearIdentity ? null : $this->identity;
+		$logged = $this->isLoggedIn();
 
 		if ($this->storage instanceof UserStorage) {
 			$this->storage->clearAuthentication($clearIdentity);
@@ -143,8 +138,14 @@ class User
 			if ($clearIdentity) {
 				$this->storage->setIdentity(null);
 			}
-			$this->logoutReason = self::MANUAL;
 		}
+
+		$this->authenticated = false;
+		$this->logoutReason = self::MANUAL;
+		if ($logged) {
+			Arrays::invoke($this->onLoggedOut, $this);
+		}
+		$this->identity = $clearIdentity ? null : $this->identity;
 	}
 
 
