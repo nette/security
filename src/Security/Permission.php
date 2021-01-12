@@ -566,7 +566,7 @@ class Permission implements Authorizator
 	 * the Role are checked.
 	 *
 	 * @param  string|Role|null  $role
-	 * @param  string|Resource|null  $resource
+	 * @param  string|Nette\Security\Resource|null  $resource
 	 * @param  string|null  $privilege
 	 * @throws Nette\InvalidStateException
 	 */
