@@ -16,12 +16,12 @@ if (false) {
 	}
 
 	/** @deprecated use Nette\Security\Resource */
-	interface IResource
+	interface IResource extends Resource
 	{
 	}
 
 	/** @deprecated use Nette\Security\Role */
-	interface IRole
+	interface IRole extends Role
 	{
 	}
 } elseif (!interface_exists(IAuthorizator::class)) {
