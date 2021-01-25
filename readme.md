@@ -2,7 +2,7 @@ Nette Security: Access Control
 ==============================
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/nette/security.svg)](https://packagist.org/packages/nette/security)
-[![Build Status](https://travis-ci.org/nette/security.svg?branch=master)](https://travis-ci.org/nette/security)
+[![Tests](https://github.com/nette/security/workflows/Tests/badge.svg?branch=master)](https://github.com/nette/security/actions)
 [![Coverage Status](https://coveralls.io/repos/github/nette/security/badge.svg?branch=master)](https://coveralls.io/github/nette/security?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/nette/security/v/stable)](https://github.com/nette/security/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/security/blob/master/license.md)
