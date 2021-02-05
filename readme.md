@@ -18,11 +18,20 @@ Authentication & Authorization library for Nette.
 - how to create custom authenticators and authorizators
 - Access Control List
 
-Documentation can be found on the [website](https://doc.nette.org/access-control). If you like it, **[please make a donation now](https://github.com/sponsors/dg)**. Thank you!
-
-In the examples, we will use an object of class [Nette\Security\User](https://api.nette.org/3.0/Nette/Security/User.html), which represents the current user.
+Documentation can be found on the [website](https://doc.nette.org/access-control).
 
 It requires PHP version 7.2 and supports PHP up to 8.0.
+
+
+[Support Me](https://github.com/sponsors/dg)
+--------------------------------------------
+
+Do you like Nette Security? Are you looking forward to the new features?
+
+[![Buy me a coffee](https://files.nette.org/icons/donation-3.svg)](https://github.com/sponsors/dg)
+
+Thank you!
+
 
 Authentication
 ==============
