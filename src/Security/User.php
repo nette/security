@@ -38,35 +38,25 @@ class User
 		LOGOUT_MANUAL = UserStorage::LOGOUT_MANUAL,
 		LOGOUT_INACTIVITY = UserStorage::LOGOUT_INACTIVITY;
 
-	/** @var string  default role for unauthenticated user */
-	public $guestRole = 'guest';
+	/** default role for unauthenticated user */
+	public string $guestRole = 'guest';
 
-	/** @var string  default role for authenticated user without own identity */
-	public $authenticatedRole = 'authenticated';
+	/** default role for authenticated user without own identity */
+	public string $authenticatedRole = 'authenticated';
 
 	/** @var callable[]  function (User $sender): void; Occurs when the user is successfully logged in */
-	public $onLoggedIn = [];
+	public iterable $onLoggedIn = [];
 
 	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
-	public $onLoggedOut = [];
+	public iterable $onLoggedOut = [];
 
-	/** @var UserStorage|IUserStorage  Session storage for current user */
-	private $storage;
-
-	/** @var IAuthenticator|null */
-	private $authenticator;
-
-	/** @var Authorizator|null */
-	private $authorizator;
-
-	/** @var IIdentity|null */
-	private $identity;
-
-	/** @var bool|null */
-	private $authenticated;
-
-	/** @var int|null */
-	private $logoutReason;
+	/** Session storage for current user */
+	private UserStorage|IUserStorage $storage;
+	private ?IAuthenticator $authenticator;
+	private ?Authorizator $authorizator;
+	private ?IIdentity $identity = null;
+	private ?bool $authenticated = null;
+	private ?int $logoutReason = null;
 
 
 	public function __construct(

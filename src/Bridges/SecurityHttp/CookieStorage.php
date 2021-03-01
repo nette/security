@@ -23,23 +23,12 @@ final class CookieStorage implements Nette\Security\UserStorage
 
 	private const MIN_LENGTH = 13;
 
-	/** @var Http\IRequest */
-	private $request;
-
-	/** @var Http\IResponse */
-	private $response;
-
-	/** @var string */
-	private $cookieName = 'userid';
-
-	/** @var ?string */
-	private $cookieDomain;
-
-	/** @var string */
-	private $cookieSameSite = 'Lax';
-
-	/** @var ?string */
-	private $cookieExpiration;
+	private Http\IRequest $request;
+	private Http\IResponse $response;
+	private string $cookieName = 'userid';
+	private ?string $cookieDomain = null;
+	private string $cookieSameSite = 'Lax';
+	private ?string $cookieExpiration = null;
 
 
 	public function __construct(Http\IRequest $request, Http\IResponse $response)

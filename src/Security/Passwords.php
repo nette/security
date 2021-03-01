@@ -19,11 +19,8 @@ class Passwords
 {
 	use Nette\SmartObject;
 
-	/** @var int|string  string since PHP 7.4 */
-	private $algo;
-
-	/** @var array */
-	private $options;
+	private string $algo;
+	private array $options;
 
 
 	/**
