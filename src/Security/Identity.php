@@ -14,7 +14,7 @@ use Nette;
 
 /**
  * @deprecated  use Nette\Security\SimpleIdentity
- * @property   mixed $id
+ * @property   string|int $id
  * @property   array $roles
  * @property   array $data
  */
@@ -26,14 +26,9 @@ class Identity implements IIdentity
 		__isset as private parentIsSet;
 	}
 
-	/** @var mixed */
-	private $id;
-
-	/** @var array */
-	private $roles;
-
-	/** @var array */
-	private $data;
+	private string|int $id;
+	private array $roles;
+	private array $data;
 
 
 	public function __construct($id, $roles = null, ?iterable $data = null)

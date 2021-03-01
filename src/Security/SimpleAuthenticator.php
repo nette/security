@@ -19,14 +19,9 @@ class SimpleAuthenticator implements Authenticator
 {
 	use Nette\SmartObject;
 
-	/** @var array */
-	private $passwords;
-
-	/** @var array */
-	private $roles;
-
-	/** @var array */
-	private $data;
+	private array $passwords;
+	private array $roles;
+	private array $data;
 
 
 	/**

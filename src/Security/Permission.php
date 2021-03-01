@@ -21,14 +21,11 @@ class Permission implements Authorizator
 {
 	use Nette\SmartObject;
 
-	/** @var array  Role storage */
-	private $roles = [];
+	private array $roles = [];
+	private array $resources = [];
 
-	/** @var array  Resource storage */
-	private $resources = [];
-
-	/** @var array  Access Control List rules; whitelist (deny everything to all) by default */
-	private $rules = [
+	/** Access Control List rules; whitelist (deny everything to all) by default */
+	private array $rules = [
 		'allResources' => [
 			'allRoles' => [
 				'allPrivileges' => [
@@ -42,10 +39,8 @@ class Permission implements Authorizator
 		'byResource' => [],
 	];
 
-	/** @var mixed */
-	private $queriedRole;
-
-	private $queriedResource;
+	private string|Role|null $queriedRole;
+	private string|Resource|null $queriedResource;
 
 
 	/********************* roles ****************d*g**/
