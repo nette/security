@@ -22,14 +22,11 @@ final class SessionStorage implements Nette\Security\UserStorage
 {
 	use Nette\SmartObject;
 
-	/** @var string */
-	private $namespace = '';
+	private string $namespace = '';
 
-	/** @var Session */
-	private $sessionHandler;
+	private Session $sessionHandler;
 
-	/** @var SessionSection */
-	private $sessionSection;
+	private ?SessionSection $sessionSection = null;
 
 
 	public function __construct(Session $sessionHandler)
