@@ -18,8 +18,7 @@ use Nette\Schema\Expect;
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
-	/** @var bool */
-	private $debugMode;
+	private bool $debugMode;
 
 
 	public function __construct(bool $debugMode = false)
