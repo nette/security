@@ -393,7 +393,7 @@ class Permission implements Authorizator
 		$roles = self::ALL,
 		$resources = self::ALL,
 		$privileges = self::ALL,
-		callable $assertion = null
+		callable $assertion = null,
 	) {
 		$this->setRule(true, self::ALLOW, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -413,7 +413,7 @@ class Permission implements Authorizator
 		$roles = self::ALL,
 		$resources = self::ALL,
 		$privileges = self::ALL,
-		callable $assertion = null
+		callable $assertion = null,
 	) {
 		$this->setRule(true, self::DENY, $roles, $resources, $privileges, $assertion);
 		return $this;
