@@ -26,7 +26,7 @@ Assert::same($hash, crypt('dg', $hash));
 
 Assert::exception(function () {
 	(new Passwords(PASSWORD_BCRYPT, ['cost' => 3]))->hash('dg');
-}, PHP_VERSION_ID < 80000 ? Nette\InvalidStateException::class : ValueError::class);
+}, ValueError::class);
 
 Assert::exception(function () {
 	(new Passwords)->hash('');
