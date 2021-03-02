@@ -33,6 +33,11 @@ class User
 		MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY;
 
+	/** Log-out reason */
+	public const
+		LOGOUT_MANUAL = UserStorage::LOGOUT_MANUAL,
+		LOGOUT_INACTIVITY = UserStorage::LOGOUT_INACTIVITY;
+
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
 
@@ -283,7 +288,7 @@ class User
 
 
 	/**
-	 * Why was user logged out?
+	 * Why was user logged out? Returns LOGOUT_MANUAL or LOGOUT_INACTIVITY.
 	 */
 	final public function getLogoutReason(): ?int
 	{
