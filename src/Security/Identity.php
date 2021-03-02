@@ -45,14 +45,9 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets the ID of user.
-	 * @param  string|int  $id
-	 * @return static
 	 */
-	public function setId($id)
+	public function setId(string|int $id): static
 	{
-		if (!is_string($id) && !is_int($id)) {
-			throw new Nette\InvalidArgumentException('Identity identifier must be string|int, but type "' . gettype($id) . '" given.');
-		}
 		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
 		return $this;
 	}
@@ -60,9 +55,8 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns the ID of user.
-	 * @return mixed
 	 */
-	public function getId()
+	public function getId(): string|int
 	{
 		return $this->id;
 	}
@@ -70,9 +64,8 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets a list of roles that the user is a member of.
-	 * @return static
 	 */
-	public function setRoles(array $roles)
+	public function setRoles(array $roles): static
 	{
 		$this->roles = $roles;
 		return $this;
@@ -113,9 +106,8 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns user data value.
-	 * @return mixed
 	 */
-	public function &__get(string $key)
+	public function &__get(string $key): mixed
 	{
 		if ($this->parentIsSet($key)) {
 			return $this->parentGet($key);
