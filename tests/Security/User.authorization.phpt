@@ -54,7 +54,7 @@ class TesterRole implements Role
 	}
 }
 
-$user = new Nette\Security\User(null, null, null, new MockUserStorage);
+$user = new Nette\Security\User(new MockUserStorage);
 
 // guest
 Assert::false($user->isLoggedIn());
