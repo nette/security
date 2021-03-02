@@ -9,9 +9,10 @@ class MockUserStorage implements Nette\Security\IUserStorage
 	private $identity;
 
 
-	public function setAuthenticated(bool $state)
+	public function setAuthenticated(bool $state): self
 	{
 		$this->auth = $state;
+		return $this;
 	}
 
 

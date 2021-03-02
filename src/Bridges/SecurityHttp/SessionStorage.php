@@ -90,9 +90,8 @@ final class SessionStorage implements Nette\Security\UserStorage
 
 	/**
 	 * Changes namespace; allows more users to share a session.
-	 * @return static
 	 */
-	public function setNamespace(string $namespace)
+	public function setNamespace(string $namespace): static
 	{
 		if ($this->namespace !== $namespace) {
 			$this->namespace = $namespace;
