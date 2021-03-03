@@ -14,18 +14,24 @@ if (false) {
 	interface IAuthorizator extends Authorizator
 	{
 	}
+} elseif (!interface_exists(IAuthorizator::class)) {
+	class_alias(Authorizator::class, IAuthorizator::class);
+}
 
+if (false) {
 	/** @deprecated use Nette\Security\Resource */
 	interface IResource extends Resource
 	{
 	}
+} elseif (!interface_exists(IResource::class)) {
+	class_alias(Resource::class, IResource::class);
+}
 
+if (false) {
 	/** @deprecated use Nette\Security\Role */
 	interface IRole extends Role
 	{
 	}
-} elseif (!interface_exists(IAuthorizator::class)) {
-	class_alias(Authorizator::class, IAuthorizator::class);
-	class_alias(Resource::class, IResource::class);
+} elseif (!interface_exists(IRole::class)) {
 	class_alias(Role::class, IRole::class);
 }
