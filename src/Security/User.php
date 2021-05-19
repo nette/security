@@ -287,6 +287,12 @@ class User
 	}
 
 
+	public function isAdmin(): bool
+	{
+		return $this->isInRole('admin');
+	}
+
+
 	/**
 	 * Sets authorization handler.
 	 */
