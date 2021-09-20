@@ -93,7 +93,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))
-				->setType(Nette\Security\IAuthenticator::class)
+				->setType(Nette\Security\Authenticator::class)
 				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles, $usersData]);
 
 			if ($this->name === 'security') {
