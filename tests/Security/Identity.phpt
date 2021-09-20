@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Security\Identity.
+ * Test: Nette\Security\SimpleIdentity.
  */
 
 declare(strict_types=1);
 
-use Nette\Security\Identity;
+use Nette\Security\SimpleIdentity;
 use Tester\Assert;
 
 
@@ -14,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 test('', function () {
-	$id = new Identity(12, 'admin', ['name' => 'John']);
+	$id = new SimpleIdentity(12, 'admin', ['name' => 'John']);
 
 	Assert::same(12, $id->getId());
 	Assert::same(12, $id->id);
@@ -27,10 +27,10 @@ test('', function () {
 
 
 test('', function () {
-	$id = new Identity('12');
+	$id = new SimpleIdentity('12');
 	Assert::same(12, $id->getId());
 
 
-	$id = new Identity('12345678901234567890');
+	$id = new SimpleIdentity('12345678901234567890');
 	Assert::same('12345678901234567890', $id->getId());
 });
