@@ -22,9 +22,3 @@ parameters:
 			identifier: instanceof.alwaysFalse
 			count: 1
 			path: src/Security/User.php
-
-		-
-			message: '#^Parameter \#1 \$credentials of method Nette\\Security\\IAuthenticator\:\:authenticate\(\) expects array\{string, string\}, list\<mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Security/User.php
