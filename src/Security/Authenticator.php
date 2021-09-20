@@ -13,8 +13,15 @@ namespace Nette\Security;
 /**
  * Performs authentication.
  */
-interface Authenticator extends IAuthenticator
+interface Authenticator
 {
+	/** Exception error code */
+	public const
+		IDENTITY_NOT_FOUND = 1,
+		INVALID_CREDENTIAL = 2,
+		FAILURE = 3,
+		NOT_APPROVED = 4;
+
 	/**
 	 * Performs an authentication.
 	 * @throws AuthenticationException
