@@ -21,7 +21,7 @@ use Nette\Utils\Arrays;
  * @property-read string|int $id
  * @property-read array $roles
  * @property-read int $logoutReason
- * @property   IAuthenticator $authenticator
+ * @property   Authenticator $authenticator
  * @property   Authorizator $authorizator
  */
 class User
@@ -64,7 +64,7 @@ class User
 
 	public function __construct(
 		private UserStorage $storage,
-		private ?IAuthenticator $authenticator = null,
+		private ?Authenticator $authenticator = null,
 		private ?Authorizator $authorizator = null,
 	) {
 	}
@@ -95,9 +95,7 @@ class User
 			$this->identity = $username;
 		} else {
 			$authenticator = $this->getAuthenticator();
-			$this->identity = $authenticator instanceof Authenticator
-				? $authenticator->authenticate(...func_get_args())
-				: $authenticator->authenticate(func_get_args());
+			$this->identity = $authenticator->authenticate(...func_get_args());
 		}
 
 		$id = $this->authenticator instanceof IdentityHandler
@@ -188,7 +186,7 @@ class User
 	/**
 	 * Sets authentication handler.
 	 */
-	public function setAuthenticator(IAuthenticator $handler): static
+	public function setAuthenticator(Authenticator $handler): static
 	{
 		$this->authenticator = $handler;
 		return $this;
@@ -198,7 +196,7 @@ class User
 	/**
 	 * Returns authentication handler.
 	 */
-	final public function getAuthenticator(): IAuthenticator
+	final public function getAuthenticator(): Authenticator
 	{
 		if (!$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
@@ -211,7 +209,7 @@ class User
 	/**
 	 * Returns authentication handler.
 	 */
-	final public function getAuthenticatorIfExists(): ?IAuthenticator
+	final public function getAuthenticatorIfExists(): ?Authenticator
 	{
 		return $this->authenticator;
 	}
