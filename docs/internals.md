@@ -150,11 +150,6 @@ logoutReason]`; everything else differs between the two implementations:
 
 ## Legacy seams and BC constraints
 
-- **`User::login()` branches on `instanceof Authenticator`**: the modern
-  interface gets `authenticate($username, $password)`, the deprecated
-  `IAuthenticator` gets a single credentials array. `IAuthenticator::authenticate()`
-  exists only as a commented-out declaration plus `@method` phpDoc — PHP does not
-  enforce it, which is why `phpstan.neon` carries an ignore for `User.php`.
 - `compatibility.php` `class_alias`es the removed `IAuthorizator`/`IResource`/`IRole`
   names and is excluded from PHPStan analysis.
 - **`SimpleIdentity extends Identity` — the deprecated class is the parent**,
@@ -175,4 +170,4 @@ logoutReason]`; everything else differs between the two implementations:
 | Identity lifecycle, veto, seams | `User::loadStoredData`, `login`/`logout`, `IdentityHandler` |
 | Sliding expiration, fixation defence, namespaces | `SessionStorage` |
 | Token-only persistence, `persistIdentity` no-op | `CookieStorage`, `TokenIdentity` |
-| Legacy authenticator dispatch, BC aliases | `User::login`, `IAuthenticator`, `compatibility.php` |
+| BC aliases | `compatibility.php` |
