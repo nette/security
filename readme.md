@@ -102,12 +102,12 @@ $authenticator = new Nette\Security\SimpleAuthenticator([
 
 This solution is more suitable for testing purposes. We will show you how to create an authenticator that will verify credentials against a database table.
 
-An authenticator is an object that implements the [Nette\Security\IAuthenticator](https://api.nette.org/3.0/Nette/Security/IAuthenticator.html) interface with method `authenticate()`. Its task is either to return the so-called [identity](#Identity) or to throw an exception `Nette\Security\AuthenticationException`. It would also be possible to provide an fine-grain error code `IAuthenticator::IDENTITY_NOT_FOUND` or `IAuthenticator::INVALID_CREDENTIAL`.
+An authenticator is an object that implements the [Nette\Security\Authenticator](https://api.nette.org/security/master/Nette/Security/Authenticator.html) interface with method `authenticate()`. Its task is either to return the so-called [identity](#Identity) or to throw an exception `Nette\Security\AuthenticationException`. It would also be possible to provide an fine-grain error code `Authenticator::IDENTITY_NOT_FOUND` or `Authenticator::INVALID_CREDENTIAL`.
 
 ```php
 use Nette;
 
-class MyAuthenticator implements Nette\Security\IAuthenticator
+class MyAuthenticator implements Nette\Security\Authenticator
 {
 	private $database;
 	private $passwords;
@@ -118,10 +118,8 @@ class MyAuthenticator implements Nette\Security\IAuthenticator
 		$this->passwords = $passwords;
 	}
 
-	public function authenticate(array $credentials): Nette\Security\IIdentity
+	public function authenticate($username, $password): Nette\Security\IIdentity
 	{
-		[$username, $password] = $credentials;
-
 		$row = $this->database->table('users')
 			->where('username', $username)
 			->fetch();
@@ -134,7 +132,7 @@ class MyAuthenticator implements Nette\Security\IAuthenticator
 			throw new Nette\Security\AuthenticationException('Invalid password.');
 		}
 
-		return new Nette\Security\Identity(
+		return new Nette\Security\SimpleIdentity(
 			$row->id,
 			$row->role, // or array of roles
 			['name' => $row->username]
@@ -180,7 +178,7 @@ Importantly, **when user logs out, identity is not deleted** and is still availa
 
 Thanks to this, you can still assume which user is at the computer and, for example, display personalized offers in the e-shop, however, you can only display his personal data after logging in.
 
-Identity is an object that implements the [Nette\Security\IIdentity](https://api.nette.org/3.0/Nette/Security/IIdentity.html) interface, the default implementation is [Nette\Security\Identity](https://api.nette.org/3.0/Nette/Security/Identity.html). And as mentioned, identity is stored in the session, so if, for example, we change the role of some of the logged-in users, old data will be kept in the identity until he logs in again.
+Identity is an object that implements the [Nette\Security\IIdentity](https://api.nette.org/master/Nette/Security/IIdentity.html) interface, the default implementation is [Nette\Security\SimpleIdentity](https://api.nette.org/3.0/Nette/Security/SimpleIdentity.html). And as mentioned, identity is stored in the session, so if, for example, we change the role of some of the logged-in users, old data will be kept in the identity until he logs in again.
 
 
 
@@ -201,7 +199,7 @@ if ($user->isLoggedIn()) { // is user logged in?
 Roles
 -----
 
-The purpose of roles is to offer a more precise permission management and remain independent on the user name. As soon as user logs in, he is assigned one or more roles. Roles themselves may be simple strings, for example, `admin`, `member`, `guest`, etc. They are specified in the second argument of `Identity` constructor, either as a string or an array.
+The purpose of roles is to offer a more precise permission management and remain independent on the user name. As soon as user logs in, he is assigned one or more roles. Roles themselves may be simple strings, for example, `admin`, `member`, `guest`, etc. They are specified in the second argument of `SimpleIdentity` constructor, either as a string or an array.
 
 As an authorization criterion, we will now use the method `isInRole()`, which checks whether the user is in the given role:
 
@@ -211,7 +209,7 @@ if ($user->isInRole('admin')) { // is the admin role assigned to the user?
 }
 ```
 
-As you already know, logging the user out does not erase his identity. Thus, method `getIdentity()` still returns object `Identity`, including all granted roles. The Nette Framework adheres to the principle of "less code, more security", so when you are checking roles, you do not have to check whether the user is logged in too. Method `isInRole()` works with **effective roles**, ie if the user is logged in, roles assigned to identity are used, if he is not logged in, an automatic special role `guest` is used instead.
+As you already know, logging the user out does not erase his identity. Thus, method `getIdentity()` still returns object `SimpleIdentity`, including all granted roles. The Nette Framework adheres to the principle of "less code, more security", so when you are checking roles, you do not have to check whether the user is logged in too. Method `isInRole()` works with **effective roles**, ie if the user is logged in, roles assigned to identity are used, if he is not logged in, an automatic special role `guest` is used instead.
 
 
 Authorizator
@@ -223,10 +221,10 @@ In addition to roles, we will introduce the terms resource and operation:
 - **resource** is a logical unit of the application - article, page, user, menu item, poll, presenter, ...
 - **operation** is a specific activity, which user may or may not do with *resource* - view, edit, delete, vote, ...
 
-An authorizer is an object that decides whether a given *role* has permission to perform a certain *operation* with specific *resource*. It is an object implementing the [Nette\Security\IAuthorizator](https://api.nette.org/3.0/Nette/Security/IAuthorizator.html) interface with only one method `isAllowed()`:
+An authorizer is an object that decides whether a given *role* has permission to perform a certain *operation* with specific *resource*. It is an object implementing the [Nette\Security\Authorizator](https://api.nette.org/master/Nette/Security/Authorizator.html) interface with only one method `isAllowed()`:
 
 ```php
-class MyAuthorizator implements Nette\Security\IAuthorizator
+class MyAuthorizator implements Nette\Security\Authorizator
 {
 	public function isAllowed($role, $resource, $operation): bool
 	{
@@ -434,3 +432,5 @@ It is possible to have several independent logged users within one site and one 
 ```php
 $user->getStorage()->setNamespace('forum');
 ```
+
+[Continue...](https://doc.nette.org/en/security/authentication)
