@@ -171,4 +171,4 @@ logoutReason]`; everything else differs between the two implementations:
 | Identity lifecycle, veto, seams | `User::loadStoredData`, `login`/`logout`, `IdentityHandler` |
 | Sliding expiration, fixation defence, namespaces | `SessionStorage` |
 | Token-only persistence, `persistIdentity` no-op | `CookieStorage`, `TokenIdentity` |
-| BC aliases, serialized identities | `compatibility.php`, `compatibility-intf.php` |
+| BC aliases, serialized identities | `compatibility.php`, `compatibility-intf.php`, `SimpleIdentity::__unserialize` |

@@ -7,6 +7,7 @@
 
 namespace Nette\Security;
 
+use Nette;
 use function in_array, is_string;
 
 
@@ -121,6 +122,37 @@ class SimpleIdentity implements IIdentity
 	public function __isset(string $key): bool
 	{
 		return isset($this->data[$key]) || in_array($key, ['id', 'roles', 'data'], true);
+	}
+
+
+	/**
+	 * Returns id, roles, data and the public and protected properties of a subclass.
+	 * @return array<string, mixed>
+	 */
+	public function __serialize(): array
+	{
+		return get_object_vars($this);
+	}
+
+
+	/**
+	 * Restores also the format of 3.x. Private properties of a subclass are left to the subclass.
+	 * @param  array<string, mixed>  $data
+	 */
+	public function __unserialize(array $data): void
+	{
+		$old = "\0Nette\\Security\\Identity\0";
+		$this->id = $data['id'] ?? $data[$old . 'id'] ?? throw new Nette\InvalidStateException('The serialized identity has no ID.');
+		$this->roles = $data['roles'] ?? $data[$old . 'roles'] ?? [];
+		$this->data = $data['data'] ?? $data[$old . 'data'] ?? [];
+		unset($data['id'], $data['roles'], $data['data']);
+
+		foreach ($data as $key => $value) {
+			$name = str_starts_with($key, "\0*\0") ? substr($key, 3) : $key;
+			if (property_exists($this, $name) && !new \ReflectionProperty($this, $name)->isPrivate()) {
+				$this->$name = $value;
+			}
+		}
 	}
 }
 
