@@ -11,7 +11,7 @@ namespace Nette\Security;
 /**
  * Performs authentication.
  */
-interface Authenticator extends IAuthenticator
+interface Authenticator
 {
 	/** Exception error code */
 	public const
