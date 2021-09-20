@@ -122,4 +122,22 @@ class SimpleIdentity implements IIdentity
 	{
 		return isset($this->data[$key]) || $this->parentIsSet($key);
 	}
+
+
+	public function __serialize(): array
+	{
+		return [
+			'id' => $this->id,
+			'roles' => $this->roles,
+			'data' => $this->data,
+		];
+	}
+
+
+	public function __unserialize(array $data): void
+	{
+		$this->id = $data['id'] ?? $data["\00Nette\\Security\\Identity\00id"] ?? 0;
+		$this->roles = $data['roles'] ?? $data["\00Nette\\Security\\Identity\00roles"] ?? [];
+		$this->data = $data['data'] ?? $data["\00Nette\\Security\\Identity\00data"] ?? [];
+	}
 }
