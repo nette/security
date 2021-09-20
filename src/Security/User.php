@@ -30,8 +30,8 @@ class User
 
 	/** @deprecated */
 	public const
-		MANUAL = IUserStorage::MANUAL,
-		INACTIVITY = IUserStorage::INACTIVITY;
+		MANUAL = UserStorage::LOGOUT_MANUAL,
+		INACTIVITY = UserStorage::LOGOUT_INACTIVITY;
 
 	/** Log-out reason */
 	public const
