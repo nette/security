@@ -17,11 +17,11 @@ use function func_get_args;
  *
  * @property-read bool $loggedIn
  * @property-read ?IIdentity $identity
- * @property-read string|int|null $id
- * @property-read string[] $roles
- * @property-read ?int $logoutReason
- * @property   Authenticator $authenticator
- * @property   Authorizator $authorizator
+ * @property-deprecated string|int|null $id
+ * @property-deprecated string[] $roles
+ * @property-deprecated ?int $logoutReason
+ * @property-deprecated Authenticator $authenticator
+ * @property-deprecated Authorizator $authorizator
  */
 class User
 {
