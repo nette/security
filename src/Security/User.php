@@ -16,13 +16,13 @@ use Nette\Utils\Arrays;
 /**
  * User authentication and authorization.
  *
- * @property-read bool $loggedIn
- * @property-read IIdentity $identity
- * @property-read string|int $id
- * @property-read array $roles
- * @property-read int $logoutReason
- * @property   Authenticator $authenticator
- * @property   Authorizator $authorizator
+ * @property-deprecated bool $loggedIn
+ * @property-deprecated IIdentity $identity
+ * @property-deprecated string|int $id
+ * @property-deprecated array $roles
+ * @property-deprecated int $logoutReason
+ * @property-deprecated Authenticator $authenticator
+ * @property-deprecated Authorizator $authorizator
  */
 class User
 {
