@@ -15,30 +15,31 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
-		"nette/utils": "^3.1"
+		"php": ">=8.0 <8.2",
+		"nette/utils": "^3.2.1 || ^4.0"
 	},
 	"require-dev": {
-		"nette/di": "^3.0.0",
-		"nette/http": "^3.0.0",
-		"nette/tester": "^2.0",
-		"tracy/tracy": "^2.4",
+		"nette/di": "^4.0",
+		"nette/http": "^4.0",
+		"nette/tester": "^2.4",
+		"tracy/tracy": "^2.8",
 		"phpstan/phpstan-nette": "^0.12"
 	},
 	"conflict": {
-		"nette/di": "<3.0-stable"
+		"nette/di": "<3.0-stable",
+		"nette/http": "<3.1.3"
 	},
 	"autoload": {
 		"classmap": ["src/"]
 	},
 	"minimum-stability": "dev",
 	"scripts": {
-		"phpstan": "phpstan analyse --level 5 --configuration tests/phpstan.neon src",
+		"phpstan": "phpstan analyse",
 		"tester": "tester tests -s"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.0-dev"
+			"dev-master": "4.0-dev"
 		}
 	}
 }

@@ -31,7 +31,7 @@ $expectedData = [
 $authenticator = new SimpleAuthenticator($users, [], $usersData);
 
 foreach ($users as $username => $password) {
-	$identity = $authenticator->authenticate([$username, $password]);
+	$identity = $authenticator->authenticate($username, $password);
 	Assert::equal($username, $identity->getId());
 	Assert::equal($expectedData[$username], $identity->getData());
 }

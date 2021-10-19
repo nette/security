@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-use Nette\Security\IAuthenticator;
-use Nette\Security\IAuthorizator;
-use Nette\Security\Identity;
+use Nette\Security\IIdentity;
+use Nette\Security\Role;
+use Nette\Security\SimpleIdentity;
 use Tester\Assert;
 
 
@@ -21,11 +21,10 @@ $_COOKIE = [];
 ob_start();
 
 
-class Authenticator implements IAuthenticator
+class Authenticator implements Nette\Security\Authenticator
 {
-	public function authenticate(array $credentials): Nette\Security\IIdentity
+	public function authenticate(string $username, string $password): IIdentity
 	{
-		[$username, $password] = $credentials;
 		if ($username !== 'john') {
 			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 
@@ -33,13 +32,13 @@ class Authenticator implements IAuthenticator
 			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
 		} else {
-			return new Identity('John Doe', ['admin']);
+			return new SimpleIdentity('John Doe', ['admin', new TesterRole]);
 		}
 	}
 }
 
 
-class Authorizator implements IAuthorizator
+class Authorizator implements Nette\Security\Authorizator
 {
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
 	{
@@ -47,6 +46,13 @@ class Authorizator implements IAuthorizator
 	}
 }
 
+class TesterRole implements Role
+{
+	public function getRoleId(): string
+	{
+		return 'tester';
+	}
+}
 
 $user = new Nette\Security\User(new MockUserStorage);
 
@@ -56,6 +62,7 @@ Assert::false($user->isLoggedIn());
 
 Assert::same(['guest'], $user->getRoles());
 Assert::false($user->isInRole('admin'));
+Assert::false($user->isInRole('tester'));
 Assert::true($user->isInRole('guest'));
 
 
@@ -67,8 +74,9 @@ $user->setAuthenticator($handler);
 $user->login('john', 'xxx');
 
 Assert::true($user->isLoggedIn());
-Assert::same(['admin'], $user->getRoles());
+Assert::equal(['admin', new TesterRole], $user->getRoles());
 Assert::true($user->isInRole('admin'));
+Assert::true($user->isInRole('tester'));
 Assert::false($user->isInRole('guest'));
 
 

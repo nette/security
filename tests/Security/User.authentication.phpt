@@ -6,8 +6,8 @@
 
 declare(strict_types=1);
 
-use Nette\Security\IAuthenticator;
-use Nette\Security\Identity;
+use Nette\Security\IIdentity;
+use Nette\Security\SimpleIdentity;
 use Tester\Assert;
 
 
@@ -19,11 +19,10 @@ $_COOKIE = [];
 ob_start();
 
 
-class Authenticator implements IAuthenticator
+class Authenticator implements Nette\Security\Authenticator
 {
-	public function authenticate(array $credentials): Nette\Security\IIdentity
+	public function authenticate(string $username, string $password): IIdentity
 	{
-		[$username, $password] = $credentials;
 		if ($username !== 'john') {
 			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 
@@ -31,7 +30,7 @@ class Authenticator implements IAuthenticator
 			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
 		} else {
-			return new Identity('John Doe', 'admin');
+			return new SimpleIdentity('John Doe', 'admin');
 		}
 	}
 }
@@ -81,16 +80,16 @@ Assert::exception(function () use ($user) {
 $user->login('john', 'xxx');
 Assert::same(1, $counter->login);
 Assert::true($user->isLoggedIn());
-Assert::equal(new Identity('John Doe', 'admin'), $user->getIdentity());
+Assert::equal(new SimpleIdentity('John Doe', 'admin'), $user->getIdentity());
 Assert::same('John Doe', $user->getId());
 
 // login as john#3
 $user->logout(true);
 Assert::same(1, $counter->logout);
-$user->login(new Identity('John Doe', 'admin'));
+$user->login(new SimpleIdentity('John Doe', 'admin'));
 Assert::same(2, $counter->login);
 Assert::true($user->isLoggedIn());
-Assert::equal(new Identity('John Doe', 'admin'), $user->getIdentity());
+Assert::equal(new SimpleIdentity('John Doe', 'admin'), $user->getIdentity());
 
 
 // log out
@@ -99,7 +98,7 @@ $user->logout(false);
 Assert::same(2, $counter->logout);
 
 Assert::false($user->isLoggedIn());
-Assert::equal(new Identity('John Doe', 'admin'), $user->getIdentity());
+Assert::equal(new SimpleIdentity('John Doe', 'admin'), $user->getIdentity());
 
 
 // logging out and clearing identity...

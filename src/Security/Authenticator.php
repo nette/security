@@ -13,13 +13,8 @@ namespace Nette\Security;
 /**
  * Performs authentication.
  */
-interface IAuthenticator
+interface Authenticator
 {
-	/** Credential key */
-	public const
-		USERNAME = 0,
-		PASSWORD = 1;
-
 	/** Exception error code */
 	public const
 		IDENTITY_NOT_FOUND = 1,
@@ -28,9 +23,8 @@ interface IAuthenticator
 		NOT_APPROVED = 4;
 
 	/**
-	 * Performs an authentication against e.g. database.
-	 * and returns IIdentity on success or throws AuthenticationException
+	 * Performs an authentication.
 	 * @throws AuthenticationException
 	 */
-	function authenticate(array $credentials): IIdentity;
+	function authenticate(string $user, string $password): IIdentity;
 }

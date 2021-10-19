@@ -14,11 +14,11 @@ require __DIR__ . '/../bootstrap.php';
 
 
 Assert::truthy(
-	preg_match('#^\$.{50,}\z#', (new Passwords)->hash('my-password'))
+	preg_match('#^\$.{50,}\z#', (new Passwords)->hash('my-password')),
 );
 
 Assert::truthy(
-	preg_match('#^\$2y\$05\$.{53}\z#', (new Passwords(PASSWORD_BCRYPT, ['cost' => 5]))->hash('dg'))
+	preg_match('#^\$2y\$05\$.{53}\z#', (new Passwords(PASSWORD_BCRYPT, ['cost' => 5]))->hash('dg')),
 );
 
 $hash = (new Passwords(PASSWORD_BCRYPT))->hash('dg');
@@ -26,7 +26,7 @@ Assert::same($hash, crypt('dg', $hash));
 
 Assert::exception(function () {
 	(new Passwords(PASSWORD_BCRYPT, ['cost' => 3]))->hash('dg');
-}, Nette\InvalidStateException::class, 'Computed hash is invalid. password_hash(): Invalid bcrypt cost parameter specified: 3');
+}, PHP_VERSION_ID < 80000 ? Nette\InvalidStateException::class : ValueError::class);
 
 Assert::exception(function () {
 	(new Passwords)->hash('');

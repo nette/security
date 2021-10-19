@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ */
+
+declare(strict_types=1);
+
+namespace Nette\Bridges\SecurityHttp;
+
+use Nette;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
+use Nette\Security\IIdentity;
+
+
+/**
+ * Session storage for Nette\Security\User object.
+ */
+final class SessionStorage implements Nette\Security\UserStorage
+{
+	use Nette\SmartObject;
+
+	private string $namespace = '';
+
+	private Session $sessionHandler;
+
+	private ?SessionSection $sessionSection = null;
+
+
+	public function __construct(Session $sessionHandler)
+	{
+		$this->sessionHandler = $sessionHandler;
+	}
+
+
+	public function saveAuthentication(IIdentity $identity): void
+	{
+		$section = $this->getSessionSection();
+		$section->set('authenticated', true);
+		$section->set('reason', null);
+		$section->set('authTime', time()); // informative value
+		$section->set('identity', $identity);
+
+		// Session Fixation defence
+		$this->sessionHandler->regenerateId();
+	}
+
+
+	public function clearAuthentication(bool $clearIdentity): void
+	{
+		$section = $this->getSessionSection();
+		$section->set('authenticated', false);
+		$section->set('reason', self::LOGOUT_MANUAL);
+		$section->set('authTime', null);
+		if ($clearIdentity === true) {
+			$section->set('identity', null);
+		}
+
+		// Session Fixation defence
+		$this->sessionHandler->regenerateId();
+	}
+
+
+	public function getState(): array
+	{
+		$section = $this->getSessionSection();
+		return $section
+			? [(bool) $section->get('authenticated'), $section->get('identity'), $section->get('reason')]
+			: [false, null, null];
+	}
+
+
+	public function setExpiration(?string $time, bool $clearIdentity = false): void
+	{
+		$section = $this->getSessionSection();
+		if ($time) {
+			$time = Nette\Utils\DateTime::from($time)->format('U');
+			$section->set('expireTime', $time);
+			$section->set('expireDelta', $time - time());
+		} else {
+			$section->remove(['expireTime', 'expireDelta']);
+		}
+
+		$section->set('expireIdentity', (bool) $clearIdentity);
+		$section->setExpiration($time, 'foo'); // time check
+	}
+
+
+	/**
+	 * Changes namespace; allows more users to share a session.
+	 */
+	public function setNamespace(string $namespace): static
+	{
+		if ($this->namespace !== $namespace) {
+			$this->namespace = $namespace;
+			$this->sessionSection = null;
+		}
+		return $this;
+	}
+
+
+	/**
+	 * Returns current namespace.
+	 */
+	public function getNamespace(): string
+	{
+		return $this->namespace;
+	}
+
+
+	/**
+	 * Returns and initializes $this->sessionSection.
+	 */
+	protected function getSessionSection(): ?SessionSection
+	{
+		if ($this->sessionSection !== null) {
+			return $this->sessionSection;
+		}
+
+		$this->sessionSection = $section = $this->sessionHandler->getSection('Nette.Http.UserStorage/' . $this->namespace);
+
+		if (!$section->get('identity') instanceof IIdentity || !is_bool($section->get('authenticated'))) {
+			$section->remove();
+		}
+
+		if ($section->get('authenticated') && $section->get('expireDelta') > 0) { // check time expiration
+			if ($section->get('expireTime') < time()) {
+				$section->set('reason', self::LOGOUT_INACTIVITY);
+				$section->set('authenticated', false);
+				if ($section->get('expireIdentity')) {
+					$section->remove('identity');
+				}
+			}
+			$section->set('expireTime', time() + $section->expireDelta); // sliding expiration
+		}
+
+		if (!$section->get('authenticated')) {
+			$section->remove(['expireTime', 'expireDelta', 'expireIdentity', 'authTime']);
+		}
+
+		return $this->sessionSection;
+	}
+}

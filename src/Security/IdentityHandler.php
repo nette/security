@@ -11,12 +11,11 @@ namespace Nette\Security;
 
 
 /**
- * Represents role, an object that may request access to an IResource.
+ * Adjusts identity from/to storage.
  */
-interface IRole
+interface IdentityHandler
 {
-	/**
-	 * Returns a string identifier of the Role.
-	 */
-	function getRoleId(): string;
+	function sleepIdentity(IIdentity $identity): IIdentity;
+
+	function wakeupIdentity(IIdentity $identity): ?IIdentity;
 }

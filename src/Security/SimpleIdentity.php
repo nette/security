@@ -14,12 +14,11 @@ use Nette;
 
 /**
  * Default implementation of IIdentity.
- *
- * @property   mixed $id
+ * @property   string|int $id
  * @property   array $roles
  * @property   array $data
  */
-class Identity implements IIdentity
+class SimpleIdentity implements IIdentity
 {
 	use Nette\SmartObject {
 		__get as private parentGet;
@@ -27,29 +26,27 @@ class Identity implements IIdentity
 		__isset as private parentIsSet;
 	}
 
-	/** @var mixed */
-	private $id;
+	private string|int $id;
 
-	/** @var array */
-	private $roles;
+	private array $roles;
 
-	/** @var array */
-	private $data;
+	private array $data;
 
 
 	public function __construct($id, $roles = null, iterable $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);
-		$this->data = $data instanceof \Traversable ? iterator_to_array($data) : (array) $data;
+		$this->data = $data instanceof \Traversable
+			? iterator_to_array($data)
+			: (array) $data;
 	}
 
 
 	/**
 	 * Sets the ID of user.
-	 * @return static
 	 */
-	public function setId($id)
+	public function setId(string|int $id): static
 	{
 		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
 		return $this;
@@ -58,9 +55,8 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns the ID of user.
-	 * @return mixed
 	 */
-	public function getId()
+	public function getId(): string|int
 	{
 		return $this->id;
 	}
@@ -68,9 +64,8 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets a list of roles that the user is a member of.
-	 * @return static
 	 */
-	public function setRoles(array $roles)
+	public function setRoles(array $roles): static
 	{
 		$this->roles = $roles;
 		return $this;
@@ -111,9 +106,8 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns user data value.
-	 * @return mixed
 	 */
-	public function &__get(string $key)
+	public function &__get(string $key): mixed
 	{
 		if ($this->parentIsSet($key)) {
 			return $this->parentGet($key);
@@ -127,5 +121,23 @@ class Identity implements IIdentity
 	public function __isset(string $key): bool
 	{
 		return isset($this->data[$key]) || $this->parentIsSet($key);
+	}
+
+
+	public function __serialize(): array
+	{
+		return [
+			'id' => $this->id,
+			'roles' => $this->roles,
+			'data' => $this->data,
+		];
+	}
+
+
+	public function __unserialize(array $data): void
+	{
+		$this->id = $data['id'] ?? $data["\00Nette\\Security\\Identity\00id"] ?? 0;
+		$this->roles = $data['roles'] ?? $data["\00Nette\\Security\\Identity\00roles"] ?? [];
+		$this->data = $data['data'] ?? $data["\00Nette\\Security\\Identity\00data"] ?? [];
 	}
 }

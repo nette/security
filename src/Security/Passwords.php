@@ -19,17 +19,16 @@ class Passwords
 {
 	use Nette\SmartObject;
 
-	/** @var int|string  string since PHP 7.4 */
-	private $algo;
+	private string $algo;
 
-	/** @var array */
-	private $options;
+	private array $options;
 
 
 	/**
-	 * See https://php.net/manual/en/password.constants.php
+	 * Chooses which secure algorithm is used for hashing and how to configure it.
+	 * @see https://php.net/manual/en/password.constants.php
 	 */
-	public function __construct($algo = PASSWORD_DEFAULT, array $options = [])
+	public function __construct(string $algo = PASSWORD_DEFAULT, array $options = [])
 	{
 		$this->algo = $algo;
 		$this->options = $options;
@@ -37,7 +36,7 @@ class Passwords
 
 
 	/**
-	 * Computes salted password hash.
+	 * Computes password´s hash. The result contains the algorithm ID and its settings, cryptographical salt and the hash itself.
 	 */
 	public function hash(string $password): string
 	{
@@ -45,10 +44,7 @@ class Passwords
 			throw new Nette\InvalidArgumentException('Password can not be empty.');
 		}
 
-		$hash = isset($this)
-			? @password_hash($password, $this->algo, $this->options) // @ is escalated to exception
-			: @password_hash($password, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x
-
+		$hash = @password_hash($password, $this->algo, $this->options); // @ is escalated to exception
 		if (!$hash) {
 			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
 		}
@@ -57,7 +53,7 @@ class Passwords
 
 
 	/**
-	 * Verifies that a password matches a hash.
+	 * Finds out, whether the given password matches the given hash.
 	 */
 	public function verify(string $password, string $hash): bool
 	{
@@ -66,12 +62,10 @@ class Passwords
 
 
 	/**
-	 * Checks if the given hash matches the options.
+	 * Finds out if the hash matches the options given in constructor.
 	 */
 	public function needsRehash(string $hash): bool
 	{
-		return isset($this)
-			? password_needs_rehash($hash, $this->algo, $this->options)
-			: password_needs_rehash($hash, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x
+		return password_needs_rehash($hash, $this->algo, $this->options);
 	}
 }

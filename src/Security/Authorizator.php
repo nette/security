@@ -14,7 +14,7 @@ namespace Nette\Security;
  * Authorizator checks if a given role has authorization
  * to access a given resource.
  */
-interface IAuthorizator
+interface Authorizator
 {
 	/** Set type: all */
 	public const ALL = null;
@@ -27,9 +27,9 @@ interface IAuthorizator
 
 	/**
 	 * Performs a role-based authorization.
-	 * @param  string|null  $role
-	 * @param  string|null  $resource
-	 * @param  string|null  $privilege
 	 */
-	function isAllowed($role, $resource, $privilege): bool;
+	function isAllowed(?string $role, ?string $resource, ?string $privilege): bool;
 }
+
+
+interface_exists(IAuthorizator::class);

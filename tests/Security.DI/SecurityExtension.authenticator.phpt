@@ -52,7 +52,7 @@ $expectedRoles = [
 ];
 
 foreach ($userList as $username => $password) {
-	$identity = $authenticator->authenticate([$username, $password]);
+	$identity = $authenticator->authenticate($username, $password);
 	Assert::equal($username, $identity->getId());
 	Assert::equal($expectedRoles[$username], $identity->getRoles());
 }

@@ -20,8 +20,7 @@ class UserPanel implements Tracy\IBarPanel
 {
 	use Nette\SmartObject;
 
-	/** @var Nette\Security\User */
-	private $user;
+	private Nette\Security\User $user;
 
 
 	public function __construct(Nette\Security\User $user)
@@ -35,12 +34,14 @@ class UserPanel implements Tracy\IBarPanel
 	 */
 	public function getTab(): ?string
 	{
-		if (headers_sent() && !session_id()) {
+		if (!session_id()) {
 			return null;
 		}
 
 		return Nette\Utils\Helpers::capture(function () {
-			$user = $this->user;
+			$status = session_status() === PHP_SESSION_ACTIVE
+				? $this->user->isLoggedIn()
+				: '?';
 			require __DIR__ . '/templates/UserPanel.tab.phtml';
 		});
 	}
@@ -49,8 +50,11 @@ class UserPanel implements Tracy\IBarPanel
 	/**
 	 * Renders panel.
 	 */
-	public function getPanel(): string
+	public function getPanel(): ?string
 	{
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			return null;
+		}
 		return Nette\Utils\Helpers::capture(function () {
 			$user = $this->user;
 			require __DIR__ . '/templates/UserPanel.panel.phtml';
