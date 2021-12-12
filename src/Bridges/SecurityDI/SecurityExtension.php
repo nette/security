@@ -80,10 +80,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$storage->addSetup('setCookieParameters', [$auth->cookieName, $auth->cookieDomain, $auth->cookieSamesite]);
 		}
 
-		$builder->addDefinition($this->prefix('legacyUserStorage')) // deprecated
-			->setType(Nette\Security\IUserStorage::class)
-			->setFactory(Nette\Http\UserStorage::class);
-
 		$user = $builder->addDefinition($this->prefix('user'))
 			->setFactory(Nette\Security\User::class);
 

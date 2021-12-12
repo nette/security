@@ -54,7 +54,7 @@ class User
 	public array $onLoggedOut = [];
 
 	/** Session storage for current user */
-	private UserStorage|IUserStorage $storage;
+	private UserStorage $storage;
 	private ?IAuthenticator $authenticator;
 	private ?Authorizator $authorizator;
 	private ?IIdentity $identity = null;
@@ -63,22 +63,17 @@ class User
 
 
 	public function __construct(
-		?IUserStorage $legacyStorage = null,
+		UserStorage $storage,
 		?IAuthenticator $authenticator = null,
 		?Authorizator $authorizator = null,
-		?UserStorage $storage = null,
 	) {
-		$this->storage = $storage ?? $legacyStorage; // back compatibility
-		if (!$this->storage) {
-			throw new Nette\InvalidStateException('UserStorage has not been set.');
-		}
-
+		$this->storage = $storage;
 		$this->authenticator = $authenticator;
 		$this->authorizator = $authorizator;
 	}
 
 
-	final public function getStorage(): UserStorage|IUserStorage
+	final public function getStorage(): UserStorage
 	{
 		return $this->storage;
 	}
@@ -111,13 +106,8 @@ class User
 		$id = $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->sleepIdentity($this->identity)
 			: $this->identity;
-		if ($this->storage instanceof UserStorage) {
-			$this->storage->saveAuthentication($id);
-		} else {
-			$this->storage->setIdentity($id);
-			$this->storage->setAuthenticated(true);
-		}
 
+		$this->storage->saveAuthentication($id);
 		$this->authenticated = true;
 		$this->logoutReason = null;
 		Arrays::invoke($this->onLoggedIn, $this);
@@ -130,16 +120,7 @@ class User
 	final public function logout(bool $clearIdentity = false): void
 	{
 		$logged = $this->isLoggedIn();
-
-		if ($this->storage instanceof UserStorage) {
-			$this->storage->clearAuthentication($clearIdentity);
-		} else {
-			$this->storage->setAuthenticated(false);
-			if ($clearIdentity) {
-				$this->storage->setIdentity(null);
-			}
-		}
-
+		$this->storage->clearAuthentication($clearIdentity);
 		$this->authenticated = false;
 		$this->logoutReason = self::LogoutManual;
 		if ($logged) {
@@ -178,17 +159,11 @@ class User
 
 	private function getStoredData(): void
 	{
-		if ($this->storage instanceof UserStorage) {
-			(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
-				$identity = $id;
-				$this->authenticated = $state;
-				$this->logoutReason = $reason;
-			})(...$this->storage->getState());
-		} else {
-			$identity = $this->storage->getIdentity();
-			$this->authenticated = $this->storage->isAuthenticated();
-			$this->logoutReason = $this->storage->getLogoutReason();
-		}
+		(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
+			$identity = $id;
+			$this->authenticated = $state;
+			$this->logoutReason = $reason;
+		})(...$this->storage->getState());
 
 		$this->identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
@@ -255,12 +230,9 @@ class User
 	/**
 	 * Enables log out after inactivity (like '20 minutes').
 	 */
-	public function setExpiration(?string $expire, bool|int|null $clearIdentity = null)
+	public function setExpiration(?string $expire, bool $clearIdentity = false)
 	{
-		$arg = $this->storage instanceof UserStorage
-			? (bool) $clearIdentity
-			: ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
-		$this->storage->setExpiration($expire, $arg);
+		$this->storage->setExpiration($expire, $clearIdentity);
 		return $this;
 	}
 
