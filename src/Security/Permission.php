@@ -232,7 +232,7 @@ class Permission implements Authorizator
 	 * @throws Nette\InvalidStateException
 	 * @return static
 	 */
-	public function addResource(string $resource, string $parent = null)
+	public function addResource(string $resource, ?string $parent = null)
 	{
 		$this->checkResource($resource, false);
 
@@ -391,7 +391,7 @@ class Permission implements Authorizator
 		$roles = self::ALL,
 		$resources = self::ALL,
 		$privileges = self::ALL,
-		callable $assertion = null
+		?callable $assertion = null
 	) {
 		$this->setRule(true, self::ALLOW, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -411,7 +411,7 @@ class Permission implements Authorizator
 		$roles = self::ALL,
 		$resources = self::ALL,
 		$privileges = self::ALL,
-		callable $assertion = null
+		?callable $assertion = null
 	) {
 		$this->setRule(true, self::DENY, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -456,7 +456,7 @@ class Permission implements Authorizator
 	 * @throws Nette\InvalidStateException
 	 * @return static
 	 */
-	protected function setRule(bool $toAdd, bool $type, $roles, $resources, $privileges, callable $assertion = null)
+	protected function setRule(bool $toAdd, bool $type, $roles, $resources, $privileges, ?callable $assertion = null)
 	{
 		// ensure that all specified Roles exist; normalize input to array of Roles or null
 		if ($roles === self::ALL) {

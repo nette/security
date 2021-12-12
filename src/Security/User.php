@@ -70,10 +70,10 @@ class User
 
 
 	public function __construct(
-		IUserStorage $legacyStorage = null,
-		IAuthenticator $authenticator = null,
-		Authorizator $authorizator = null,
-		UserStorage $storage = null
+		?IUserStorage $legacyStorage = null,
+		?IAuthenticator $authenticator = null,
+		?Authorizator $authorizator = null,
+		?UserStorage $storage = null
 	) {
 		$this->storage = $storage ?? $legacyStorage; // back compatibility
 		if (!$this->storage) {
@@ -102,7 +102,7 @@ class User
 	 * @param  string|IIdentity  $user  name or Identity
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($user, string $password = null): void
+	public function login($user, ?string $password = null): void
 	{
 		$this->logout(true);
 		if ($user instanceof IIdentity) {

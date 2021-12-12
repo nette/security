@@ -36,7 +36,7 @@ class Identity implements IIdentity
 	private $data;
 
 
-	public function __construct($id, $roles = null, iterable $data = null)
+	public function __construct($id, $roles = null, ?iterable $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);

@@ -93,9 +93,9 @@ final class CookieStorage implements Nette\Security\UserStorage
 
 
 	public function setCookieParameters(
-		string $name = null,
-		string $domain = null,
-		string $sameSite = null
+		?string $name = null,
+		?string $domain = null,
+		?string $sameSite = null
 	) {
 		$this->cookieName = $name ?? $this->cookieName;
 		$this->cookieDomain = $domain ?? $this->cookieDomain;
