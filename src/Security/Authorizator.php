@@ -31,11 +31,8 @@ interface Authorizator
 
 	/**
 	 * Performs a role-based authorization.
-	 * @param  string|null  $role
-	 * @param  string|null  $resource
-	 * @param  string|null  $privilege
 	 */
-	function isAllowed($role, $resource, $privilege): bool;
+	function isAllowed(?string $role, ?string $resource, ?string $privilege): bool;
 }
 
 

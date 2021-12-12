@@ -18,7 +18,7 @@ use Nette\Utils\Arrays;
  *
  * @property-read bool $loggedIn
  * @property-read IIdentity $identity
- * @property-read mixed $id
+ * @property-read string|int $id
  * @property-read array $roles
  * @property-read int $logoutReason
  * @property   IAuthenticator $authenticator
@@ -78,10 +78,7 @@ class User
 	}
 
 
-	/**
-	 * @return UserStorage|IUserStorage
-	 */
-	final public function getStorage()
+	final public function getStorage(): UserStorage|IUserStorage
 	{
 		return $this->storage;
 	}
@@ -96,7 +93,7 @@ class User
 	 * @throws AuthenticationException if authentication was not successful
 	 */
 	public function login(
-		$user,
+		string|IIdentity $user,
 		#[\SensitiveParameter]
 		?string $password = null,
 	): void
@@ -202,9 +199,8 @@ class User
 
 	/**
 	 * Returns current user ID, if any.
-	 * @return mixed
 	 */
-	public function getId()
+	public function getId(): string|int|null
 	{
 		$identity = $this->getIdentity();
 		return $identity ? $identity->getId() : null;
@@ -219,9 +215,8 @@ class User
 
 	/**
 	 * Sets authentication handler.
-	 * @return static
 	 */
-	public function setAuthenticator(IAuthenticator $handler)
+	public function setAuthenticator(IAuthenticator $handler): static
 	{
 		$this->authenticator = $handler;
 		return $this;
@@ -264,16 +259,9 @@ class User
 
 	/**
 	 * Enables log out after inactivity (like '20 minutes').
-	 * @param  string|null  $expire
-	 * @param  int|bool  $clearIdentity
-	 * @return static
 	 */
-	public function setExpiration($expire, $clearIdentity = null)
+	public function setExpiration(?string $expire, bool|int|null $clearIdentity = null)
 	{
-		if ($expire !== null && !is_string($expire)) {
-			trigger_error("Expiration should be a string like '20 minutes' etc.", E_USER_DEPRECATED);
-		}
-
 		if (func_num_args() > 2) {
 			$clearIdentity = $clearIdentity || func_get_arg(2);
 			trigger_error(__METHOD__ . '() third parameter is deprecated, use second one: setExpiration($time, true|false)', E_USER_DEPRECATED);
@@ -346,9 +334,8 @@ class User
 
 	/**
 	 * Sets authorization handler.
-	 * @return static
 	 */
-	public function setAuthorizator(Authorizator $handler)
+	public function setAuthorizator(Authorizator $handler): static
 	{
 		$this->authorizator = $handler;
 		return $this;

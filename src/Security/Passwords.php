@@ -27,7 +27,7 @@ class Passwords
 	 * Chooses which secure algorithm is used for hashing and how to configure it.
 	 * @see https://php.net/manual/en/password.constants.php
 	 */
-	public function __construct($algo = PASSWORD_DEFAULT, array $options = [])
+	public function __construct(string $algo = PASSWORD_DEFAULT, array $options = [])
 	{
 		$this->algo = $algo;
 		$this->options = $options;
