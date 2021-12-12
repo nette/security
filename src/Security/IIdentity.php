@@ -16,9 +16,8 @@ interface IIdentity
 {
 	/**
 	 * Returns the ID of user.
-	 * @return string|int
 	 */
-	function getId();
+	function getId(): string|int;
 
 	/**
 	 * Returns a list of roles that the user is a member of.
