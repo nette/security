@@ -11,6 +11,7 @@ namespace Nette\Bridges\SecurityDI;
 
 use Nette;
 use Nette\Schema\Expect;
+use Tracy;
 
 
 /**
@@ -138,7 +139,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if (
 			$this->debugMode &&
-			($this->config->debugger ?? $builder->getByType(\Tracy\Bar::class))
+			($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
 		) {
 			$builder->getDefinition($this->prefix('user'))->addSetup('@Tracy\Bar::addPanel', [
 				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
