@@ -50,6 +50,7 @@ class Passwords
 		if (!$hash) {
 			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
 		}
+
 		return $hash;
 	}
 

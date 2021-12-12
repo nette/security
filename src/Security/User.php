@@ -79,6 +79,7 @@ class User
 		if (!$this->storage) {
 			throw new Nette\InvalidStateException('UserStorage has not been set.');
 		}
+
 		$this->authenticator = $authenticator;
 		$this->authorizator = $authorizator;
 	}
@@ -150,6 +151,7 @@ class User
 		if ($logged) {
 			Arrays::invoke($this->onLoggedOut, $this);
 		}
+
 		$this->identity = $clearIdentity ? null : $this->identity;
 	}
 
@@ -162,6 +164,7 @@ class User
 		if ($this->authenticated === null) {
 			$this->getStoredData();
 		}
+
 		return $this->authenticated;
 	}
 
@@ -174,6 +177,7 @@ class User
 		if ($this->authenticated === null) {
 			$this->getStoredData();
 		}
+
 		return $this->identity;
 	}
 
@@ -236,9 +240,11 @@ class User
 			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthenticatorIfExists()', E_USER_DEPRECATED);
 			$throw = func_get_arg(0);
 		}
+
 		if (($throw ?? true) && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
 		}
+
 		return $this->authenticator;
 	}
 
@@ -270,6 +276,7 @@ class User
 		if ($expire !== null && !is_string($expire)) {
 			trigger_error("Expiration should be a string like '20 minutes' etc.", E_USER_DEPRECATED);
 		}
+
 		if (func_num_args() > 2) {
 			$clearIdentity = $clearIdentity || func_get_arg(2);
 			trigger_error(__METHOD__ . '() third parameter is deprecated, use second one: setExpiration($time, true|false)', E_USER_DEPRECATED);
@@ -319,6 +326,7 @@ class User
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -359,9 +367,11 @@ class User
 			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthorizatorIfExists()', E_USER_DEPRECATED);
 			$throw = func_get_arg(0);
 		}
+
 		if (($throw ?? true) && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');
 		}
+
 		return $this->authorizator;
 	}
 

@@ -56,6 +56,7 @@ class Identity implements IIdentity
 		if (!is_string($id) && !is_int($id)) {
 			throw new Nette\InvalidArgumentException('Identity identifier must be string|int, but type "' . gettype($id) . '" given.');
 		}
+
 		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
 		return $this;
 	}

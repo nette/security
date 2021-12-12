@@ -101,6 +101,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 			$this->namespace = $namespace;
 			$this->sessionSection = null;
 		}
+
 		return $this;
 	}
 
@@ -137,6 +138,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 					$section->remove('identity');
 				}
 			}
+
 			$section->set('expireTime', time() + $section->expireDelta); // sliding expiration
 		}
 
