@@ -42,7 +42,7 @@ class Authorizator implements Nette\Security\Authorizator
 {
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
 	{
-		return $role === 'admin' && strpos($resource, 'jany') === false;
+		return $role === 'admin' && !str_contains($resource, 'jany');
 	}
 }
 
