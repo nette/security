@@ -40,8 +40,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 						'password' => Expect::string(),
 						'roles' => Expect::anyOf(Expect::string(), Expect::listOf('string')),
 						'data' => Expect::array(),
-					])->castTo('array')
-				)
+					])->castTo('array'),
+				),
 			),
 			'roles' => Expect::arrayOf('string|array|null'), // role => parent(s)
 			'resources' => Expect::arrayOf('string|null'), // resource => parent

@@ -76,7 +76,7 @@ class User
 		?IUserStorage $legacyStorage = null,
 		?IAuthenticator $authenticator = null,
 		?Authorizator $authorizator = null,
-		?UserStorage $storage = null
+		?UserStorage $storage = null,
 	) {
 		$this->storage = $storage ?? $legacyStorage; // back compatibility
 		if (!$this->storage) {
@@ -108,7 +108,7 @@ class User
 	public function login(
 		$user,
 		#[\SensitiveParameter]
-		?string $password = null
+		?string $password = null,
 	): void
 	{
 		$this->logout(true);

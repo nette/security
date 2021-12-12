@@ -38,7 +38,7 @@ class SimpleAuthenticator implements Authenticator
 		#[\SensitiveParameter]
 		array $passwords,
 		array $roles = [],
-		array $data = []
+		array $data = [],
 	) {
 		$this->passwords = $passwords;
 		$this->roles = $roles;
@@ -54,7 +54,7 @@ class SimpleAuthenticator implements Authenticator
 	public function authenticate(
 		string $username,
 		#[\SensitiveParameter]
-		string $password
+		string $password,
 	): IIdentity
 	{
 		foreach ($this->passwords as $name => $pass) {

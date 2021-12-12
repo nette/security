@@ -42,7 +42,7 @@ class Passwords
 	 */
 	public function hash(
 		#[\SensitiveParameter]
-		string $password
+		string $password,
 	): string
 	{
 		if ($password === '') {
@@ -64,7 +64,7 @@ class Passwords
 	public function verify(
 		#[\SensitiveParameter]
 		string $password,
-		string $hash
+		string $hash,
 	): bool
 	{
 		return password_verify($password, $hash);

@@ -61,7 +61,7 @@ class Permission implements Authorizator
 	 */
 	public function addRole(string $role, $parents = null)
 	{
-		$this->checkRole($role, false);
+		$this->checkRole($role, exists: false);
 		if (isset($this->roles[$role])) {
 			throw new Nette\InvalidStateException("Role '$role' already exists in the list.");
 		}
@@ -94,7 +94,7 @@ class Permission implements Authorizator
 	 */
 	public function hasRole(string $role): bool
 	{
-		$this->checkRole($role, false);
+		$this->checkRole($role, exists: false);
 		return isset($this->roles[$role]);
 	}
 
@@ -234,7 +234,7 @@ class Permission implements Authorizator
 	 */
 	public function addResource(string $resource, ?string $parent = null)
 	{
-		$this->checkResource($resource, false);
+		$this->checkResource($resource, exists: false);
 
 		if (isset($this->resources[$resource])) {
 			throw new Nette\InvalidStateException("Resource '$resource' already exists in the list.");
@@ -259,7 +259,7 @@ class Permission implements Authorizator
 	 */
 	public function hasResource(string $resource): bool
 	{
-		$this->checkResource($resource, false);
+		$this->checkResource($resource, exists: false);
 		return isset($this->resources[$resource]);
 	}
 
@@ -391,7 +391,7 @@ class Permission implements Authorizator
 		$roles = self::All,
 		$resources = self::All,
 		$privileges = self::All,
-		?callable $assertion = null
+		?callable $assertion = null,
 	) {
 		$this->setRule(true, self::Allow, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -411,7 +411,7 @@ class Permission implements Authorizator
 		$roles = self::All,
 		$resources = self::All,
 		$privileges = self::All,
-		?callable $assertion = null
+		?callable $assertion = null,
 	) {
 		$this->setRule(true, self::Deny, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -497,7 +497,7 @@ class Permission implements Authorizator
 		if ($toAdd) { // add to the rules
 			foreach ($resources as $resource) {
 				foreach ($roles as $role) {
-					$rules = &$this->getRules($resource, $role, true);
+					$rules = &$this->getRules($resource, $role, create: true);
 					if (count($privileges) === 0) {
 						$rules['allPrivileges']['type'] = $type;
 						$rules['allPrivileges']['assert'] = $assertion;

@@ -23,10 +23,10 @@ Assert::same(['guest'], $acl->getRoleParents('member'));
 Assert::same(['member'], $acl->getRoleParents('editor'));
 
 
-Assert::true($acl->roleInheritsFrom('member', 'guest', true));
-Assert::true($acl->roleInheritsFrom('editor', 'member', true));
+Assert::true($acl->roleInheritsFrom('member', 'guest', onlyParents: true));
+Assert::true($acl->roleInheritsFrom('editor', 'member', onlyParents: true));
 Assert::true($acl->roleInheritsFrom('editor', 'guest'));
-Assert::false($acl->roleInheritsFrom('editor', 'guest', true));
+Assert::false($acl->roleInheritsFrom('editor', 'guest', onlyParents: true));
 Assert::false($acl->roleInheritsFrom('guest', 'member'));
 Assert::false($acl->roleInheritsFrom('member', 'editor'));
 Assert::false($acl->roleInheritsFrom('guest', 'editor'));
