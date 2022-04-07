@@ -24,10 +24,13 @@ Assert::truthy(
 $hash = (new Passwords(PASSWORD_BCRYPT))->hash('dg');
 Assert::same($hash, crypt('dg', $hash));
 
-Assert::exception(function () {
-	(new Passwords(PASSWORD_BCRYPT, ['cost' => 3]))->hash('dg');
-}, ValueError::class);
+Assert::exception(
+	fn() => (new Passwords(PASSWORD_BCRYPT, ['cost' => 3]))->hash('dg'),
+	ValueError::class,
+);
 
-Assert::exception(function () {
-	(new Passwords)->hash('');
-}, Nette\InvalidArgumentException::class, 'Password can not be empty.');
+Assert::exception(
+	fn() => (new Passwords)->hash(''),
+	Nette\InvalidArgumentException::class,
+	'Password can not be empty.',
+);
