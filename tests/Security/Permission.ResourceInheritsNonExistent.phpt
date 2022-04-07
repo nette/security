@@ -15,10 +15,14 @@ require __DIR__ . '/../bootstrap.php';
 
 $acl = new Permission;
 $acl->addResource('area');
-Assert::exception(function () use ($acl) {
-	$acl->resourceInheritsFrom('nonexistent', 'area');
-}, Nette\InvalidStateException::class, "Resource 'nonexistent' does not exist.");
+Assert::exception(
+	fn() => $acl->resourceInheritsFrom('nonexistent', 'area'),
+	Nette\InvalidStateException::class,
+	"Resource 'nonexistent' does not exist.",
+);
 
-Assert::exception(function () use ($acl) {
-	$acl->resourceInheritsFrom('area', 'nonexistent');
-}, Nette\InvalidStateException::class, "Resource 'nonexistent' does not exist.");
+Assert::exception(
+	fn() => $acl->resourceInheritsFrom('area', 'nonexistent'),
+	Nette\InvalidStateException::class,
+	"Resource 'nonexistent' does not exist.",
+);

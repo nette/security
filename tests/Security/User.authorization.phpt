@@ -81,9 +81,11 @@ Assert::false($user->isInRole('guest'));
 
 
 // authorization
-Assert::exception(function () use ($user) {
-	$user->isAllowed('delete_file');
-}, Nette\InvalidStateException::class, 'Authorizator has not been set.');
+Assert::exception(
+	fn() => $user->isAllowed('delete_file'),
+	Nette\InvalidStateException::class,
+	'Authorizator has not been set.',
+);
 
 $handler = new Authorizator;
 $user->setAuthorizator($handler);
