@@ -25,6 +25,7 @@ class SimpleAuthenticator implements Authenticator
 		private array $passwords,
 		private array $roles = [],
 		private array $data = [],
+		private ?Passwords $verifier = null,
 	) {
 	}
 
@@ -56,6 +57,9 @@ class SimpleAuthenticator implements Authenticator
 
 	protected function verifyPassword(string $password, string $passOrHash): bool
 	{
+		if (preg_match('~\$.{50,}~A', $passOrHash)) {
+			return $this->verifier->verify($password, $passOrHash);
+		}
 		return $password === $passOrHash;
 	}
 }
