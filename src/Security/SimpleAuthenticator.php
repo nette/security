@@ -19,21 +19,16 @@ class SimpleAuthenticator implements Authenticator
 {
 	use Nette\SmartObject;
 
-	private array $passwords;
-	private array $roles;
-	private array $data;
-
-
 	/**
 	 * @param  array  $passwords list of pairs username => password
 	 * @param  array  $roles list of pairs username => role[]
 	 * @param  array  $data list of pairs username => mixed[]
 	 */
-	public function __construct(array $passwords, array $roles = [], array $data = [])
-	{
-		$this->passwords = $passwords;
-		$this->roles = $roles;
-		$this->data = $data;
+	public function __construct(
+		private array $passwords,
+		private array $roles = [],
+		private array $data = [],
+	) {
 	}
 
 
