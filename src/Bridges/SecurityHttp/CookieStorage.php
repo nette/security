@@ -61,7 +61,10 @@ final class CookieStorage implements Nette\Security\UserStorage
 			$uid,
 			$this->cookieExpiration,
 			null,
-			$this->cookieDomain
+			$this->cookieDomain,
+			null,
+			true,
+			$this->cookieSameSite
 		);
 	}
 
