@@ -6,8 +6,8 @@
 
 declare(strict_types=1);
 
-use Nette\Security\SimpleAuthenticator;
 use Nette\Security\Passwords;
+use Nette\Security\SimpleAuthenticator;
 use Tester\Assert;
 
 
