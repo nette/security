@@ -20,9 +20,11 @@ Assert::exception(function () use ($storage) {
 $id = '123456789123456';
 $response->expects()->setCookie('userid', $id, null, null, null, false, true, 'Lax');
 $storage->saveAuthentication(new SimpleIdentity($id));
+Assert::equal([true, new SimpleIdentity($id), null], $storage->getState());
 Mockery::close();
 
 // clear id
 $response->expects()->deleteCookie('userid', null, null);
 $storage->clearAuthentication(true);
+Assert::same([false, null, null], $storage->getState());
 Mockery::close();
