@@ -33,9 +33,10 @@ final class CookieStorage implements Nette\Security\UserStorage
 	/**
 	 * As reading from state reads from HTTP request but saving/clearing stores to HTTP response,
 	 * reading from state after writing to state results in inaccurate results (old data).
-	 * This cached identity balances the gap between request and response.
+	 * This cached identity ID balances the gap between request and response.
+	 * Note that we can't cache whole identity as it couldn't be then used as input into SimpleIdentity (it doesn't support objects)
 	 */
-	private ?IIdentity $cachedIdentity = null;
+	private ?string $cachedIdentityId = null;
 
 
 	public function __construct(Http\IRequest $request, Http\IResponse $response)
@@ -59,13 +60,13 @@ final class CookieStorage implements Nette\Security\UserStorage
 			domain: $this->cookieDomain,
 			sameSite: $this->cookieSameSite,
 		);
-		$this->cachedIdentity = $identity;
+		$this->cachedIdentityId = (string) $identity->getId();
 	}
 
 
 	public function clearAuthentication(bool $clearIdentity): void
 	{
-		$this->cachedIdentity = null;
+		$this->cachedIdentityId = null;
 		$this->response->deleteCookie(
 			$this->cookieName,
 			domain: $this->cookieDomain,
@@ -75,8 +76,9 @@ final class CookieStorage implements Nette\Security\UserStorage
 
 	public function getState(): array
 	{
-		if ($this->cachedIdentity !== null) {
-			return [(bool) $this->cachedIdentity, $this->cachedIdentity, null];
+		if ($this->cachedIdentityId !== null) {
+			$identity = new Nette\Security\SimpleIdentity($this->cachedIdentityId);
+			return [(bool) $identity, $identity, null];
 		}
 
 		$uid = $this->request->getCookie($this->cookieName);
