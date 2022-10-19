@@ -29,7 +29,7 @@ class MockUserStorage implements Nette\Security\UserStorage
 	}
 
 
-	public function setExpiration(?string $expire, bool $clearIdentity): void
+	public function setExpiration(string|int|null $expire, bool $clearIdentity): void
 	{
 	}
 }

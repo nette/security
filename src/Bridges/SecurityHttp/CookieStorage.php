@@ -29,7 +29,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	private string $cookieName = 'userid';
 	private ?string $cookieDomain = null;
 	private string $cookieSameSite = 'Lax';
-	private ?string $cookieExpiration = null;
+	private string|int|null $cookieExpiration = null;
 
 
 	public function __construct(Http\IRequest $request, Http\IResponse $response)
@@ -80,7 +80,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	}
 
 
-	public function setExpiration(?string $expire, bool $clearIdentity): void
+	public function setExpiration(string|int|null $expire, bool $clearIdentity): void
 	{
 		$this->cookieExpiration = $expire;
 	}
