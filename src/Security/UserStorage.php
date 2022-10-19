@@ -39,5 +39,5 @@ interface UserStorage
 	/**
 	 * Enables log out from the persistent storage after inactivity (like '20 minutes').
 	 */
-	function setExpiration(?string $expire, bool $clearIdentity): void;
+	function setExpiration(string|int|null $expire, bool $clearIdentity): void;
 }
