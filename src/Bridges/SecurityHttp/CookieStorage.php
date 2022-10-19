@@ -41,7 +41,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	/** @var string */
 	private $cookieSameSite = 'Lax';
 
-	/** @var ?string */
+	/** @var string|int|null */
 	private $cookieExpiration;
 
 
@@ -97,7 +97,10 @@ final class CookieStorage implements Nette\Security\UserStorage
 	}
 
 
-	public function setExpiration(?string $expire, bool $clearIdentity): void
+	/**
+	 * @param string|int|null $expire
+	 */
+	public function setExpiration($expire, bool $clearIdentity): void
 	{
 		$this->cookieExpiration = $expire;
 	}
