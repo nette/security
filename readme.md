@@ -305,7 +305,7 @@ $acl->allow('guest', 'poll', 'vote');
 $acl->allow('registered', 'comment', 'add');
 
 // the administrator can view and edit anything
-$acl->allow('administrator', $acl::ALL, ['view', 'edit', 'add']);
+$acl->allow('administrator', $acl::All, ['view', 'edit', 'add']);
 ```
 
 What if we want to **prevent** someone from accessing a resource?

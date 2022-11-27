@@ -62,12 +62,12 @@ class SimpleAuthenticator implements Authenticator
 				if ($this->verifyPassword($password, $pass)) {
 					return new SimpleIdentity($name, $this->roles[$name] ?? null, $this->data[$name] ?? []);
 				} else {
-					throw new AuthenticationException('Invalid password.', self::INVALID_CREDENTIAL);
+					throw new AuthenticationException('Invalid password.', self::InvalidCredential);
 				}
 			}
 		}
 
-		throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
+		throw new AuthenticationException("User '$username' not found.", self::IdentityNotFound);
 	}
 
 

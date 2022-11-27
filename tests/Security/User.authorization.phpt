@@ -26,10 +26,10 @@ class Authenticator implements Nette\Security\Authenticator
 	public function authenticate(string $username, string $password): IIdentity
 	{
 		if ($username !== 'john') {
-			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
+			throw new Nette\Security\AuthenticationException('Unknown user', self::IdentityNotFound);
 
 		} elseif ($password !== 'xxx') {
-			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
+			throw new Nette\Security\AuthenticationException('Password not match', self::InvalidCredential);
 
 		} else {
 			return new SimpleIdentity('John Doe', ['admin', new TesterRole]);
@@ -40,7 +40,7 @@ class Authenticator implements Nette\Security\Authenticator
 
 class Authorizator implements Nette\Security\Authorizator
 {
-	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL): bool
+	public function isAllowed($role = self::All, $resource = self::All, $privilege = self::All): bool
 	{
 		return $role === 'admin' && strpos($resource, 'jany') === false;
 	}

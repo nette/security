@@ -17,8 +17,11 @@ interface UserStorage
 {
 	/** Log-out reason */
 	public const
-		LOGOUT_MANUAL = 1,
-		LOGOUT_INACTIVITY = 2;
+		LogoutManual = 1,
+		LogoutInactivity = 2;
+
+	public const LOGOUT_MANUAL = self::LogoutManual;
+	public const LOGOUT_INACTIVITY = self::LogoutInactivity;
 
 	/**
 	 * Sets the authenticated state of user.

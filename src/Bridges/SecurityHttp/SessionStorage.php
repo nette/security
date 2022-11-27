@@ -62,7 +62,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 	{
 		$section = $this->getSessionSection();
 		$section->set('authenticated', false);
-		$section->set('reason', self::LOGOUT_MANUAL);
+		$section->set('reason', self::LogoutManual);
 		$section->set('authTime', null);
 		if ($clearIdentity === true) {
 			$section->set('identity', null);
@@ -149,7 +149,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 
 		if ($section->get('authenticated') && $section->get('expireDelta') > 0) { // check time expiration
 			if ($section->get('expireTime') < time()) {
-				$section->set('reason', self::LOGOUT_INACTIVITY);
+				$section->set('reason', self::LogoutInactivity);
 				$section->set('authenticated', false);
 				if ($section->get('expireIdentity')) {
 					$section->remove('identity');

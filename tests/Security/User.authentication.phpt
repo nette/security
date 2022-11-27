@@ -24,10 +24,10 @@ class Authenticator implements Nette\Security\Authenticator
 	public function authenticate(string $username, string $password): IIdentity
 	{
 		if ($username !== 'john') {
-			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
+			throw new Nette\Security\AuthenticationException('Unknown user', self::IdentityNotFound);
 
 		} elseif ($password !== 'xxx') {
-			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
+			throw new Nette\Security\AuthenticationException('Password not match', self::InvalidCredential);
 
 		} else {
 			return new SimpleIdentity('John Doe', 'admin');

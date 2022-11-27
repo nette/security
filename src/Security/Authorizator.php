@@ -17,13 +17,17 @@ namespace Nette\Security;
 interface Authorizator
 {
 	/** Set type: all */
-	public const ALL = null;
+	public const All = null;
 
 	/** Permission type: allow */
-	public const ALLOW = true;
+	public const Allow = true;
 
 	/** Permission type: deny */
-	public const DENY = false;
+	public const Deny = false;
+
+	public const ALL = self::All;
+	public const ALLOW = self::Allow;
+	public const DENY = self::Deny;
 
 	/**
 	 * Performs a role-based authorization.
