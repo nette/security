@@ -33,13 +33,17 @@ class User
 		LogoutManual = 1,
 		LogoutInactivity = 2;
 
-	/** @deprecated */
-	public const
-		MANUAL = self::LogoutManual,
-		INACTIVITY = self::LogoutInactivity;
-
+	/** @deprecated use User::LogoutManual */
 	public const LOGOUT_MANUAL = self::LogoutManual;
+
+	/** @deprecated use User::LogoutManual */
+	public const MANUAL = self::LogoutManual;
+
+	/** @deprecated use User::LogoutInactivity */
 	public const LOGOUT_INACTIVITY = self::LogoutInactivity;
+
+	/** @deprecated use User::LogoutInactivity */
+	public const INACTIVITY = self::LogoutInactivity;
 
 	/** default role for unauthenticated user */
 	public string $guestRole = 'guest';

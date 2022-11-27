@@ -25,8 +25,13 @@ interface Authorizator
 	/** Permission type: deny */
 	public const Deny = false;
 
+	/** @deprecated use Authorizator::All */
 	public const ALL = self::All;
+
+	/** @deprecated use Authorizator::Allow */
 	public const ALLOW = self::Allow;
+
+	/** @deprecated use Authorizator::Deny */
 	public const DENY = self::Deny;
 
 	/**
