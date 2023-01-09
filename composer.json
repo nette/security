@@ -16,7 +16,7 @@
 	],
 	"require": {
 		"php": ">=7.2 <8.3",
-		"nette/utils": "^3.2.1"
+		"nette/utils": "^3.2.1 || ~4.0.0"
 	},
 	"require-dev": {
 		"nette/di": "^3.0.1",
@@ -24,7 +24,7 @@
 		"nette/tester": "^2.0",
 		"tracy/tracy": "^2.4",
 		"phpstan/phpstan-nette": "^1.0",
-		"mockery/mockery": "^1.5"
+		"mockery/mockery": "^1.3.6"
 	},
 	"conflict": {
 		"nette/di": "<3.0-stable",
