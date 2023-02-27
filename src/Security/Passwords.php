@@ -40,7 +40,10 @@ class Passwords
 	/**
 	 * Computes password´s hash. The result contains the algorithm ID and its settings, cryptographical salt and the hash itself.
 	 */
-	public function hash(string $password): string
+	public function hash(
+		#[\SensitiveParameter]
+		string $password
+	): string
 	{
 		if ($password === '') {
 			throw new Nette\InvalidArgumentException('Password can not be empty.');
@@ -58,7 +61,11 @@ class Passwords
 	/**
 	 * Finds out, whether the given password matches the given hash.
 	 */
-	public function verify(string $password, string $hash): bool
+	public function verify(
+		#[\SensitiveParameter]
+		string $password,
+		string $hash
+	): bool
 	{
 		return password_verify($password, $hash);
 	}
