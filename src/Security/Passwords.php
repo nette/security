@@ -17,8 +17,6 @@ use Nette;
  */
 class Passwords
 {
-	use Nette\SmartObject;
-
 	private string $algo;
 	private array $options;
 

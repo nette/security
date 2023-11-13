@@ -21,8 +21,6 @@ use Nette\Security\User;
  */
 final class SessionStorage implements Nette\Security\UserStorage
 {
-	use Nette\SmartObject;
-
 	private string $namespace = '';
 	private Session $sessionHandler;
 	private ?SessionSection $sessionSection = null;

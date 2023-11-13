@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nette\Security;
 
-use Nette;
-
 
 /**
  * @deprecated  use Nette\Security\SimpleIdentity
@@ -20,12 +18,6 @@ use Nette;
  */
 class Identity implements IIdentity
 {
-	use Nette\SmartObject {
-		__get as private parentGet;
-		__set as private parentSet;
-		__isset as private parentIsSet;
-	}
-
 	private string|int $id;
 	private array $roles;
 	private array $data;
@@ -93,8 +85,8 @@ class Identity implements IIdentity
 	 */
 	public function __set(string $key, $value): void
 	{
-		if ($this->parentIsSet($key)) {
-			$this->parentSet($key, $value);
+		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
+			$this->{"set$key"}($value);
 
 		} else {
 			$this->data[$key] = $value;
@@ -107,8 +99,9 @@ class Identity implements IIdentity
 	 */
 	public function &__get(string $key): mixed
 	{
-		if ($this->parentIsSet($key)) {
-			return $this->parentGet($key);
+		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
+			$res = $this->{"get$key"}();
+			return $res;
 
 		} else {
 			return $this->data[$key];
@@ -118,6 +111,6 @@ class Identity implements IIdentity
 
 	public function __isset(string $key): bool
 	{
-		return isset($this->data[$key]) || $this->parentIsSet($key);
+		return isset($this->data[$key]) || in_array($key, ['id', 'roles', 'data'], strict: true);
 	}
 }

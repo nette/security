@@ -19,8 +19,6 @@ use Nette\Security\IIdentity;
  */
 final class CookieStorage implements Nette\Security\UserStorage
 {
-	use Nette\SmartObject;
-
 	private const MinLength = 13;
 
 	private Http\IRequest $request;

@@ -9,16 +9,12 @@ declare(strict_types=1);
 
 namespace Nette\Security;
 
-use Nette;
-
 
 /**
  * Trivial implementation of Authenticator.
  */
 class SimpleAuthenticator implements Authenticator
 {
-	use Nette\SmartObject;
-
 	private array $passwords;
 	private array $roles;
 	private array $data;

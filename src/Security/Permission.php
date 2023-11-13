@@ -19,8 +19,6 @@ use Nette;
  */
 class Permission implements Authorizator
 {
-	use Nette\SmartObject;
-
 	private array $roles = [];
 	private array $resources = [];
 
