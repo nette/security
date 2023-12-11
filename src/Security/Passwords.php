@@ -17,18 +17,14 @@ use Nette;
  */
 class Passwords
 {
-	private string $algo;
-	private array $options;
-
-
 	/**
 	 * Chooses which secure algorithm is used for hashing and how to configure it.
 	 * @see https://php.net/manual/en/password.constants.php
 	 */
-	public function __construct(string $algo = PASSWORD_DEFAULT, array $options = [])
-	{
-		$this->algo = $algo;
-		$this->options = $options;
+	public function __construct(
+		private string $algo = PASSWORD_DEFAULT,
+		private array $options = [],
+	) {
 	}
 
 
