@@ -72,7 +72,7 @@ $user->setExpiration(null);
 
 Expiration must be set to value equal or lower than the expiration of sessions.
 
-The reason of the last logout can be obtained by method `$user->getLogoutReason()`, which returns either the constant `Nette\Security\IUserStorage::INACTIVITY` if the time expired or `IUserStorage::MANUAL` when the `logout()` method was called.
+The reason of the last logout can be obtained by method `$user->getLogoutReason()`, which returns either the constant `Nette\Security\User::LogoutInactivity` if the time expired or `User::LogoutManual` when the `logout()` method was called.
 
 In presenters, you can verify login in the `startup()` method:
 

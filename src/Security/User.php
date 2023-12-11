@@ -28,15 +28,15 @@ class User
 {
 	use Nette\SmartObject;
 
-	/** @deprecated */
-	public const
-		MANUAL = IUserStorage::MANUAL,
-		INACTIVITY = IUserStorage::INACTIVITY;
-
 	/** Log-out reason */
 	public const
-		LogoutManual = UserStorage::LogoutManual,
-		LogoutInactivity = UserStorage::LogoutInactivity;
+		LogoutManual = 1,
+		LogoutInactivity = 2;
+
+	/** @deprecated */
+	public const
+		MANUAL = self::LogoutManual,
+		INACTIVITY = self::LogoutInactivity;
 
 	public const LOGOUT_MANUAL = self::LogoutManual;
 	public const LOGOUT_INACTIVITY = self::LogoutInactivity;
@@ -154,7 +154,7 @@ class User
 		}
 
 		$this->authenticated = false;
-		$this->logoutReason = self::MANUAL;
+		$this->logoutReason = self::LogoutManual;
 		if ($logged) {
 			Arrays::invoke($this->onLoggedOut, $this);
 		}

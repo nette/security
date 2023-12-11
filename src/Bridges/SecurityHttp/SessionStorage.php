@@ -13,6 +13,7 @@ use Nette;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Security\IIdentity;
+use Nette\Security\User;
 
 
 /**
@@ -62,7 +63,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 	{
 		$section = $this->getSessionSection();
 		$section->set('authenticated', false);
-		$section->set('reason', self::LogoutManual);
+		$section->set('reason', User::LogoutManual);
 		$section->set('authTime', null);
 		if ($clearIdentity === true) {
 			$section->set('identity', null);
@@ -149,7 +150,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 
 		if ($section->get('authenticated') && $section->get('expireDelta') > 0) { // check time expiration
 			if ($section->get('expireTime') < time()) {
-				$section->set('reason', self::LogoutInactivity);
+				$section->set('reason', User::LogoutInactivity);
 				$section->set('authenticated', false);
 				if ($section->get('expireIdentity')) {
 					$section->remove('identity');
