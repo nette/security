@@ -17,7 +17,7 @@ Assert::exception(
 
 // correct id
 $id = '123456789123456';
-$response->expects()->setCookie('userid', $id, null, null, null, false, true, 'Lax');
+$response->expects()->setCookie('userid', $id, null, null, null, false, true, Nette\Http\SameSite::Lax);
 $storage->saveAuthentication(new SimpleIdentity($id));
 Assert::equal([true, new SimpleIdentity($id), null], $storage->getState());
 Mockery::close();
