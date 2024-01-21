@@ -58,7 +58,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		/** @var object{debugger: bool, users: array, roles: array, resources: array} $config */
+		/** @var object{debugger: bool, users: array, roles: array, resources: array, authentication: \stdClass} $config */
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
 
