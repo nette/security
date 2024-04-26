@@ -51,10 +51,10 @@ class User
 	/** default role for authenticated user without own identity */
 	public string $authenticatedRole = 'authenticated';
 
-	/** @var callable[]  function (User $sender): void; Occurs when the user is successfully logged in */
+	/** @var array<callable(self): void>  Occurs when the user is successfully logged in */
 	public array $onLoggedIn = [];
 
-	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
+	/** @var array<callable(self): void>  Occurs when the user is logged out */
 	public array $onLoggedOut = [];
 
 	private ?IIdentity $identity = null;
