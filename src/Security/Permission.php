@@ -50,7 +50,7 @@ class Permission implements Authorizator
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
 	 */
-	public function addRole(string $role, string|array $parents = null): static
+	public function addRole(string $role, string|array|null $parents = null): static
 	{
 		$this->checkRole($role, exists: false);
 		if (isset($this->roles[$role])) {
