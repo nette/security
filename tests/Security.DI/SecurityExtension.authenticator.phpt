@@ -29,6 +29,8 @@ security:
 		admin: {password: admin123, roles: [admin, user]}
 		user: {password: user123}
 		moderator: {password: moderator123, roles: moderator}
+		dynamic1: ::trim(xxx)
+		dynamic2: {password: ::trim(xxx)}
 ', 'neon'));
 
 eval($compiler->addConfig($config)->compile());
@@ -43,12 +45,16 @@ $userList = [
 	'admin' => 'admin123',
 	'user' => 'user123',
 	'moderator' => 'moderator123',
+	'dynamic1' => 'xxx',
+	'dynamic2' => 'xxx',
 ];
 $expectedRoles = [
 	'john' => [],
 	'admin' => ['admin', 'user'],
 	'user' => [],
 	'moderator' => ['moderator'],
+	'dynamic1' => [],
+	'dynamic2' => [],
 ];
 
 foreach ($userList as $username => $password) {

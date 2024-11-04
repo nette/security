@@ -34,9 +34,9 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			'debugger' => Expect::bool(),
 			'users' => Expect::arrayOf(
 				Expect::anyOf(
-					Expect::string(), // user => password
+					Expect::string()->dynamic(), // user => password
 					Expect::structure([ // user => password + roles + data
-						'password' => Expect::string(),
+						'password' => Expect::string()->dynamic(),
 						'roles' => Expect::anyOf(Expect::string(), Expect::listOf('string')),
 						'data' => Expect::array(),
 					])->castTo('array'),
