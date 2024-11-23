@@ -32,16 +32,16 @@ class User
 		LogoutManual = 1,
 		LogoutInactivity = 2;
 
-	/** @deprecated use User::LogoutManual */
+	#[\Deprecated('use User::LogoutManual')]
 	public const LOGOUT_MANUAL = self::LogoutManual;
 
-	/** @deprecated use User::LogoutManual */
+	#[\Deprecated('use User::LogoutManual')]
 	public const MANUAL = self::LogoutManual;
 
-	/** @deprecated use User::LogoutInactivity */
+	#[\Deprecated('use User::LogoutInactivity')]
 	public const LOGOUT_INACTIVITY = self::LogoutInactivity;
 
-	/** @deprecated use User::LogoutInactivity */
+	#[\Deprecated('use User::LogoutInactivity')]
 	public const INACTIVITY = self::LogoutInactivity;
 
 	/** role for an unauthenticated user, unless a guest identity provides its own roles */

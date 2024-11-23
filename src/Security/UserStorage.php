@@ -13,10 +13,10 @@ namespace Nette\Security;
  */
 interface UserStorage
 {
-	/** @deprecated use User::LogoutManual */
+	#[\Deprecated('use User::LogoutManual')]
 	public const LOGOUT_MANUAL = 1;
 
-	/** @deprecated use User::LogoutInactivity */
+	#[\Deprecated('use User::LogoutInactivity')]
 	public const LOGOUT_INACTIVITY = 2;
 
 	/**

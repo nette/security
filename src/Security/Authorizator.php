@@ -22,13 +22,13 @@ interface Authorizator
 	/** Permission type: deny */
 	public const Deny = false;
 
-	/** @deprecated use Authorizator::All */
+	#[\Deprecated('use Authorizator::All')]
 	public const ALL = self::All;
 
-	/** @deprecated use Authorizator::Allow */
+	#[\Deprecated('use Authorizator::Allow')]
 	public const ALLOW = self::Allow;
 
-	/** @deprecated use Authorizator::Deny */
+	#[\Deprecated('use Authorizator::Deny')]
 	public const DENY = self::Deny;
 
 	/**
