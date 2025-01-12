@@ -41,7 +41,7 @@ class UserPanel implements Tracy\IBarPanel
 			$status = session_status() === PHP_SESSION_ACTIVE
 				? $this->user->isLoggedIn()
 				: '?';
-			require __DIR__ . '/templates/UserPanel.tab.phtml';
+			require __DIR__ . '/dist/tab.phtml';
 		});
 	}
 
@@ -57,7 +57,7 @@ class UserPanel implements Tracy\IBarPanel
 
 		return Nette\Utils\Helpers::capture(function () {
 			$user = $this->user;
-			require __DIR__ . '/templates/UserPanel.panel.phtml';
+			require __DIR__ . '/dist/panel.phtml';
 		});
 	}
 }

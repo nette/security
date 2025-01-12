@@ -1,0 +1,9 @@
+<h1>{if $user->isLoggedIn()}Logged in{else}Unlogged{/if}</h1>
+
+<div class="tracy-inner nette-UserPanel">
+	{if $user->getIdentity()}
+		{Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true])}
+	{else}
+		<p>no identity</p>
+	{/if}
+</div>

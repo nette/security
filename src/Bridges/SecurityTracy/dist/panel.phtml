@@ -1,0 +1,13 @@
+<?php
+declare(strict_types=1);
+?>
+<h1><?php if ($user->isLoggedIn()): ?>
+Logged in<?php else: ?>
+Unlogged<?php endif ?>
+</h1>
+
+<div class="tracy-inner nette-UserPanel">
+<?php if ($user->getIdentity()): ?>		<?= Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true]) ?>
+
+<?php else: ?>		<p>no identity</p>
+<?php endif ?></div>
