@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nette\Security;
 
+use function in_array, is_float, is_numeric, iterator_to_array;
+
 
 /**
  * @deprecated  use Nette\Security\SimpleIdentity

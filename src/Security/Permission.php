@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Security;
 
 use Nette;
+use function array_keys, array_pop, count, is_array;
 
 
 /**

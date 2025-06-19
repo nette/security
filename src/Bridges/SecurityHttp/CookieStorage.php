@@ -12,6 +12,7 @@ namespace Nette\Bridges\SecurityHttp;
 use Nette;
 use Nette\Http;
 use Nette\Security\IIdentity;
+use function is_string, strlen;
 
 
 /**

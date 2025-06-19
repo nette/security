@@ -12,6 +12,7 @@ namespace Nette\Bridges\SecurityDI;
 use Nette;
 use Nette\Schema\Expect;
 use Tracy;
+use function is_array;
 
 
 /**

@@ -11,6 +11,7 @@ namespace Nette\Security;
 
 use Nette;
 use Nette\Utils\Arrays;
+use function func_get_args;
 
 
 /**

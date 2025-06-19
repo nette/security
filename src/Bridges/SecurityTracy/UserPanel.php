@@ -11,6 +11,7 @@ namespace Nette\Bridges\SecurityTracy;
 
 use Nette;
 use Tracy;
+use const PHP_SESSION_ACTIVE;
 
 
 /**

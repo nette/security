@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\Security;
 
 use Nette;
+use const PASSWORD_DEFAULT;
 
 
 /**
