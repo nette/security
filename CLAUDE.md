@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Nette Security is a standalone PHP library providing authentication, authorization, and role-based access control (ACL) for the Nette Framework ecosystem.
 
 - **Type**: Reusable PHP library/package
-- **PHP Support**: 8.1 - 8.5
+- **PHP Support**: 8.2 - 8.5
 - **Key Components**: Authentication (User login/logout), Authorization (Permission checking), ACL (Access Control Lists)
 - **Documentation**: https://doc.nette.org/access-control
 
@@ -556,7 +556,7 @@ public function checkRequirements($element): void
 ## CI/CD Pipeline
 
 GitHub Actions run on all pull requests:
-- Tests across PHP 8.1, 8.2, 8.3, 8.4, 8.5
+- Tests across PHP 8.2, 8.3, 8.4, 8.5
 - Code style checks (Nette Code Checker)
 - Static analysis (PHPStan Level 5)
 - Code coverage tracking
