@@ -27,7 +27,7 @@ Nette Security provides authentication (login/logout via pluggable
 persistence (`UserStorage`: session or cookie). Standalone library. Developers
 **implement the interfaces, never extend the concrete classes**.
 
-- **PHP Version**: 8.1 - 8.6
+- **PHP Version**: 8.3 - 8.6
 - **Package**: `nette/security`
 
 ## Essential Commands

@@ -20,7 +20,7 @@ Authentication & Authorization library for Nette.
 
 Documentation can be found on the [website](https://doc.nette.org/access-control).
 
-It requires PHP version 8.1 and supports PHP up to 8.6.
+It requires PHP version 8.3 and supports PHP up to 8.6.
 
 
 [Support Me](https://github.com/sponsors/dg)
