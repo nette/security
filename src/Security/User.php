@@ -32,16 +32,16 @@ class User
 		LogoutManual = 1,
 		LogoutInactivity = 2;
 
-	/** @deprecated use User::LogoutManual */
+	#[\Deprecated('use User::LogoutManual', since: '3.2')]
 	public const LOGOUT_MANUAL = self::LogoutManual;
 
-	/** @deprecated use User::LogoutManual */
+	#[\Deprecated('use User::LogoutManual', since: '2.2')]
 	public const MANUAL = self::LogoutManual;
 
-	/** @deprecated use User::LogoutInactivity */
+	#[\Deprecated('use User::LogoutInactivity', since: '3.2')]
 	public const LOGOUT_INACTIVITY = self::LogoutInactivity;
 
-	/** @deprecated use User::LogoutInactivity */
+	#[\Deprecated('use User::LogoutInactivity', since: '2.2')]
 	public const INACTIVITY = self::LogoutInactivity;
 
 	/** role for an unauthenticated user, unless a guest identity provides its own roles */
@@ -250,7 +250,7 @@ class User
 	}
 
 
-	/** @deprecated */
+	#[\Deprecated(since: '3.0.2')]
 	final public function hasAuthenticator(): bool
 	{
 		return (bool) $this->authenticator;
@@ -302,13 +302,7 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		foreach ($this->getRoles() as $r) {
-			if ($role === ($r instanceof Role ? $r->getRoleId() : $r)) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any($this->getRoles(), fn($r) => $role === ($r instanceof Role ? $r->getRoleId() : $r));
 	}
 
 
@@ -318,13 +312,7 @@ class User
 	 */
 	public function isAllowed(mixed $resource = Authorizator::All, mixed $privilege = Authorizator::All): bool
 	{
-		foreach ($this->getRoles() as $role) {
-			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any($this->getRoles(), fn($role) => $this->getAuthorizator()->isAllowed($role, $resource, $privilege));
 	}
 
 
@@ -360,7 +348,7 @@ class User
 	}
 
 
-	/** @deprecated */
+	#[\Deprecated(since: '3.0.2')]
 	final public function hasAuthorizator(): bool
 	{
 		return (bool) $this->authorizator;

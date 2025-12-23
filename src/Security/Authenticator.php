@@ -20,16 +20,16 @@ interface Authenticator extends IAuthenticator
 		Failure = 3,
 		NotApproved = 4;
 
-	/** @deprecated use Authenticator::IdentityNotFound */
+	#[\Deprecated('use Authenticator::IdentityNotFound', since: '3.2')]
 	public const IDENTITY_NOT_FOUND = self::IdentityNotFound;
 
-	/** @deprecated use Authenticator::InvalidCredential */
+	#[\Deprecated('use Authenticator::InvalidCredential', since: '3.2')]
 	public const INVALID_CREDENTIAL = self::InvalidCredential;
 
-	/** @deprecated use Authenticator::Failure */
+	#[\Deprecated('use Authenticator::Failure', since: '3.2')]
 	public const FAILURE = self::Failure;
 
-	/** @deprecated use Authenticator::NotApproved */
+	#[\Deprecated('use Authenticator::NotApproved', since: '3.2')]
 	public const NOT_APPROVED = self::NotApproved;
 
 	/**

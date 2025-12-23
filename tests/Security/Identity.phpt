@@ -17,6 +17,6 @@ test('deprecated Identity behaves like SimpleIdentity', function () {
 	Assert::same('John', $id->name);
 
 	// numeric string id is coerced to int, oversized stays string
-	Assert::same(12, (new Identity('12'))->getId());
-	Assert::same('12345678901234567890', (new Identity('12345678901234567890'))->getId());
+	Assert::same(12, new Identity('12')->getId());
+	Assert::same('12345678901234567890', new Identity('12345678901234567890')->getId());
 });

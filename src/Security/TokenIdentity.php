@@ -13,10 +13,10 @@ use Nette;
 /**
  * Identity carrying only a token from the client, to be exchanged for the real identity by IdentityHandler::wakeupIdentity().
  */
-final class TokenIdentity implements IIdentity
+final readonly class TokenIdentity implements IIdentity
 {
 	public function __construct(
-		private readonly string $token,
+		private string $token,
 	) {
 	}
 

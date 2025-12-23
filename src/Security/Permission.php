@@ -145,13 +145,7 @@ class Permission implements Authorizator
 			return $inherits;
 		}
 
-		foreach ($this->roles[$role]['parents'] as $parent => $foo) {
-			if ($this->roleInheritsFrom($parent, $inherit)) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any($this->roles[$role]['parents'], fn($foo, $parent) => $this->roleInheritsFrom($parent, $inherit));
 	}
 
 
