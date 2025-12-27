@@ -17,12 +17,9 @@ use const PHP_SESSION_ACTIVE;
  */
 class UserPanel implements Tracy\IBarPanel
 {
-	private Nette\Security\User $user;
-
-
-	public function __construct(Nette\Security\User $user)
-	{
-		$this->user = $user;
+	public function __construct(
+		private readonly Nette\Security\User $user,
+	) {
 	}
 
 

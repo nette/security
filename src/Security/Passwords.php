@@ -21,8 +21,8 @@ class Passwords
 	 * @see https://php.net/manual/en/password.constants.php
 	 */
 	public function __construct(
-		private string $algo = PASSWORD_DEFAULT,
-		private array $options = [],
+		private readonly string $algo = PASSWORD_DEFAULT,
+		private readonly array $options = [],
 	) {
 	}
 

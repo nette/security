@@ -18,12 +18,9 @@ use function is_array;
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
-	private bool $debugMode;
-
-
-	public function __construct(bool $debugMode = false)
-	{
-		$this->debugMode = $debugMode;
+	public function __construct(
+		private readonly bool $debugMode = false,
+	) {
 	}
 
 
