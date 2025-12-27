@@ -24,7 +24,8 @@
 		"nette/tester": "^2.5",
 		"tracy/tracy": "^2.9",
 		"phpstan/phpstan-nette": "^2.0@stable",
-		"mockery/mockery": "^1.6@stable"
+		"mockery/mockery": "^1.6@stable",
+		"rector/rector": "^2.3@stable"
 	},
 	"conflict": {
 		"nette/di": "<3.0-stable",
