@@ -91,7 +91,7 @@ class User
 		?string $password = null,
 	): void
 	{
-		$this->logout(true);
+		$this->logout(clearIdentity: true);
 		if ($username instanceof IIdentity) {
 			$this->identity = $username;
 		} else {
@@ -228,7 +228,7 @@ class User
 	/**
 	 * Enables log out after inactivity (like '20 minutes').
 	 */
-	public function setExpiration(?string $expire, bool $clearIdentity = false)
+	public function setExpiration(?string $expire, bool $clearIdentity = false): static
 	{
 		$this->storage->setExpiration($expire, $clearIdentity);
 		return $this;
@@ -257,7 +257,7 @@ class User
 		}
 
 		$identity = $this->getIdentity();
-		return $identity && $identity->getRoles() ? $identity->getRoles() : [$this->authenticatedRole];
+		return $identity?->getRoles() ?? [$this->authenticatedRole];
 	}
 
 
@@ -280,7 +280,7 @@ class User
 	 * Has a user effective access to the Resource?
 	 * If $resource is null, then the query applies to all resources.
 	 */
-	public function isAllowed($resource = Authorizator::All, $privilege = Authorizator::All): bool
+	public function isAllowed(mixed $resource = Authorizator::All, mixed $privilege = Authorizator::All): bool
 	{
 		foreach ($this->getRoles() as $role) {
 			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
