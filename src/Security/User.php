@@ -91,7 +91,7 @@ class User
 		?string $password = null,
 	): void
 	{
-		$this->logout(true);
+		$this->logout(clearIdentity: true);
 		if ($username instanceof IIdentity) {
 			$this->identity = $username;
 		} else {
@@ -228,7 +228,7 @@ class User
 	/**
 	 * Enables log out after inactivity (like '20 minutes').
 	 */
-	public function setExpiration(?string $expire, bool $clearIdentity = false)
+	public function setExpiration(?string $expire, bool $clearIdentity = false): static
 	{
 		$this->storage->setExpiration($expire, $clearIdentity);
 		return $this;
