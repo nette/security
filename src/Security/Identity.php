@@ -23,7 +23,7 @@ class Identity implements IIdentity
 	private array $data;
 
 
-	public function __construct($id, $roles = null, ?iterable $data = null)
+	public function __construct(string|int $id, $roles = null, ?iterable $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);
@@ -83,7 +83,7 @@ class Identity implements IIdentity
 	/**
 	 * Sets user data value.
 	 */
-	public function __set(string $key, $value): void
+	public function __set(string $key, mixed $value): void
 	{
 		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
 			$this->{"set$key"}($value);

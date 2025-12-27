@@ -21,15 +21,14 @@ use function is_bool, time;
 final class SessionStorage implements Nette\Security\UserStorage
 {
 	private string $namespace = '';
-	private Session $sessionHandler;
 	private ?SessionSection $sessionSection = null;
 	private ?int $expireTime = null;
 	private bool $expireIdentity = false;
 
 
-	public function __construct(Session $sessionHandler)
-	{
-		$this->sessionHandler = $sessionHandler;
+	public function __construct(
+		private readonly Session $sessionHandler,
+	) {
 	}
 
 
@@ -123,7 +122,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 	/**
 	 * Returns and initializes $this->sessionSection.
 	 */
-	protected function getSessionSection(): ?SessionSection
+	private function getSessionSection(): ?SessionSection
 	{
 		if ($this->sessionSection !== null) {
 			return $this->sessionSection;
