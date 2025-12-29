@@ -140,9 +140,9 @@ final class SessionStorage implements Nette\Security\UserStorage
 				if ($section->get('expireIdentity')) {
 					$section->remove('identity');
 				}
+			} else {
+				$section->set('expireTime', time() + $section->get('expireDelta')); // sliding expiration
 			}
-
-			$section->set('expireTime', time() + $section->get('expireDelta')); // sliding expiration
 		}
 
 		if (!$section->get('authenticated')) {
