@@ -1,14 +1,34 @@
 parameters:
-	level: 5
+	level: 8
 
 	paths:
 		- src
 
-	treatPhpDocTypesAsCertain: false
+	excludePaths:
+		- src/compatibility.php
+
+	fileExtensions:
+		- php
+		- phtml
 
 	ignoreErrors:
-		- '#Variable \$this in isset\(\) always exists and is not nullable\.#'
+		-   # generated Latte code: attribute interpolation emits a dead `=== null` check for values that are never null
+			identifier: identical.alwaysFalse
+			path: src/Bridges/SecurityTracy/dist/tab.phtml
+		-
+			message: '#^Method Nette\\Http\\IResponse\:\:setCookie\(\) invoked with 8 parameters, 3\-7 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Bridges/SecurityHttp/CookieStorage.php
 
+		-
+			message: '#^Instanceof between string and Nette\\Security\\Role will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
+			count: 1
+			path: src/Security/User.php
 
-includes:
-	- vendor/phpstan/phpstan-nette/extension.neon
+		-
+			message: '#^Parameter \#1 \$credentials of method Nette\\Security\\IAuthenticator\:\:authenticate\(\) expects array\{string, string\}, list\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Security/User.php
