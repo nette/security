@@ -13,15 +13,13 @@ namespace Nette\Security;
  */
 class SimpleAuthenticator implements Authenticator
 {
-	/**
-	 * @param  array  $passwords list of pairs username => password
-	 * @param  array  $roles list of pairs username => role[]
-	 * @param  array  $data list of pairs username => mixed[]
-	 */
 	public function __construct(
+		/** @var array<string, string> */
 		#[\SensitiveParameter]
 		private array $passwords,
+		/** @var array<string, string|string[]|null> */
 		private array $roles = [],
+		/** @var array<string, array<string, mixed>> */
 		private array $data = [],
 	) {
 	}

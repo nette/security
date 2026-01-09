@@ -10,7 +10,7 @@ namespace Nette\Security;
 
 /**
  * @deprecated  update to Nette\Security\Authenticator
- * @method IIdentity authenticate(array $credentials)
+ * @method IIdentity authenticate(array{string, string} $credentials)
  */
 interface IAuthenticator
 {

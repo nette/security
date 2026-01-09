@@ -18,10 +18,10 @@ class Passwords
 {
 	/**
 	 * Chooses which secure algorithm is used for hashing and how to configure it.
-	 * @see https://php.net/manual/en/password.constants.php
 	 */
 	public function __construct(
 		private readonly string $algo = PASSWORD_DEFAULT,
+		/** @var array<string, mixed>  algorithm-specific options, see https://php.net/manual/en/password.constants.php */
 		private readonly array $options = [],
 	) {
 	}

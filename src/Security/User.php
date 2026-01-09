@@ -16,10 +16,10 @@ use function func_get_args;
  * User authentication and authorization.
  *
  * @property-read bool $loggedIn
- * @property-read IIdentity $identity
- * @property-read string|int $id
- * @property-read array $roles
- * @property-read int $logoutReason
+ * @property-read ?IIdentity $identity
+ * @property-read string|int|null $id
+ * @property-read string[] $roles
+ * @property-read ?int $logoutReason
  * @property   IAuthenticator $authenticator
  * @property   Authorizator $authorizator
  */
@@ -247,6 +247,7 @@ class User
 
 	/**
 	 * Returns a list of effective roles that a user has been granted.
+	 * @return string[]
 	 */
 	public function getRoles(): array
 	{

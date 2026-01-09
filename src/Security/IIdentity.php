@@ -10,18 +10,19 @@ namespace Nette\Security;
 
 /**
  * Represents the user of application.
- * @method array getData()
+ * @method array<string, mixed> getData()
  */
 interface IIdentity
 {
 	/**
 	 * Returns the ID of user.
-	 * @return mixed
+	 * @return string|int
 	 */
 	function getId();
 
 	/**
 	 * Returns a list of roles that the user is a member of.
+	 * @return string[]
 	 */
 	function getRoles(): array;
 

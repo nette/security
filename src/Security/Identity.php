@@ -13,17 +13,25 @@ use function in_array, is_float, is_numeric, iterator_to_array;
 /**
  * @deprecated  use Nette\Security\SimpleIdentity
  * @property   string|int $id
- * @property   array $roles
- * @property   array $data
+ * @property   string[] $roles
+ * @property   array<string, mixed> $data
  */
 class Identity implements IIdentity
 {
 	private string|int $id;
+
+	/** @var string[] */
 	private array $roles;
+
+	/** @var array<string, mixed> */
 	private array $data;
 
 
-	public function __construct(string|int $id, $roles = null, ?iterable $data = null)
+	/**
+	 * @param  string|string[]|null  $roles
+	 * @param  ?iterable<string, mixed>  $data
+	 */
+	public function __construct(string|int $id, string|array|null $roles = null, ?iterable $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);
@@ -54,6 +62,7 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets a list of roles that the user is a member of.
+	 * @param  string[]  $roles
 	 */
 	public function setRoles(array $roles): static
 	{
@@ -64,6 +73,7 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns a list of roles that the user is a member of.
+	 * @return string[]
 	 */
 	public function getRoles(): array
 	{
@@ -73,6 +83,7 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns a user data.
+	 * @return array<string, mixed>
 	 */
 	public function getData(): array
 	{
