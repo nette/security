@@ -138,7 +138,7 @@ class User
 			$this->getStoredData();
 		}
 
-		return $this->authenticated;
+		return (bool) $this->authenticated;
 	}
 
 
@@ -166,7 +166,7 @@ class User
 		$this->identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
 			: $identity;
-		$this->authenticated = $this->authenticated && $this->identity;
+		$this->authenticated = $this->authenticated && $this->identity !== null;
 	}
 
 

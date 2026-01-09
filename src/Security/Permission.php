@@ -621,6 +621,7 @@ class Permission implements Authorizator
 				break;
 			}
 
+			assert(is_string($resource));
 			$resource = $this->resources[$resource]['parent']; // try next Resource
 		} while (true);
 
