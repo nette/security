@@ -22,7 +22,7 @@ ob_start();
 
 test('Session stays authenticated without expiration set', function () {
 	$request = new Nette\Http\Request(new Nette\Http\UrlScript('http://localhost'));
-	$response = new Nette\Http\Response();
+	$response = new Nette\Http\Response;
 	$session = new Session($request, $response);
 	$storage = new SessionStorage($session);
 
@@ -37,7 +37,7 @@ test('Session stays authenticated without expiration set', function () {
 
 test('Expiration with clearIdentity removes identity on timeout', function () {
 	$request = new Nette\Http\Request(new Nette\Http\UrlScript('http://localhost'));
-	$response = new Nette\Http\Response();
+	$response = new Nette\Http\Response;
 	$session = new Session($request, $response);
 	$storage = new SessionStorage($session);
 
@@ -62,7 +62,7 @@ test('Expiration with clearIdentity removes identity on timeout', function () {
 
 test('Expiration without clearIdentity keeps identity on timeout', function () {
 	$request = new Nette\Http\Request(new Nette\Http\UrlScript('http://localhost'));
-	$response = new Nette\Http\Response();
+	$response = new Nette\Http\Response;
 	$session = new Session($request, $response);
 	$storage = new SessionStorage($session);
 
@@ -86,7 +86,7 @@ test('Expiration without clearIdentity keeps identity on timeout', function () {
 
 test('Sliding expiration extends session on activity', function () {
 	$request = new Nette\Http\Request(new Nette\Http\UrlScript('http://localhost'));
-	$response = new Nette\Http\Response();
+	$response = new Nette\Http\Response;
 	$session = new Session($request, $response);
 	$storage = new SessionStorage($session);
 
@@ -115,7 +115,7 @@ test('Sliding expiration extends session on activity', function () {
 
 test('setExpiration(null) disables expiration', function () {
 	$request = new Nette\Http\Request(new Nette\Http\UrlScript('http://localhost'));
-	$response = new Nette\Http\Response();
+	$response = new Nette\Http\Response;
 	$session = new Session($request, $response);
 	$storage = new SessionStorage($session);
 
