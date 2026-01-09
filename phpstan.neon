@@ -1,14 +1,15 @@
 parameters:
-	level: 5
+	level: 8
 
 	paths:
 		- src
 
-	treatPhpDocTypesAsCertain: false
+	excludePaths:
+		- src/compatibility.php
 
-	ignoreErrors:
-		- '#Variable \$this in isset\(\) always exists and is not nullable\.#'
-
+	fileExtensions:
+		- php
+		- phtml
 
 includes:
-	- vendor/phpstan/phpstan-nette/extension.neon
+	- phpstan-baseline.neon

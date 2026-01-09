@@ -96,12 +96,12 @@ class Identity implements IIdentity
 	 */
 	public function __set(string $key, mixed $value): void
 	{
-		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
-			$this->{"set$key"}($value);
-
-		} else {
-			$this->data[$key] = $value;
-		}
+		match ($key) {
+			'id' => $this->setId($value),
+			'roles' => $this->setRoles($value),
+			'data' => $this->data = $value,
+			default => $this->data[$key] = $value,
+		};
 	}
 
 
@@ -111,7 +111,7 @@ class Identity implements IIdentity
 	public function &__get(string $key): mixed
 	{
 		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
-			$res = $this->{"get$key"}();
+			$res = $this->{'get' . ucfirst($key)}();
 			return $res;
 
 		} else {

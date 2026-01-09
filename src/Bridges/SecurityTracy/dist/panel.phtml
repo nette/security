@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<h1><?php if ($user->isLoggedIn()): ?>
+<?php /** @var Nette\Security\User $user */ ?><h1><?php if ($user->isLoggedIn()): ?>
 Logged in<?php else: ?>
 Unlogged<?php endif ?>
 </h1>
