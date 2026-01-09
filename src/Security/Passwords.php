@@ -41,7 +41,7 @@ class Passwords
 
 		$hash = @password_hash($password, $this->algo, $this->options); // @ is escalated to exception
 		if (!$hash) {
-			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
+			throw new Nette\InvalidStateException('Computed hash is invalid. ' . (error_get_last()['message'] ?? ''));
 		}
 
 		return $hash;

@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php $messages = [true => 'Logged in', false => 'Unlogged', '?' => 'Session is closed'] ?><?php $colors = [true => '#61A519', false => '#ababab', '?' => '#bb0000'] ?><span title="<?= Tracy\Helpers::escapeHtml($messages[$status]) ?>
+<?php /** @var string|bool $status */ ?><?php $messages = [true => 'Logged in', false => 'Unlogged', '?' => 'Session is closed'] ?><?php $colors = [true => '#61A519', false => '#ababab', '?' => '#bb0000'] ?><span title="<?= Tracy\Helpers::escapeHtml($messages[$status]) ?>
 ">
 	<svg viewBox="0 -50 2048 2048">
 		<path fill="<?= Tracy\Helpers::escapeHtml($colors[$status]) ?>

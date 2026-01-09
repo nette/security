@@ -8,7 +8,7 @@
 namespace Nette\Security;
 
 use Nette;
-use function array_keys, array_pop, count, is_array;
+use function array_keys, array_pop, count, is_array, is_string;
 
 
 /**
@@ -619,6 +619,7 @@ class Permission implements Authorizator
 				break;
 			}
 
+			assert(is_string($resource));
 			$resource = $this->resources[$resource]['parent']; // try next Resource
 		} while (true);
 
