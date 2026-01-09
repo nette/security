@@ -18,10 +18,13 @@ use function array_keys, array_pop, count, is_array;
  */
 class Permission implements Authorizator
 {
+	/** @var array<string, array{parents: array<string, true>, children: array<string, true>}> */
 	private array $roles = [];
+
+	/** @var array<string, array{parent: ?string, children: array<string, true>}> */
 	private array $resources = [];
 
-	/** Access Control List rules; whitelist (deny everything to all) by default */
+	/** @var array<string, mixed> Access Control List rules; whitelist (deny everything to all) by default */
 	private array $rules = [
 		'allResources' => [
 			'allRoles' => [
@@ -46,6 +49,7 @@ class Permission implements Authorizator
 	/**
 	 * Adds a Role to the list. The most recently added parent
 	 * takes precedence over parents that were previously added.
+	 * @param  string|string[]|null  $parents
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
 	 */
@@ -106,6 +110,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Roles.
+	 * @return list<string>
 	 */
 	public function getRoles(): array
 	{
@@ -115,6 +120,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns existing Role's parents ordered by ascending priority.
+	 * @return list<string>
 	 */
 	public function getRoleParents(string $role): array
 	{
@@ -267,6 +273,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Resources.
+	 * @return list<string>
 	 */
 	public function getResources(): array
 	{
@@ -365,6 +372,10 @@ class Permission implements Authorizator
 	/**
 	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
+	 * @param  string|string[]|null  $roles
+	 * @param  string|string[]|null  $resources
+	 * @param  string|string[]|null  $privileges
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 */
 	public function allow(
 		string|array|null $roles = self::All,
@@ -381,6 +392,10 @@ class Permission implements Authorizator
 	/**
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
+	 * @param  string|string[]|null  $roles
+	 * @param  string|string[]|null  $resources
+	 * @param  string|string[]|null  $privileges
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 */
 	public function deny(
 		string|array|null $roles = self::All,
@@ -396,6 +411,9 @@ class Permission implements Authorizator
 
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
+	 * @param  string|string[]|null  $roles
+	 * @param  string|string[]|null  $resources
+	 * @param  string|string[]|null  $privileges
 	 */
 	public function removeAllow(
 		string|array|null $roles = self::All,
@@ -410,6 +428,9 @@ class Permission implements Authorizator
 
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
+	 * @param  string|string[]|null  $roles
+	 * @param  string|string[]|null  $resources
+	 * @param  string|string[]|null  $privileges
 	 */
 	public function removeDeny(
 		string|array|null $roles = self::All,
@@ -424,6 +445,10 @@ class Permission implements Authorizator
 
 	/**
 	 * Performs operations on Access Control List rules.
+	 * @param  string|string[]|null  $roles
+	 * @param  string|string[]|null  $resources
+	 * @param  string|string[]|null  $privileges
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 * @throws Nette\InvalidStateException
 	 */
 	protected function setRule(
@@ -711,6 +736,7 @@ class Permission implements Authorizator
 	/**
 	 * Returns the rules associated with a Resource and a Role, or null if no such rules exist.
 	 * If the $create parameter is true, then a rule set is first created and then returned to the caller.
+	 * @return array<string, mixed>|null
 	 */
 	private function &getRules(?string $resource, ?string $role, bool $create = false): ?array
 	{
