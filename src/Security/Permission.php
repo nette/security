@@ -20,7 +20,10 @@ use function array_keys, array_pop, count, is_array;
  */
 class Permission implements Authorizator
 {
+	/** @var array<string, array{parents: array<string, true>, children: array<string, true>}> */
 	private array $roles = [];
+
+	/** @var array<string, array{parent: ?string, children: array<string, true>}> */
 	private array $resources = [];
 
 	/** Access Control List rules; whitelist (deny everything to all) by default */
@@ -108,6 +111,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Roles.
+	 * @return string[]
 	 */
 	public function getRoles(): array
 	{
@@ -117,6 +121,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns existing Role's parents ordered by ascending priority.
+	 * @return string[]
 	 */
 	public function getRoleParents(string $role): array
 	{
@@ -269,6 +274,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Resources.
+	 * @return string[]
 	 */
 	public function getResources(): array
 	{

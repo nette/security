@@ -24,6 +24,7 @@ class Passwords
 	 */
 	public function __construct(
 		private readonly string $algo = PASSWORD_DEFAULT,
+		/* @var  array<string, mixed>  algorithm-specific options (e.g. 'cost' for bcrypt) */
 		private readonly array $options = [],
 	) {
 	}

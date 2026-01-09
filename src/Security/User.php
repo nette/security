@@ -249,6 +249,7 @@ class User
 
 	/**
 	 * Returns a list of effective roles that a user has been granted.
+	 * @return string[]
 	 */
 	public function getRoles(): array
 	{
@@ -257,7 +258,7 @@ class User
 		}
 
 		$identity = $this->getIdentity();
-		return $identity && $identity->getRoles() ? $identity->getRoles() : [$this->authenticatedRole];
+		return $identity?->getRoles() ?? [$this->authenticatedRole];
 	}
 
 
