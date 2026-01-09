@@ -23,7 +23,9 @@
 		"nette/http": "^3.2",
 		"nette/tester": "^2.6",
 		"tracy/tracy": "^2.9",
-		"phpstan/phpstan-nette": "^2.0@stable",
+		"phpstan/phpstan": "^2.1@stable",
+		"phpstan/extension-installer": "^1.4@stable",
+		"nette/phpstan-rules": "^1.0",
 		"mockery/mockery": "^1.6@stable"
 	},
 	"conflict": {
@@ -44,6 +46,11 @@
 	"extra": {
 		"branch-alias": {
 			"dev-master": "3.2-dev"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"phpstan/extension-installer": true
 		}
 	}
 }
