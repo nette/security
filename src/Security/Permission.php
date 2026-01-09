@@ -20,7 +20,10 @@ use function array_keys, array_pop, count, is_array;
  */
 class Permission implements Authorizator
 {
+	/** @var array<string, array{parents: array<string, true>, children: array<string, true>}> */
 	private array $roles = [];
+
+	/** @var array<string, array{parent: ?string, children: array<string, true>}> */
 	private array $resources = [];
 
 	/** Access Control List rules; whitelist (deny everything to all) by default */
@@ -108,6 +111,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Roles.
+	 * @return string[]
 	 */
 	public function getRoles(): array
 	{
@@ -117,6 +121,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns existing Role's parents ordered by ascending priority.
+	 * @return string[]
 	 */
 	public function getRoleParents(string $role): array
 	{
@@ -269,6 +274,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Returns all Resources.
+	 * @return string[]
 	 */
 	public function getResources(): array
 	{
@@ -367,6 +373,7 @@ class Permission implements Authorizator
 	/**
 	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 */
 	public function allow(
 		string|array|null $roles = self::All,
@@ -383,6 +390,7 @@ class Permission implements Authorizator
 	/**
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return true in order for rule to apply.
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 */
 	public function deny(
 		string|array|null $roles = self::All,
@@ -426,6 +434,7 @@ class Permission implements Authorizator
 
 	/**
 	 * Performs operations on Access Control List rules.
+	 * @param  callable(self, ?string, ?string, ?string): bool  $assertion
 	 * @throws Nette\InvalidStateException
 	 */
 	protected function setRule(
