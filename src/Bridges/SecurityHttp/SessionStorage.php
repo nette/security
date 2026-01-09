@@ -64,9 +64,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 	public function getState(): array
 	{
 		$section = $this->getSessionSection();
-		return $section
-			? [(bool) $section->get('authenticated'), $section->get('identity'), $section->get('reason')]
-			: [false, null, null];
+		return [(bool) $section->get('authenticated'), $section->get('identity'), $section->get('reason')];
 	}
 
 
@@ -83,6 +81,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 
 	private function setupExpiration(): void
 	{
+		assert($this->sessionSection !== null);
 		$section = $this->sessionSection;
 		if ($this->expireTime) {
 			$section->set('expireTime', $this->expireTime);
@@ -122,7 +121,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 	/**
 	 * Returns and initializes $this->sessionSection.
 	 */
-	private function getSessionSection(): ?SessionSection
+	private function getSessionSection(): SessionSection
 	{
 		if ($this->sessionSection !== null) {
 			return $this->sessionSection;

@@ -82,11 +82,11 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			][$auth->storage]);
 
 		if ($auth->storage === 'cookie') {
-			if ($auth->cookieDomain === 'domain') {
-				$auth->cookieDomain = $builder::literal('$this->getByType(Nette\Http\IRequest::class)->getUrl()->getDomain(2)');
-			}
+			$cookieDomain = $auth->cookieDomain === 'domain'
+				? $builder::literal('$this->getByType(Nette\Http\IRequest::class)->getUrl()->getDomain(2)')
+				: $auth->cookieDomain;
 
-			$storage->addSetup('setCookieParameters', [$auth->cookieName, $auth->cookieDomain, $auth->cookieSamesite]);
+			$storage->addSetup('setCookieParameters', [$auth->cookieName, $cookieDomain, $auth->cookieSamesite]);
 		}
 
 		$user = $builder->addDefinition($this->prefix('user'))
@@ -147,7 +147,9 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$this->debugMode &&
 			($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
 		) {
-			$builder->getDefinition($this->prefix('user'))->addSetup('@Tracy\Bar::addPanel', [
+			$definition = $builder->getDefinition($this->prefix('user'));
+			assert($definition instanceof Nette\DI\Definitions\ServiceDefinition);
+			$definition->addSetup('@Tracy\Bar::addPanel', [
 				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
 			]);
 		}

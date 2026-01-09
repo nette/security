@@ -1,11 +1,23 @@
-<?php declare(strict_types=1); ?>
-<h1><?php if ($user->isLoggedIn()): ?>
-Logged in<?php else: ?>
-Unlogged<?php endif ?>
-</h1>
+<?php declare(strict_types=1);
+
+/** @var Nette\Security\User $user */
+echo '<h1>';
+if ($user->isLoggedIn()) /* pos 2:5 */ {
+	echo 'Logged in';
+} else /* pos 2:38 */ {
+	echo 'Unlogged';
+}
+echo '</h1>
 
 <div class="tracy-inner nette-UserPanel">
-<?php if ($user->getIdentity()): ?>		<?= Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true]) ?>
-
-<?php else: ?>		<p>no identity</p>
-<?php endif ?></div>
+';
+if ($user->getIdentity()) /* pos 5:2 */ {
+	echo '	';
+	echo Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true]) /* pos 6:3 */;
+	echo "\n";
+} else /* pos 7:2 */ {
+	echo '	<p>no identity</p>
+';
+}
+echo '</div>
+';
