@@ -16,10 +16,10 @@ use function func_get_args;
  * User authentication and authorization.
  *
  * @property-read bool $loggedIn
- * @property-read IIdentity $identity
- * @property-read string|int $id
- * @property-read array $roles
- * @property-read int $logoutReason
+ * @property-read ?IIdentity $identity
+ * @property-read string|int|null $id
+ * @property-read list<string> $roles
+ * @property-read ?int $logoutReason
  * @property   IAuthenticator $authenticator
  * @property   Authorizator $authorizator
  */
@@ -50,10 +50,10 @@ class User
 	/** default role for authenticated user without own identity */
 	public string $authenticatedRole = 'authenticated';
 
-	/** @var array<callable(self): void>  Occurs when the user is successfully logged in */
+	/** @var array<callable(static): void>  Occurs when the user is successfully logged in */
 	public array $onLoggedIn = [];
 
-	/** @var array<callable(self): void>  Occurs when the user is logged out */
+	/** @var array<callable(static): void>  Occurs when the user is logged out */
 	public array $onLoggedOut = [];
 
 	private ?IIdentity $identity = null;
@@ -111,7 +111,8 @@ class User
 
 
 	/**
-	 * Logs out the user from the current session.
+	 * Logs out the user from the current session. The identity is kept available afterwards,
+	 * unless $clearIdentity is set.
 	 */
 	final public function logout(bool $clearIdentity = false): void
 	{
@@ -141,7 +142,8 @@ class User
 
 
 	/**
-	 * Returns the current user identity, or null if not authenticated.
+	 * Returns the user identity. It may be available even when not logged in (e.g. after logout or expiration),
+	 * so its presence does not imply the user is logged in; null if none.
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
@@ -169,7 +171,8 @@ class User
 
 
 	/**
-	 * Returns current user ID, if any.
+	 * Returns the ID of the identity returned by getIdentity(), so it may be available even when not
+	 * logged in; null if there is no identity.
 	 */
 	public function getId(): string|int|null
 	{
@@ -179,7 +182,7 @@ class User
 
 
 	/**
-	 * Discards cached authentication state, forcing a reload from storage on next access.
+	 * Discards the cached authentication state and identity, forcing a reload on next access.
 	 */
 	final public function refreshStorage(): void
 	{
@@ -227,7 +230,8 @@ class User
 
 
 	/**
-	 * Enables log out after inactivity (like '20 minutes').
+	 * Enables log out after inactivity (like '20 minutes'). The identity is kept available afterwards,
+	 * unless $clearIdentity is set.
 	 */
 	public function setExpiration(?string $expire, bool $clearIdentity = false): static
 	{
@@ -249,7 +253,9 @@ class User
 
 
 	/**
-	 * Returns effective roles of the user. Unauthenticated users get the guest role.
+	 * Returns effective roles derived from the login state, not from the (possibly retained) identity.
+	 * Logged in: the identity's roles, or authenticatedRole. Otherwise: the guestRole.
+	 * @return list<string>
 	 */
 	public function getRoles(): array
 	{

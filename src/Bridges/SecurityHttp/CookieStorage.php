@@ -84,6 +84,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	}
 
 
+	/** @param  'Lax'|'Strict'|'None'|null  $sameSite */
 	public function setCookieParameters(
 		?string $name = null,
 		?string $domain = null,

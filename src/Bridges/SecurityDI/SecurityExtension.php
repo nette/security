@@ -15,6 +15,20 @@ use function is_array;
 
 /**
  * Security extension for Nette DI.
+ *
+ * @property object{
+ *     debugger: bool|null,
+ *     users: array<string, string|array{password: string, roles?: string|list<string>, data?: array<string, mixed>}>,
+ *     roles: array<string, string|list<string>|null>,
+ *     resources: array<string, string|null>,
+ *     authentication: object{
+ *         storage: 'session'|'cookie',
+ *         expiration: string|null,
+ *         cookieName: string|null,
+ *         cookieDomain: string|null,
+ *         cookieSamesite: 'Lax'|'Strict'|'None'|null,
+ *     },
+ * } $config
  */
 class SecurityExtension extends Nette\DI\CompilerExtension
 {
@@ -53,7 +67,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration(): void
 	{
-		/** @var object{debugger: bool, users: array, roles: array, resources: array, authentication: \stdClass} $config */
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
 
