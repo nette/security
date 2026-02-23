@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\Permission Tests basic Role inheritance.
  */
-
-declare(strict_types=1);
 
 use Nette\Security\Permission;
 use Tester\Assert;

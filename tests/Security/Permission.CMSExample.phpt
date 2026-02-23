@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\Permission Ensures that an example for a content management system is operable.
  */
-
-declare(strict_types=1);
 
 use Nette\Security\Permission;
 use Tester\Assert;

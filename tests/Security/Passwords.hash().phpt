@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\Passwords::hash()
  */
-
-declare(strict_types=1);
 
 use Nette\Security\Passwords;
 use Tester\Assert;

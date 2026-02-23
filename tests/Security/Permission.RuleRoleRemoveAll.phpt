@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\Permission Ensures that removal of all Roles results in Role-specific rules being removed.
  */
-
-declare(strict_types=1);
 
 use Nette\Security\Permission;
 use Tester\Assert;

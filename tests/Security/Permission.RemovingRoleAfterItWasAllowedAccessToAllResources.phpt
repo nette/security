@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\Permission Confirm that deleting a role after allowing access to all roles
  * raise undefined index error.
  */
-
-declare(strict_types=1);
 
 use Nette\Security\Permission;
 use Tester\Assert;

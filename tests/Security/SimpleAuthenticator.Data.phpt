@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\SimpleAuthenticator and data
  */
-
-declare(strict_types=1);
 
 use Nette\Security\SimpleAuthenticator;
 use Tester\Assert;

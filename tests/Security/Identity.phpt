@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\Identity.
  */
-
-declare(strict_types=1);
 
 use Nette\Security\Identity;
 use Tester\Assert;

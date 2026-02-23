@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Nette\Security\User authorization.
  */
-
-declare(strict_types=1);
 
 use Nette\Security\IIdentity;
 use Nette\Security\Role;
