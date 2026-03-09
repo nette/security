@@ -11,12 +11,12 @@ use Nette;
 
 
 /**
- * Password Hashing.
+ * Password hashing and verification.
  */
 class Passwords
 {
 	/**
-	 * Chooses which secure algorithm is used for hashing and how to configure it.
+	 * Configures the hashing algorithm and its options.
 	 * @see https://php.net/manual/en/password.constants.php
 	 */
 	public function __construct(
@@ -27,7 +27,7 @@ class Passwords
 
 
 	/**
-	 * Computes password´s hash. The result contains the algorithm ID and its settings, cryptographical salt and the hash itself.
+	 * Computes a password hash containing the algorithm ID, settings, salt, and the hash itself.
 	 */
 	public function hash(
 		#[\SensitiveParameter]
@@ -48,7 +48,7 @@ class Passwords
 
 
 	/**
-	 * Finds out, whether the given password matches the given hash.
+	 * Checks whether the password matches the given hash.
 	 */
 	public function verify(
 		#[\SensitiveParameter]
@@ -61,7 +61,7 @@ class Passwords
 
 
 	/**
-	 * Finds out if the hash matches the options given in constructor.
+	 * Checks whether the hash needs to be rehashed with the current algorithm and options.
 	 */
 	public function needsRehash(string $hash): bool
 	{

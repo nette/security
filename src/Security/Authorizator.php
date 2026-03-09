@@ -9,8 +9,7 @@ namespace Nette\Security;
 
 
 /**
- * Authorizator checks if a given role has authorization
- * to access a given resource.
+ * Checks whether a given role has access to a given resource.
  */
 interface Authorizator
 {

@@ -80,7 +80,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns true if the Role exists in the list.
+	 * Checks whether the Role exists in the list.
 	 */
 	public function hasRole(string $role): bool
 	{
@@ -213,7 +213,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Adds a Resource having an identifier unique to the list.
+	 * Adds a Resource to the list.
 	 *
 	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
@@ -241,7 +241,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns true if the Resource exists in the list.
+	 * Checks whether the Resource exists in the list.
 	 */
 	public function hasResource(string $resource): bool
 	{
@@ -603,7 +603,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns real currently queried Role. Use by assertion.
+	 * Returns the role currently being queried. Used by assertion callbacks.
 	 */
 	public function getQueriedRole(): string|Role|null
 	{
@@ -612,7 +612,7 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns real currently queried Resource. Use by assertion.
+	 * Returns the resource currently being queried. Used by assertion callbacks.
 	 */
 	public function getQueriedResource(): string|Resource|null
 	{

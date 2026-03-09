@@ -9,7 +9,7 @@ namespace Nette\Security;
 
 
 /**
- * Interface for persistent storage for user object data.
+ * Persistent storage for user authentication state and identity.
  */
 interface UserStorage
 {
@@ -20,12 +20,12 @@ interface UserStorage
 	public const LOGOUT_INACTIVITY = 2;
 
 	/**
-	 * Sets the authenticated state of user.
+	 * Saves authenticated identity to storage.
 	 */
 	function saveAuthentication(IIdentity $identity): void;
 
 	/**
-	 * Removed authenticated state of user.
+	 * Removes authenticated state from storage.
 	 */
 	function clearAuthentication(bool $clearIdentity): void;
 

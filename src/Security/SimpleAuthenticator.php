@@ -28,8 +28,7 @@ class SimpleAuthenticator implements Authenticator
 
 
 	/**
-	 * Performs an authentication against e.g. database.
-	 * and returns IIdentity on success or throws AuthenticationException
+	 * Authenticates against the in-memory list of users (case-insensitive username).
 	 * @throws AuthenticationException
 	 */
 	public function authenticate(
