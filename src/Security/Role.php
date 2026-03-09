@@ -9,7 +9,7 @@ namespace Nette\Security;
 
 
 /**
- * Represents role, an object that may request access to an IResource.
+ * Represents a role that can be granted access to resources.
  */
 interface Role
 {

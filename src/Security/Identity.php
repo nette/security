@@ -72,7 +72,7 @@ class Identity implements IIdentity
 
 
 	/**
-	 * Returns a user data.
+	 * Returns user data.
 	 */
 	public function getData(): array
 	{

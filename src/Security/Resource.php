@@ -9,7 +9,7 @@ namespace Nette\Security;
 
 
 /**
- * Represents resource, an object to which access is controlled.
+ * Represents a resource to which access is controlled.
  */
 interface Resource
 {

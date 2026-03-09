@@ -79,8 +79,8 @@ class User
 
 
 	/**
-	 * Conducts the authentication process. Parameters are optional.
-	 * @param  string|IIdentity  $username  name or Identity
+	 * Authenticates the user. Accepts username and password, or an IIdentity directly.
+	 * @param  string|IIdentity  $username  username or identity
 	 * @throws AuthenticationException if authentication was not successful
 	 */
 	public function login(
@@ -128,7 +128,7 @@ class User
 
 
 	/**
-	 * Is this user authenticated?
+	 * Checks whether the user is authenticated.
 	 */
 	final public function isLoggedIn(): bool
 	{
@@ -141,7 +141,7 @@ class User
 
 
 	/**
-	 * Returns current user identity, if any.
+	 * Returns the current user identity, or null if not authenticated.
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
@@ -178,6 +178,9 @@ class User
 	}
 
 
+	/**
+	 * Discards cached authentication state, forcing a reload from storage on next access.
+	 */
 	final public function refreshStorage(): void
 	{
 		$this->identity = $this->authenticated = $this->logoutReason = null;
@@ -208,7 +211,7 @@ class User
 
 
 	/**
-	 * Returns authentication handler.
+	 * Returns authentication handler, or null if none is set.
 	 */
 	final public function getAuthenticatorIfExists(): ?IAuthenticator
 	{
@@ -234,7 +237,7 @@ class User
 
 
 	/**
-	 * Why was user logged out? Returns LOGOUT_MANUAL or LOGOUT_INACTIVITY.
+	 * Returns the logout reason: LogoutManual or LogoutInactivity, or null if not applicable.
 	 */
 	final public function getLogoutReason(): ?int
 	{
@@ -246,7 +249,7 @@ class User
 
 
 	/**
-	 * Returns a list of effective roles that a user has been granted.
+	 * Returns effective roles of the user. Unauthenticated users get the guest role.
 	 */
 	public function getRoles(): array
 	{
@@ -260,7 +263,7 @@ class User
 
 
 	/**
-	 * Is a user in the specified effective role?
+	 * Checks whether the user has the specified effective role.
 	 */
 	final public function isInRole(string $role): bool
 	{
@@ -275,8 +278,8 @@ class User
 
 
 	/**
-	 * Has a user effective access to the Resource?
-	 * If $resource is null, then the query applies to all resources.
+	 * Checks whether the user has access to the given resource and privilege.
+	 * Null means all resources or all privileges.
 	 */
 	public function isAllowed(mixed $resource = Authorizator::All, mixed $privilege = Authorizator::All): bool
 	{
@@ -314,7 +317,7 @@ class User
 
 
 	/**
-	 * Returns current authorization handler.
+	 * Returns authorization handler, or null if none is set.
 	 */
 	final public function getAuthorizatorIfExists(): ?Authorizator
 	{
