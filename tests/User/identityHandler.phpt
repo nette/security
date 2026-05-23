@@ -171,6 +171,12 @@ test('logout() clears the storage even when wakeupIdentity() vetoed the authenti
 		{
 			return null; // simulate revoked token
 		}
+
+
+		public function getGuestIdentity(): ?IIdentity
+		{
+			return null;
+		}
 	};
 
 	$storage = new MockUserStorage;
