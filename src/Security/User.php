@@ -50,6 +50,9 @@ class User
 	/** default role for authenticated user without own identity */
 	public string $authenticatedRole = 'authenticated';
 
+	/** keep identity available (via getIdentity() and getId()) after logout or expiration; depends on the storage implementation */
+	public bool $persistIdentity = true;
+
 	/** @var array<callable(static): void>  Occurs when the user is successfully logged in */
 	public array $onLoggedIn = [];
 
@@ -112,10 +115,11 @@ class User
 
 	/**
 	 * Logs out the user from the current session. The identity is kept available afterwards,
-	 * unless $clearIdentity is set.
+	 * unless $clearIdentity is set or the $persistIdentity property is disabled.
 	 */
 	final public function logout(bool $clearIdentity = false): void
 	{
+		$clearIdentity = $clearIdentity || !$this->persistIdentity;
 		$logged = $this->isLoggedIn();
 		$this->storage->clearAuthentication($clearIdentity);
 		$this->authenticated = false;
@@ -139,8 +143,8 @@ class User
 
 
 	/**
-	 * Returns the user identity. It may be available even when not logged in (e.g. after logout or expiration),
-	 * so its presence does not imply the user is logged in; null if none.
+	 * Returns the user identity. It may be available even when not logged in (e.g. after logout or expiration)
+	 * unless $persistIdentity is disabled, so its presence does not imply the user is logged in; null if none.
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
@@ -161,10 +165,11 @@ class User
 			$this->logoutReason = $reason;
 		})(...$this->storage->getState());
 
-		$this->identity = $identity && $this->authenticator instanceof IdentityHandler
+		$identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
 			: $identity;
-		$this->authenticated = $this->authenticated && $this->identity !== null;
+		$this->authenticated = $this->authenticated && $identity !== null;
+		$this->identity = !$this->authenticated && !$this->persistIdentity ? null : $identity;
 	}
 
 
@@ -229,11 +234,11 @@ class User
 
 	/**
 	 * Enables log out after inactivity (like '20 minutes'). The identity is kept available afterwards,
-	 * unless $clearIdentity is set.
+	 * unless $clearIdentity is set or the $persistIdentity property is disabled.
 	 */
 	public function setExpiration(?string $expire, bool $clearIdentity = false): static
 	{
-		$this->storage->setExpiration($expire, $clearIdentity);
+		$this->storage->setExpiration($expire, $clearIdentity || !$this->persistIdentity);
 		return $this;
 	}
 

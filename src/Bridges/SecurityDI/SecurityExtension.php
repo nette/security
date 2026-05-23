@@ -24,6 +24,7 @@ use function is_array;
  *     authentication: object{
  *         storage: 'session'|'cookie',
  *         expiration: string|null,
+ *         persistIdentity: bool,
  *         cookieName: string|null,
  *         cookieDomain: string|null,
  *         cookieSamesite: 'Lax'|'Strict'|'None'|null,
@@ -57,6 +58,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			'authentication' => Expect::structure([
 				'storage' => Expect::anyOf('session', 'cookie')->default('session'),
 				'expiration' => Expect::string()->dynamic(),
+				'persistIdentity' => Expect::bool(true),
 				'cookieName' => Expect::string(),
 				'cookieDomain' => Expect::string(),
 				'cookieSamesite' => Expect::anyOf('Lax', 'Strict', 'None'),
@@ -94,6 +96,10 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($auth->expiration) {
 			$user->addSetup('setExpiration', [$auth->expiration]);
+		}
+
+		if (!$auth->persistIdentity) {
+			$user->addSetup('$persistIdentity', [false]);
 		}
 
 		if ($config->users) {
