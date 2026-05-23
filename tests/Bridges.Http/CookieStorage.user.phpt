@@ -45,6 +45,12 @@ function createHandler(?IIdentity $result): Nette\Security\Authenticator
 				? null
 				: $this->result;
 		}
+
+
+		public function getGuestIdentity(): ?IIdentity
+		{
+			return null;
+		}
 	};
 }
 

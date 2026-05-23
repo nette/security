@@ -177,7 +177,6 @@ class User
 	{
 		if (!$this->guestIdentityResolved) {
 			$this->guestIdentity = $this->authenticator instanceof IdentityHandler
-				&& method_exists($this->authenticator, 'getGuestIdentity')
 				? $this->authenticator->getGuestIdentity()
 				: null;
 			$this->guestIdentityResolved = true;

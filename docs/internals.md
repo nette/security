@@ -115,9 +115,8 @@ The few non-obvious invariants:
   `refreshStorage()` leaves `User` serving stale authentication.
 - **Guest identity is resolved on read only and never written to storage**;
   its resolution is cached and invalidated by `setAuthenticator`/`refreshStorage`.
-  It comes from `getGuestIdentity()` on the `IdentityHandler` authenticator — an
-  **optional** method declared only as `@method` phpDoc and detected via
-  `method_exists`, not part of the interface proper.
+  It comes from `getGuestIdentity()` on the `IdentityHandler` authenticator,
+  which returns `null` when there is none.
 - **`User::isAllowed()` is a disjunction over effective roles**: the user
   is allowed if **any single** of their roles is allowed — a deny resolved for
   one role never vetoes another role's allow. Single-role resolution lives in

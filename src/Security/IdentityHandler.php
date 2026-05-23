@@ -10,7 +10,6 @@ namespace Nette\Security;
 
 /**
  * Serializes and restores identity to/from persistent storage.
- * @method ?IIdentity getGuestIdentity()
  */
 interface IdentityHandler
 {
@@ -23,4 +22,9 @@ interface IdentityHandler
 	 * Called after identity is read from storage. Typically refreshes roles or validates the token. Returns null to force logout.
 	 */
 	function wakeupIdentity(IIdentity $identity): ?IIdentity;
+
+	/**
+	 * Returns the identity for an anonymous (not logged-in) user, or null if none.
+	 */
+	function getGuestIdentity(): ?IIdentity;
 }
