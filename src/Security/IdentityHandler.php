@@ -10,6 +10,7 @@ namespace Nette\Security;
 
 /**
  * Serializes and restores identity to/from persistent storage.
+ * @method ?IIdentity getGuestIdentity()
  */
 interface IdentityHandler
 {

@@ -32,3 +32,8 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Security/User.php
+
+		-   # getGuestIdentity() is declared via @method as optional; method_exists() guards it at runtime
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Security/User.php

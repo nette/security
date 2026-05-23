@@ -195,6 +195,12 @@ test('refreshStorage() with IdentityHandler triggers wakeup again', function () 
 				array_merge($identity->getRoles(), ['role' . $this->wakeupCount]),
 			);
 		}
+
+
+		public function getGuestIdentity(): ?IIdentity
+		{
+			return null;
+		}
 	};
 
 	$storage = new MutableStorage;

@@ -52,6 +52,12 @@ class AuthenticatorWithHandler implements Nette\Security\Authenticator, Nette\Se
 		// Real implementation would fetch fresh data from DB
 		return new SimpleIdentity($identity->getId(), ['admin', 'user'], ['name' => 'John Doe Updated']);
 	}
+
+
+	public function getGuestIdentity(): ?IIdentity
+	{
+		return null;
+	}
 }
 
 
@@ -122,6 +128,12 @@ test('IdentityHandler.wakeupIdentity() returning null logs user out', function (
 		public function wakeupIdentity(IIdentity $identity): ?IIdentity
 		{
 			// Simulate invalid token/expired session
+			return null;
+		}
+
+
+		public function getGuestIdentity(): ?IIdentity
+		{
 			return null;
 		}
 	};
