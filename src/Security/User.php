@@ -133,10 +133,7 @@ class User
 	 */
 	final public function isLoggedIn(): bool
 	{
-		if ($this->authenticated === null) {
-			$this->getStoredData();
-		}
-
+		$this->loadStoredData();
 		return (bool) $this->authenticated;
 	}
 
@@ -147,16 +144,17 @@ class User
 	 */
 	final public function getIdentity(): ?IIdentity
 	{
-		if ($this->authenticated === null) {
-			$this->getStoredData();
-		}
-
+		$this->loadStoredData();
 		return $this->identity;
 	}
 
 
-	private function getStoredData(): void
+	private function loadStoredData(): void
 	{
+		if ($this->authenticated !== null) {
+			return;
+		}
+
 		(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
 			$identity = $id;
 			$this->authenticated = $state;
