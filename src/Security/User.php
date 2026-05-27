@@ -67,7 +67,7 @@ class User
 
 
 	public function __construct(
-		private UserStorage $storage,
+		private readonly UserStorage $storage,
 		private ?IAuthenticator $authenticator = null,
 		private ?Authorizator $authorizator = null,
 	) {
@@ -196,7 +196,7 @@ class User
 	public function getId(): string|int|null
 	{
 		$identity = $this->getIdentity();
-		return $identity ? $identity->getId() : null;
+		return $identity?->getId();
 	}
 
 

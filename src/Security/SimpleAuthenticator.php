@@ -16,11 +16,11 @@ class SimpleAuthenticator implements Authenticator
 	public function __construct(
 		/** @var array<string, string> */
 		#[\SensitiveParameter]
-		private array $passwords,
+		private readonly array $passwords,
 		/** @var array<string, string|list<string>|null> */
-		private array $roles = [],
+		private readonly array $roles = [],
 		/** @var array<string, array<string, mixed>> */
-		private array $data = [],
+		private readonly array $data = [],
 	) {
 	}
 
