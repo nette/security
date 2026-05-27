@@ -14,6 +14,7 @@ parameters:
 	ignoreErrors:
 		-   # generated Latte code: attribute interpolation emits a dead `=== null` check for values that are never null
 			identifier: identical.alwaysFalse
+			count: 2
 			path: src/Bridges/SecurityTracy/dist/tab.phtml
 		-
 			message: '#^Method Nette\\Http\\IResponse\:\:setCookie\(\) invoked with 8 parameters, 3\-7 required\.$#'
@@ -30,10 +31,5 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$credentials of method Nette\\Security\\IAuthenticator\:\:authenticate\(\) expects array\{string, string\}, list\<mixed\> given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Security/User.php
-
-		-   # getGuestIdentity() is declared via @method as optional; method_exists() guards it at runtime
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Security/User.php
