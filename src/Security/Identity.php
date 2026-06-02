@@ -7,7 +7,7 @@
 
 namespace Nette\Security;
 
-use function in_array, is_float, is_numeric, iterator_to_array;
+use function ctype_digit, in_array, is_string, iterator_to_array;
 
 
 /**
@@ -46,7 +46,7 @@ class Identity implements IIdentity
 	 */
 	public function setId(string|int $id): static
 	{
-		$this->id = is_numeric($id) && !is_float($tmp = $id * 1) ? $tmp : $id;
+		$this->id = is_string($id) && ctype_digit($id) && (string) ($tmp = (int) $id) === $id ? $tmp : $id;
 		return $this;
 	}
 
