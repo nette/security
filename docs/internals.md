@@ -149,12 +149,14 @@ logoutReason]`; everything else differs between the two implementations:
 
 ## Legacy seams and BC constraints
 
-- `compatibility.php` `class_alias`es the removed `IAuthorizator`/`IResource`/`IRole`
-  names and is excluded from PHPStan analysis.
-- **`SimpleIdentity extends Identity` — the deprecated class is the parent**,
-  kept so identities serialized in existing sessions keep unserializing. Don't
-  flip the hierarchy or remove `Identity`.
-- `Identity::setId()` normalizes numeric strings to int only when the round-trip
+- `compatibility-intf.php` `class_alias`es the old names `IAuthorizator`/`IResource`/`IRole`
+  and `compatibility.php` the old `Identity` to `SimpleIdentity`; both are
+  excluded from PHPStan analysis.
+- **`Identity` is an alias kept so identities serialized in existing sessions
+  keep unserializing.** A type check does not autoload, so each file of
+  a renamed class ends by loading its alias (`class_exists(Identity::class)`);
+  without it `instanceof Identity` is false until something asks for the name.
+- `SimpleIdentity::setId()` normalizes numeric strings to int only when the round-trip
   is lossless (`'123'` → `123`; `'0123'` stays a string).
 
 ## Navigation map
@@ -169,4 +171,4 @@ logoutReason]`; everything else differs between the two implementations:
 | Identity lifecycle, veto, seams | `User::loadStoredData`, `login`/`logout`, `IdentityHandler` |
 | Sliding expiration, fixation defence, namespaces | `SessionStorage` |
 | Token-only persistence, `persistIdentity` no-op | `CookieStorage`, `TokenIdentity` |
-| BC aliases | `compatibility.php` |
+| BC aliases, serialized identities | `compatibility.php`, `compatibility-intf.php` |
