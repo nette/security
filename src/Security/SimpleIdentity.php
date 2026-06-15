@@ -7,10 +7,119 @@
 
 namespace Nette\Security;
 
+use function ctype_digit, in_array, is_string, iterator_to_array;
+
 
 /**
  * Default implementation of IIdentity.
+ * @property   string|int $id
+ * @property   list<string> $roles
+ * @property   array<string,mixed> $data
  */
-class SimpleIdentity extends Identity
+class SimpleIdentity implements IIdentity
 {
+	private string|int $id;
+
+	/** @var list<string> */
+	private array $roles;
+
+	/** @var array<string, mixed> */
+	private array $data;
+
+
+	/**
+	 * @param  string|list<string>|null  $roles
+	 * @param  ?iterable<string, mixed>  $data
+	 */
+	public function __construct(string|int $id, string|array|null $roles = null, ?iterable $data = null)
+	{
+		$this->setId($id);
+		$this->setRoles((array) $roles);
+		$this->data = iterator_to_array($data ?? []);
+	}
+
+
+	/**
+	 * Sets the ID of user.
+	 */
+	public function setId(string|int $id): static
+	{
+		$this->id = is_string($id) && ctype_digit($id) && (string) ($tmp = (int) $id) === $id ? $tmp : $id;
+		return $this;
+	}
+
+
+	/**
+	 * Returns the ID of user.
+	 */
+	public function getId(): string|int
+	{
+		return $this->id;
+	}
+
+
+	/**
+	 * Sets a list of roles that the user is a member of.
+	 * @param  list<string>  $roles
+	 */
+	public function setRoles(array $roles): static
+	{
+		$this->roles = $roles;
+		return $this;
+	}
+
+
+	/**
+	 * Returns a list of roles that the user is a member of.
+	 * @return list<string>
+	 */
+	public function getRoles(): array
+	{
+		return $this->roles;
+	}
+
+
+	/**
+	 * Returns user data.
+	 * @return array<string, mixed>
+	 */
+	public function getData(): array
+	{
+		return $this->data;
+	}
+
+
+	/**
+	 * Sets user data value.
+	 */
+	public function __set(string $key, mixed $value): void
+	{
+		match ($key) {
+			'id' => $this->setId($value),
+			'roles' => $this->setRoles($value),
+			'data' => $this->data = $value,
+			default => $this->data[$key] = $value,
+		};
+	}
+
+
+	/**
+	 * Returns user data value.
+	 */
+	public function &__get(string $key): mixed
+	{
+		if (in_array($key, ['id', 'roles', 'data'], strict: true)) {
+			$res = $this->{'get' . ucfirst($key)}();
+			return $res;
+
+		} else {
+			return $this->data[$key];
+		}
+	}
+
+
+	public function __isset(string $key): bool
+	{
+		return isset($this->data[$key]) || in_array($key, ['id', 'roles', 'data'], strict: true);
+	}
 }
