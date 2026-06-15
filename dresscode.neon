@@ -23,7 +23,7 @@ overrides:
 			- deprecations
 
 	- # the deprecated names are what BC keeps alive
-		paths: [src/Security/SimpleIdentity.php]
+		paths: [src/compatibility-intf.php, src/Security/Authorizator.php, src/Security/Resource.php, src/Security/Role.php]
 		upgrading: {declarations: {deprecatedClass: keep}}
 
 	- # the extension supports nette/di since 3.1, older than the installed one
