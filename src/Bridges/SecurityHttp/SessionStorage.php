@@ -91,7 +91,7 @@ final class SessionStorage implements Nette\Security\UserStorage
 		}
 
 		$section->set('expireIdentity', $this->expireIdentity);
-		$section->setExpiration((string) $this->expireTime, 'foo'); // time check
+		$section->setExpiration($this->expireTime === null ? null : '@' . $this->expireTime, 'foo'); // time check
 	}
 
 
