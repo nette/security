@@ -20,18 +20,20 @@ $compiler->addExtension('session', new SessionExtension);
 $compiler->addExtension('security', new SecurityExtension);
 
 $loader = new Nette\DI\Config\Loader;
-$config = $loader->load(Tester\FileMock::create('
-security:
-	authentication:
-		storage: cookie
-		expiration: 1 week
-		cookieName: abc
-		cookieDomain: domain
-		cookieSamesite: Strict
+$config = $loader->load(Tester\FileMock::create(<<<'XX'
 
-services:
-	http.request: Nette\Http\Request(Nette\Http\UrlScript("http://www.nette.org"))
-', 'neon'));
+	security:
+		authentication:
+			storage: cookie
+			expiration: 1 week
+			cookieName: abc
+			cookieDomain: domain
+			cookieSamesite: Strict
+
+	services:
+		http.request: Nette\Http\Request(Nette\Http\UrlScript("http://www.nette.org"))
+
+	XX, 'neon'));
 
 eval($compiler->addConfig($config)->compile());
 $container = new Container;

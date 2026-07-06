@@ -16,15 +16,17 @@ $compiler->addExtension('session', new SessionExtension);
 $compiler->addExtension('security', new SecurityExtension);
 
 $loader = new Nette\DI\Config\Loader;
-$config = $loader->load(Tester\FileMock::create('
-session:
-	expiration: 1 year
+$config = $loader->load(Tester\FileMock::create(<<<'XX'
 
-security:
-	authentication:
-		storage: session
-		expiration: 1 week
-', 'neon'));
+	session:
+		expiration: 1 year
+
+	security:
+		authentication:
+			storage: session
+			expiration: 1 week
+
+	XX, 'neon'));
 
 eval($compiler->addConfig($config)->compile());
 $container = new Container;

@@ -20,16 +20,18 @@ $compiler->addExtension('bar', new SessionExtension);
 $compiler->addExtension('security', new SecurityExtension);
 
 $loader = new Nette\DI\Config\Loader;
-$config = $loader->load(Tester\FileMock::create('
-security:
-	users:
-		john: john123
-		admin: {password: admin123, roles: [admin, user]}
-		user: {password: user123}
-		moderator: {password: moderator123, roles: moderator}
-		dynamic1: ::trim(xxx)
-		dynamic2: {password: ::trim(xxx)}
-', 'neon'));
+$config = $loader->load(Tester\FileMock::create(<<<'XX'
+
+	security:
+		users:
+			john: john123
+			admin: {password: admin123, roles: [admin, user]}
+			user: {password: user123}
+			moderator: {password: moderator123, roles: moderator}
+			dynamic1: ::trim(xxx)
+			dynamic2: {password: ::trim(xxx)}
+
+	XX, 'neon'));
 
 eval($compiler->addConfig($config)->compile());
 $container = new Container;

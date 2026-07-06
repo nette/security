@@ -36,11 +36,13 @@ test('disabled via configuration', function () {
 	$compiler->setClassName('ContainerDisabled');
 
 	$loader = new Nette\DI\Config\Loader;
-	$config = $loader->load(Tester\FileMock::create('
-security:
-	authentication:
-		persistIdentity: false
-', 'neon'));
+	$config = $loader->load(Tester\FileMock::create(<<<'XX'
+
+		security:
+			authentication:
+				persistIdentity: false
+
+		XX, 'neon'));
 
 	eval($compiler->addConfig($config)->compile());
 	$container = new ContainerDisabled;

@@ -87,18 +87,3 @@ test('needsRehash() with invalid hash indicates rehash needed', function () {
 	Assert::true($passwords->needsRehash(''));
 	Assert::true($passwords->needsRehash('$2y$10$tooshort'));
 });
-
-
-test('needsRehash() detects cost decrease (security downgrade)', function () {
-	$password = 'test';
-
-	// Create hash with cost 12
-	$pw12 = new Passwords(PASSWORD_BCRYPT, ['cost' => 12]);
-	$hash12 = $pw12->hash($password);
-
-	// Check with cost 8 (downgrade)
-	$pw8 = new Passwords(PASSWORD_BCRYPT, ['cost' => 8]);
-
-	// Should not indicate rehash needed (to maintain security level)
-	// Assert::false($pw8->needsRehash($hash12)); // not implemented
-});

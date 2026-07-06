@@ -20,15 +20,17 @@ $compiler->addExtension('bar', new SessionExtension);
 $compiler->addExtension('security', new SecurityExtension);
 
 $loader = new Nette\DI\Config\Loader;
-$config = $loader->load(Tester\FileMock::create('
-security:
-	roles:
-		guest:
-		member: [guest]
-	resources:
-		item:
-		article: item
-', 'neon'));
+$config = $loader->load(Tester\FileMock::create(<<<'XX'
+
+	security:
+		roles:
+			guest:
+			member: [guest]
+		resources:
+			item:
+			article: item
+
+	XX, 'neon'));
 
 eval($compiler->addConfig($config)->compile());
 $container = new Container;

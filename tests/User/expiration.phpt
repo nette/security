@@ -12,7 +12,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 
-class MockUserStorage implements Nette\Security\UserStorage
+class ExpiringStorage implements Nette\Security\UserStorage
 {
 	public ?string $expireTime = null;
 	public bool $expireIdentity = false;
@@ -54,7 +54,7 @@ class MockUserStorage implements Nette\Security\UserStorage
 
 
 test('User delegates setExpiration to storage', function () {
-	$storage = new MockUserStorage;
+	$storage = new ExpiringStorage;
 	$user = new User($storage);
 
 	$user->setExpiration('30 minutes');
@@ -67,7 +67,7 @@ test('User delegates setExpiration to storage', function () {
 
 
 test('User delegates setExpiration with clearIdentity flag', function () {
-	$storage = new MockUserStorage;
+	$storage = new ExpiringStorage;
 	$user = new User($storage);
 
 	$user->setExpiration('10 minutes', clearIdentity: true);
