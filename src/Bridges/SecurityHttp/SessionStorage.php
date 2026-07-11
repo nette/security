@@ -91,7 +91,9 @@ final class SessionStorage implements Nette\Security\UserStorage
 		}
 
 		$section->set('expireIdentity', $this->expireIdentity);
-		$section->setExpiration($this->expireTime === null ? null : '@' . $this->expireTime, 'foo'); // time check
+		// expiration is bound to a dummy variable 'foo', so nette/http checks the time against session.gc_maxlifetime
+		// but never wipes the section itself; expiration is handled manually in getSessionSection()
+		$section->setExpiration($this->expireTime === null ? null : '@' . $this->expireTime, 'foo');
 	}
 
 
