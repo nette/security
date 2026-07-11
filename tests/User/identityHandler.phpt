@@ -155,6 +155,41 @@ test('IdentityHandler.wakeupIdentity() returning null logs user out', function (
 });
 
 
+test('logout() clears the storage even when wakeupIdentity() vetoed the authentication', function () {
+	$handler = new class implements Nette\Security\Authenticator, Nette\Security\IdentityHandler {
+		public function authenticate(string $username, string $password): IIdentity
+		{
+			return new SimpleIdentity('john', ['user']);
+		}
+
+
+		public function sleepIdentity(IIdentity $identity): IIdentity
+		{
+			return $identity;
+		}
+
+
+		public function wakeupIdentity(IIdentity $identity): ?IIdentity
+		{
+			return null; // simulate revoked token
+		}
+	};
+
+	$storage = new MockUserStorage;
+	$user = new Nette\Security\User($storage);
+	$user->setAuthenticator($handler);
+	$user->login('john', 'xxx');
+	Assert::true($storage->getState()[0]);
+
+	$user2 = new Nette\Security\User($storage);
+	$user2->setAuthenticator($handler);
+	Assert::false($user2->isLoggedIn());
+
+	$user2->logout();
+	Assert::false($storage->getState()[0]); // the stale authenticated flag is gone
+});
+
+
 test('IdentityHandler is not called when authenticator does not implement it', function () {
 	$handler = new class implements Nette\Security\Authenticator {
 		public int $authCount = 0;

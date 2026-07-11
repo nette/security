@@ -123,9 +123,13 @@ class User
 	{
 		$clearIdentity = $clearIdentity || !$this->persistIdentity;
 		$logged = $this->isLoggedIn();
-		$this->storage->clearAuthentication($clearIdentity);
+		// the last condition covers a stored authentication vetoed by wakeupIdentity(); otherwise there is nothing to change
+		if ($logged || $clearIdentity || $this->storage->getState()[0]) {
+			$this->storage->clearAuthentication($clearIdentity);
+			$this->logoutReason = self::LogoutManual;
+		}
+
 		$this->authenticated = false;
-		$this->logoutReason = self::LogoutManual;
 		if ($logged) {
 			Arrays::invoke($this->onLoggedOut, $this);
 		}
