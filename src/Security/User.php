@@ -161,11 +161,7 @@ class User
 			return;
 		}
 
-		(function (bool $state, ?IIdentity $id, ?int $reason) use (&$identity) {
-			$identity = $id;
-			$this->authenticated = $state;
-			$this->logoutReason = $reason;
-		})(...$this->storage->getState());
+		[$this->authenticated, $identity, $this->logoutReason] = $this->storage->getState();
 
 		$identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
