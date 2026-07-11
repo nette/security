@@ -59,9 +59,9 @@ composer phpstan
 - **A failed `assert` callback makes the rule *not apply*** (falls through as if
   absent) - except on the ultimate default rule, where it returns the **inverted**
   type. Assertions receive string IDs and reach objects via
-  `getQueriedRole()`/`getQueriedResource()`; `isAllowed()` is **not re-entrant** -
-  it nulls the queried role/resource on return, so an assertion must read them
-  before calling `isAllowed()` again.
+  `getQueriedRole()`/`getQueriedResource()`; `isAllowed()` saves and restores the
+  queried role/resource in a `finally`, so it is re-entrant (an assertion may call
+  `isAllowed()` again) and exception-safe.
 - **Effective roles come from login state, not the retained identity.** After
   `logout()` the identity is kept by default (`persistIdentity`), but roles drop to
   guest - which is why `isInRole()`/`isAllowed()` need no prior `isLoggedIn()` check

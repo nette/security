@@ -39,8 +39,8 @@ class Permission implements Authorizator
 		'byResource' => [],
 	];
 
-	private string|Role|null $queriedRole;
-	private string|Resource|null $queriedResource;
+	private string|Role|null $queriedRole = null;
+	private string|Resource|null $queriedResource = null;
 
 
 	/********************* roles ****************d*g**/
@@ -172,22 +172,10 @@ class Permission implements Authorizator
 			unset($this->roles[$parent]['children'][$role]);
 		}
 
-		unset($this->roles[$role]);
+		unset($this->roles[$role], $this->rules['allResources']['byRole'][$role]);
 
-		foreach ($this->rules['allResources']['byRole'] as $roleCurrent => $rules) {
-			if ($role === $roleCurrent) {
-				unset($this->rules['allResources']['byRole'][$roleCurrent]);
-			}
-		}
-
-		foreach ($this->rules['byResource'] as $resourceCurrent => $visitor) {
-			if (isset($visitor['byRole'])) {
-				foreach ($visitor['byRole'] as $roleCurrent => $rules) {
-					if ($role === $roleCurrent) {
-						unset($this->rules['byResource'][$resourceCurrent]['byRole'][$roleCurrent]);
-					}
-				}
-			}
+		foreach (array_keys($this->rules['byResource']) as $resource) {
+			unset($this->rules['byResource'][$resource]['byRole'][$role]);
 		}
 
 		return $this;
@@ -200,15 +188,10 @@ class Permission implements Authorizator
 	public function removeAllRoles(): static
 	{
 		$this->roles = [];
+		$this->rules['allResources']['byRole'] = [];
 
-		foreach ($this->rules['allResources']['byRole'] as $roleCurrent => $rules) {
-			unset($this->rules['allResources']['byRole'][$roleCurrent]);
-		}
-
-		foreach ($this->rules['byResource'] as $resourceCurrent => $visitor) {
-			foreach ($visitor['byRole'] as $roleCurrent => $rules) {
-				unset($this->rules['byResource'][$resourceCurrent]['byRole'][$roleCurrent]);
-			}
+		foreach (array_keys($this->rules['byResource']) as $resource) {
+			$this->rules['byResource'][$resource]['byRole'] = [];
 		}
 
 		return $this;
@@ -329,21 +312,11 @@ class Permission implements Authorizator
 			unset($this->resources[$parent]['children'][$resource]);
 		}
 
-		$removed = [$resource];
 		foreach ($this->resources[$resource]['children'] as $child => $foo) {
 			$this->removeResource($child);
-			$removed[] = $child;
 		}
 
-		foreach ($removed as $resourceRemoved) {
-			foreach ($this->rules['byResource'] as $resourceCurrent => $rules) {
-				if ($resourceRemoved === $resourceCurrent) {
-					unset($this->rules['byResource'][$resourceCurrent]);
-				}
-			}
-		}
-
-		unset($this->resources[$resource]);
+		unset($this->resources[$resource], $this->rules['byResource'][$resource]);
 		return $this;
 	}
 
@@ -353,15 +326,8 @@ class Permission implements Authorizator
 	 */
 	public function removeAllResources(): static
 	{
-		foreach ($this->resources as $resource => $foo) {
-			foreach ($this->rules['byResource'] as $resourceCurrent => $rules) {
-				if ($resource === $resourceCurrent) {
-					unset($this->rules['byResource'][$resourceCurrent]);
-				}
-			}
-		}
-
 		$this->resources = [];
+		$this->rules['byResource'] = [];
 		return $this;
 	}
 
@@ -574,57 +540,66 @@ class Permission implements Authorizator
 		string|null $privilege = self::All,
 	): bool
 	{
-		$this->queriedRole = $role;
-		if ($role !== self::All) {
-			if ($role instanceof Role) {
-				$role = $role->getRoleId();
+		$prevQueriedRole = $this->queriedRole;
+		$prevQueriedResource = $this->queriedResource;
+
+		try {
+			$this->queriedRole = $role;
+			if ($role !== self::All) {
+				if ($role instanceof Role) {
+					$role = $role->getRoleId();
+				}
+
+				$this->checkRole($role);
 			}
 
-			$this->checkRole($role);
-		}
+			$this->queriedResource = $resource;
+			if ($resource !== self::All) {
+				if ($resource instanceof Resource) {
+					$resource = $resource->getResourceId();
+				}
 
-		$this->queriedResource = $resource;
-		if ($resource !== self::All) {
-			if ($resource instanceof Resource) {
-				$resource = $resource->getResourceId();
+				$this->checkResource($resource);
 			}
 
-			$this->checkResource($resource);
-		}
+			do {
+				// depth-first search on $role if it is not 'allRoles' pseudo-parent
+				if (
+					$role !== null
+					&& ($result = $this->searchRolePrivileges($privilege === self::All, $role, $resource, $privilege)) !== null
+				) {
+					break;
+				}
 
-		do {
-			// depth-first search on $role if it is not 'allRoles' pseudo-parent
-			if (
-				$role !== null
-				&& ($result = $this->searchRolePrivileges($privilege === self::All, $role, $resource, $privilege)) !== null
-			) {
-				break;
-			}
+				if ($privilege === self::All) {
+					if ($rules = $this->getRules($resource, self::All)) { // look for rule on 'allRoles' psuedo-parent
+						foreach ($rules['byPrivilege'] as $privilege => $rule) {
+							if (($result = $this->getRuleType($resource, null, $privilege)) === self::Deny) {
+								break 2;
+							}
+						}
 
-			if ($privilege === self::All) {
-				if ($rules = $this->getRules($resource, self::All)) { // look for rule on 'allRoles' psuedo-parent
-					foreach ($rules['byPrivilege'] as $privilege => $rule) {
-						if (($result = $this->getRuleType($resource, null, $privilege)) === self::Deny) {
-							break 2;
+						if (($result = $this->getRuleType($resource, null, null)) !== null) {
+							break;
 						}
 					}
-
-					if (($result = $this->getRuleType($resource, null, null)) !== null) {
-						break;
-					}
+				} elseif (($result = $this->getRuleType($resource, null, $privilege)) !== null) { // look for rule on 'allRoles' pseudo-parent
+					break;
+				} elseif (($result = $this->getRuleType($resource, null, null)) !== null) {
+					break;
 				}
-			} elseif (($result = $this->getRuleType($resource, null, $privilege)) !== null) { // look for rule on 'allRoles' pseudo-parent
-				break;
-			} elseif (($result = $this->getRuleType($resource, null, null)) !== null) {
-				break;
-			}
 
-			assert(is_string($resource));
-			$resource = $this->resources[$resource]['parent']; // try next Resource
-		} while (true);
+				assert(is_string($resource));
+				$resource = $this->resources[$resource]['parent']; // try next Resource
+			} while (true);
 
-		$this->queriedRole = $this->queriedResource = null;
-		return $result;
+			return $result;
+
+		} finally {
+			// restores previous values to keep the method re-entrant (assertions may call isAllowed() again)
+			$this->queriedRole = $prevQueriedRole;
+			$this->queriedResource = $prevQueriedResource;
+		}
 	}
 
 
@@ -656,13 +631,11 @@ class Permission implements Authorizator
 	 */
 	private function searchRolePrivileges(bool $all, ?string $role, ?string $resource, ?string $privilege): ?bool
 	{
-		$dfs = [
-			'visited' => [],
-			'stack' => [$role],
-		];
+		$visited = [];
+		$stack = [$role];
 
-		while (($role = array_pop($dfs['stack'])) !== null) {
-			if (isset($dfs['visited'][$role])) {
+		while (($role = array_pop($stack)) !== null) {
+			if (isset($visited[$role])) {
 				continue;
 			}
 
@@ -687,9 +660,9 @@ class Permission implements Authorizator
 				}
 			}
 
-			$dfs['visited'][$role] = true;
-			foreach ($this->roles[$role]['parents'] as $roleParent => $foo) {
-				$dfs['stack'][] = $roleParent;
+			$visited[$role] = true;
+			foreach ($this->roles[$role]['parents'] as $parent => $foo) {
+				$stack[] = $parent;
 			}
 		}
 
@@ -726,6 +699,8 @@ class Permission implements Authorizator
 			return null;
 
 		} elseif ($rule['type'] === self::Allow) {
+			// failed assertion on the ultimate default rule (all roles, all resources, all privileges):
+			// there is nothing left to fall back to, so the inverted type is returned to give a definite answer
 			return self::Deny;
 
 		} else {

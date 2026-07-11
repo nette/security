@@ -80,13 +80,11 @@ A rule may carry an `assert` callback. In `getRuleType()`:
 - Assertions receive **string IDs**, not objects. To reach the actual queried
   object they call `getQueriedRole()` / `getQueriedResource()`, which return
   whatever was passed to `isAllowed()`.
-- `isAllowed()` stores the queried role/resource in object state and
-  unconditionally **nulls both on normal return**. There is **no save/restore
-  and no `finally`**: a nested `isAllowed()` call from inside an assertion
-  clobbers the queried state and leaves it `null` for the rest of the outer
-  assertion, and an exception mid-query (unknown role/resource) leaves stale
-  values behind. An assertion must read `getQueriedRole()`/`getQueriedResource()`
-  **before** recursing into `isAllowed()`.
+- `isAllowed()` stores the queried role/resource in object state and **saves and
+  restores the previous values in a `finally`**. The method is therefore
+  re-entrant (an assertion may call `isAllowed()` again and the outer queried
+  state survives) and exception-safe (an unknown role/resource mid-query leaves
+  no stale values behind).
 
 ## User: effective roles come from login state, not the retained identity
 
