@@ -8,7 +8,7 @@
 namespace Nette\Security;
 
 use Nette;
-use function in_array, is_string;
+use function array_key_exists, in_array, is_string;
 
 
 /**
@@ -113,8 +113,11 @@ class SimpleIdentity implements IIdentity
 			$res = $this->{'get' . ucfirst($key)}();
 			return $res;
 
-		} else {
+		} elseif (array_key_exists($key, $this->data)) {
 			return $this->data[$key];
+
+		} else {
+			Nette\Utils\ObjectHelpers::strictGet(static::class, $key);
 		}
 	}
 
