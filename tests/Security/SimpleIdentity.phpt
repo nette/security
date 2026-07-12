@@ -32,3 +32,16 @@ test('', function () {
 	$id = new SimpleIdentity('12345678901234567890');
 	Assert::same('12345678901234567890', $id->getId());
 });
+
+
+test('reading an undeclared data key throws and does not pollute data', function () {
+	$id = new SimpleIdentity(12, 'admin', ['name' => 'John', 'note' => null]);
+	Assert::null($id->note); // existing null value is readable
+
+	Assert::exception(
+		fn() => $id->undeclared,
+		Nette\MemberAccessException::class,
+		'Cannot read an undeclared property Nette\Security\SimpleIdentity::$undeclared.',
+	);
+	Assert::same(['name' => 'John', 'note' => null], $id->getData());
+});
