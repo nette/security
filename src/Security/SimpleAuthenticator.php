@@ -9,12 +9,13 @@ namespace Nette\Security;
 
 
 /**
- * Trivial implementation of Authenticator.
+ * Trivial implementation of Authenticator. Passwords may be stored in plain text
+ * or as crypt-format hashes (e.g. from password_hash()); the format is detected automatically.
  */
 class SimpleAuthenticator implements Authenticator
 {
 	public function __construct(
-		/** @var array<string, string> */
+		/** @var array<string, string>  username => password or crypt-format hash */
 		#[\SensitiveParameter]
 		private readonly array $passwords,
 		/** @var array<string, string|list<string>|null> */
@@ -51,6 +52,9 @@ class SimpleAuthenticator implements Authenticator
 
 	protected function verifyPassword(string $password, string $passOrHash): bool
 	{
-		return $password === $passOrHash;
+		// the crypt-format '$ident$' prefix + length marks a hash; unknown algorithms fail closed in password_verify()
+		return preg_match('~^\$[^$]+\$.{20,}~', $passOrHash)
+			? password_verify($password, $passOrHash)
+			: hash_equals($passOrHash, $password);
 	}
 }
