@@ -12,7 +12,7 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Security\IIdentity;
 use Nette\Security\User;
-use function is_bool, time;
+use function is_bool;
 
 
 /**

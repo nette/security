@@ -8,6 +8,7 @@
 namespace Nette\Security;
 
 use Nette;
+use function defined;
 
 
 /**

@@ -10,7 +10,7 @@ namespace Nette\Bridges\SecurityDI;
 use Nette;
 use Nette\Schema\Expect;
 use Tracy;
-use function array_pad, is_array;
+use function is_array;
 
 
 /**

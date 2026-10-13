@@ -8,7 +8,7 @@
 namespace Nette\Security;
 
 use Nette;
-use function array_keys, array_pop, count, is_array, is_string;
+use function count, is_array, is_string;
 
 
 /**
