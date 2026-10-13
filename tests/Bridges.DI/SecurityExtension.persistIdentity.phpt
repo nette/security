@@ -4,8 +4,7 @@
  * Test: SecurityExtension persistIdentity
  */
 
-use Nette\Bridges\HttpDI\HttpExtension;
-use Nette\Bridges\HttpDI\SessionExtension;
+use Nette\Bridges\HttpDI\{HttpExtension, SessionExtension};
 use Nette\Bridges\SecurityDI\SecurityExtension;
 use Nette\DI;
 use Tester\Assert;

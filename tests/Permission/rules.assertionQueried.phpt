@@ -4,9 +4,7 @@
  * Test: Nette\Security\Permission assertions with getQueriedRole() and getQueriedResource().
  */
 
-use Nette\Security\Permission;
-use Nette\Security\Resource;
-use Nette\Security\Role;
+use Nette\Security\{Permission, Resource, Role};
 use Tester\Assert;
 
 

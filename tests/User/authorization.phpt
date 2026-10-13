@@ -4,9 +4,7 @@
  * Test: Nette\Security\User authorization.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\Role;
-use Nette\Security\SimpleIdentity;
+use Nette\Security\{IIdentity, Role, SimpleIdentity};
 use Tester\Assert;
 
 

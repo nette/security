@@ -4,8 +4,7 @@
  * Test: Nette\Security\User persistIdentity.
  */
 
-use Nette\Security\SimpleIdentity;
-use Nette\Security\User;
+use Nette\Security\{SimpleIdentity, User};
 use Tester\Assert;
 
 

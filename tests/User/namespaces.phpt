@@ -4,8 +4,7 @@
  * Test: Nette\Security\User with storage namespaces for multiple authentication contexts.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\SimpleIdentity;
+use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
 

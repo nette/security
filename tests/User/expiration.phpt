@@ -4,8 +4,7 @@
  * Test: Nette\Security\User expiration delegation to UserStorage.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\User;
+use Nette\Security\{IIdentity, User};
 use Tester\Assert;
 
 

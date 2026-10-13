@@ -6,8 +6,7 @@
 
 use Nette\Bridges\SecurityHttp\SessionStorage;
 use Nette\Http\Session;
-use Nette\Security\SimpleIdentity;
-use Nette\Security\User;
+use Nette\Security\{SimpleIdentity, User};
 use Tester\Assert;
 
 

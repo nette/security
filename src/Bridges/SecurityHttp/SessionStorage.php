@@ -8,10 +8,8 @@
 namespace Nette\Bridges\SecurityHttp;
 
 use Nette;
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
-use Nette\Security\IIdentity;
-use Nette\Security\User;
+use Nette\Http\{Session, SessionSection};
+use Nette\Security\{IIdentity, User};
 use function is_bool;
 
 

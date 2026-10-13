@@ -4,9 +4,7 @@
  * PHPStan type tests.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\Permission;
-use Nette\Security\User;
+use Nette\Security\{IIdentity, Permission, User};
 use function PHPStan\Testing\assertType;
 
 

@@ -4,8 +4,7 @@
  * Test: Nette\Security\User refreshStorage() method.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\SimpleIdentity;
+use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
 

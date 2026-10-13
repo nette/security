@@ -4,9 +4,7 @@
  * Test: Nette\Security\User guest identity.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\SimpleIdentity;
-use Nette\Security\User;
+use Nette\Security\{IIdentity, SimpleIdentity, User};
 use Tester\Assert;
 
 

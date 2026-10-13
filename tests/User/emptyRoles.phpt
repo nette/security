@@ -5,9 +5,7 @@
  * without falling back to $authenticatedRole or $guestRole.
  */
 
-use Nette\Security\IIdentity;
-use Nette\Security\SimpleIdentity;
-use Nette\Security\User;
+use Nette\Security\{IIdentity, SimpleIdentity, User};
 use Tester\Assert;
 
 
