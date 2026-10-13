@@ -26,6 +26,10 @@ overrides:
 		paths: [src/Security/Authenticator.php, src/Security/SimpleIdentity.php, src/Security/User.php]
 		upgrading: {declarations: {deprecatedClass: keep}}
 
+	- # the extension supports nette/di since 3.1, older than the installed one
+		paths: [src/Bridges/SecurityDI/SecurityExtension.php]
+		upgrading: {declarations: {deprecatedMember: keep}}
+
 	- # constants published in upper case, where the case is part of the API
 		paths: [src/Security/IAuthenticator.php]
 		naming: {constant: keep}
