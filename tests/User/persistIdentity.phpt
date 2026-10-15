@@ -7,7 +7,6 @@
 use Nette\Security\{SimpleIdentity, User};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/MockUserStorage.php';
 

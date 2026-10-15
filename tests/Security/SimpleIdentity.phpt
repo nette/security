@@ -7,7 +7,6 @@
 use Nette\Security\SimpleIdentity;
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

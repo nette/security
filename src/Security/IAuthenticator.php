@@ -31,5 +31,5 @@ interface IAuthenticator
 	 * and returns IIdentity on success or throws AuthenticationException
 	 * @throws AuthenticationException
 	 */
-	//function authenticate(array $credentials): IIdentity;
+	// function authenticate(array $credentials): IIdentity;
 }

@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
 /**
- * Test: Nette\Security\Permission Ensures that an exception is thrown when a non-existent Resource is specified as a parent upon Resource addition.
+ * Test: Nette\Security\Permission throws when a non-existent Resource is given as a parent upon Resource addition.
  */
 
 use Nette\Security\Permission;
 use Tester\Assert;
-
 
 require __DIR__ . '/../bootstrap.php';
 

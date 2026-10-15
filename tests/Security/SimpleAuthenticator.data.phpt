@@ -7,7 +7,6 @@
 use Nette\Security\SimpleAuthenticator;
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

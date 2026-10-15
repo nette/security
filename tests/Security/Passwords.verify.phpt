@@ -7,7 +7,6 @@
 use Nette\Security\Passwords;
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 

@@ -118,7 +118,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			}
 
 			$builder->addDefinition($this->prefix('authenticator'))
-				->setType(Nette\Security\IAuthenticator::class)
+				->setType(Nette\Security\Authenticator::class)
 				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles, $usersData]);
 
 			if ($this->name === 'security') {
@@ -162,8 +162,8 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		if (
-			$this->debugMode &&
-			($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
+			$this->debugMode
+			&& ($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
 		) {
 			$definition = $builder->getDefinition($this->prefix('user'));
 			assert($definition instanceof Nette\DI\Definitions\ServiceDefinition);

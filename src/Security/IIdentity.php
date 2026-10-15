@@ -29,5 +29,5 @@ interface IIdentity
 	/**
 	 * Returns user data.
 	 */
-	//function getData(): array;
+	// function getData(): array;
 }

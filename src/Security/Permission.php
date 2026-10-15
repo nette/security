@@ -508,8 +508,8 @@ class Permission implements Authorizator
 						}
 					} else {
 						foreach ($privileges as $privilege) {
-							if (isset($rules['byPrivilege'][$privilege]) &&
-								$type === $rules['byPrivilege'][$privilege]['type']
+							if (isset($rules['byPrivilege'][$privilege])
+								&& $type === $rules['byPrivilege'][$privilege]['type']
 							) {
 								unset($rules['byPrivilege'][$privilege]);
 							}
@@ -537,7 +537,7 @@ class Permission implements Authorizator
 	public function isAllowed(
 		string|Role|null $role = self::All,
 		string|Resource|null $resource = self::All,
-		string|null $privilege = self::All,
+		?string $privilege = self::All,
 	): bool
 	{
 		$prevQueriedRole = $this->queriedRole;

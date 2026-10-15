@@ -7,7 +7,6 @@
 use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/MockUserStorage.php';
 
@@ -84,7 +83,7 @@ Assert::equal(new SimpleIdentity('John Doe', 'admin'), $user->getIdentity());
 Assert::same('John Doe', $user->getId());
 
 // login as john#3
-$user->logout(true);
+$user->logout(clearIdentity: true);
 Assert::same(1, $counter->logout);
 $user->login(new SimpleIdentity('John Doe', 'admin'));
 Assert::same(2, $counter->login);
@@ -94,7 +93,7 @@ Assert::equal(new SimpleIdentity('John Doe', 'admin'), $user->getIdentity());
 
 // log out
 // logging out...
-$user->logout(false);
+$user->logout();
 Assert::same(2, $counter->logout);
 
 Assert::false($user->isLoggedIn());
@@ -102,7 +101,7 @@ Assert::equal(new SimpleIdentity('John Doe', 'admin'), $user->getIdentity());
 
 
 // logging out and clearing identity...
-$user->logout(true);
+$user->logout(clearIdentity: true);
 Assert::same(2, $counter->logout); // not logged in -> logout event not triggered
 
 Assert::false($user->isLoggedIn());

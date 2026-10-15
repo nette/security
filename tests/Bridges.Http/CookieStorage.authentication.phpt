@@ -24,6 +24,6 @@ Mockery::close();
 
 // clear id
 $response->expects()->deleteCookie('userid', null, null);
-$storage->clearAuthentication(true);
+$storage->clearAuthentication(clearIdentity: true);
 Assert::same([false, null, null], $storage->getState());
 Mockery::close();

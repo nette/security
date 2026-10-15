@@ -7,7 +7,6 @@
 use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -191,7 +190,7 @@ test('refreshStorage() with IdentityHandler triggers wakeup again', function () 
 			// Each wakeup adds a role
 			return new SimpleIdentity(
 				$identity->getId(),
-				array_merge($identity->getRoles(), ['role' . $this->wakeupCount]),
+				[...$identity->getRoles(), 'role' . $this->wakeupCount],
 			);
 		}
 

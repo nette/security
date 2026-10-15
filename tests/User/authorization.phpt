@@ -7,7 +7,6 @@
 use Nette\Security\{IIdentity, Role, SimpleIdentity};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/MockUserStorage.php';
 
@@ -92,6 +91,6 @@ Assert::false($user->isAllowed('sleep_with_jany'));
 
 // log out
 // logging out...
-$user->logout(false);
+$user->logout();
 
 Assert::false($user->isAllowed('delete_file'));

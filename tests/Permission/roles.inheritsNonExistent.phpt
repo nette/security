@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
 /**
- * Test: Nette\Security\Permission Ensures that an exception is thrown when a non-existent Role is specified to each parameter of inherits().
+ * Test: Nette\Security\Permission throws when a non-existent Role is passed to each parameter of inherits().
  */
 
 use Nette\Security\Permission;
 use Tester\Assert;
-
 
 require __DIR__ . '/../bootstrap.php';
 

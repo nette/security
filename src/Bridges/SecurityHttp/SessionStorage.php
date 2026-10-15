@@ -66,9 +66,9 @@ final class SessionStorage implements Nette\Security\UserStorage
 	}
 
 
-	public function setExpiration(?string $time, bool $clearIdentity = false): void
+	public function setExpiration(?string $expire, bool $clearIdentity = false): void
 	{
-		$this->expireTime = $time ? (int) Nette\Utils\DateTime::from($time)->format('U') : null;
+		$this->expireTime = $expire ? (int) Nette\Utils\DateTime::from($expire)->format('U') : null;
 		$this->expireIdentity = $clearIdentity;
 
 		if ($this->sessionSection && $this->sessionSection->get('authenticated')) {

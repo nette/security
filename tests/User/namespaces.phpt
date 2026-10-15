@@ -7,7 +7,6 @@
 use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -159,7 +158,7 @@ test('Identity is preserved after logout when not clearing in one namespace', fu
 	Assert::true($user->isLoggedIn());
 
 	// Logout without clearing identity
-	$user->logout(false);
+	$user->logout();
 	Assert::false($user->isLoggedIn());
 	Assert::same('john', $user->getIdentity()->getId()); // Identity preserved
 

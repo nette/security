@@ -9,7 +9,6 @@ use Nette\Http\Session;
 use Nette\Security\{SimpleIdentity, User};
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -63,7 +62,7 @@ test('Expiration without clearIdentity keeps identity on timeout', function () {
 	$session = new Session($request, $response);
 	$storage = new SessionStorage($session);
 
-	$storage->setExpiration('1 second', false);
+	$storage->setExpiration('1 second');
 	$storage->saveAuthentication(new SimpleIdentity('john'));
 
 	Assert::equal([true, new SimpleIdentity('john'), null], $storage->getState());

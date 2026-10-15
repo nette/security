@@ -9,7 +9,6 @@ use Nette\Bridges\SecurityDI\SecurityExtension;
 use Nette\DI;
 use Tester\Assert;
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
