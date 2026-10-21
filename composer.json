@@ -1,17 +1,13 @@
 {
 	"name": "nette/security",
-	"description": "🔑 Nette Security: provides authentication, authorization and a role-based access control management via ACL (Access Control List)",
-	"keywords": ["nette", "authentication", "authorization", "ACL"],
-	"homepage": "https://nette.org",
+	"description": "🔑 Nette Security: authentication and authorization. Login and user identity, roles, ACL with resources and assertions, and safe password hashing.",
+	"keywords": ["nette", "security", "authentication", "authorization", "acl", "login", "roles", "permissions", "password hashing", "rbac"],
+	"homepage": "https://doc.nette.org/security",
 	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
 		{
 			"name": "David Grudl",
 			"homepage": "https://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "https://nette.org/contributors"
 		}
 	],
 	"require": {
