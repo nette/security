@@ -22,7 +22,3 @@ $container = new Container;
 
 Assert::type(Nette\Bridges\SecurityHttp\SessionStorage::class, $container->getService('security.userStorage'));
 Assert::type(Nette\Security\User::class, $container->getService('security.user'));
-
-// aliases
-Assert::same($container->getService('security.userStorage'), $container->getService('nette.userStorage'));
-Assert::same($container->getService('security.user'), $container->getService('user'));

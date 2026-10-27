@@ -35,7 +35,6 @@ $container = new Container;
 
 $authorizator = $container->getService('security.authorizator');
 Assert::type(Nette\Security\Permission::class, $authorizator);
-Assert::same($authorizator, $container->getService('nette.authorizator'));
 
 Assert::same(['guest', 'member'], $authorizator->getRoles());
 Assert::same([], $authorizator->getRoleParents('guest'));

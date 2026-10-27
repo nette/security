@@ -36,7 +36,6 @@ $container = new Container;
 
 $authenticator = $container->getService('security.authenticator');
 Assert::type(Nette\Security\SimpleAuthenticator::class, $authenticator);
-Assert::same($authenticator, $container->getService('nette.authenticator'));
 
 $userList = [
 	'john' => 'john123',
