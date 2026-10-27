@@ -120,10 +120,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$builder->addDefinition($this->prefix('authenticator'))
 				->setType(Nette\Security\Authenticator::class)
 				->setFactory(Nette\Security\SimpleAuthenticator::class, [$usersList, $usersRoles, $usersData]);
-
-			if ($this->name === 'security') {
-				$builder->addAlias('nette.authenticator', $this->prefix('authenticator'));
-			}
 		}
 
 		if ($config->roles || $config->resources || $config->rules->allow || $config->rules->deny) {
@@ -144,15 +140,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 					$authorizator->addSetup($type, array_pad(is_array($rule) ? $rule : [$rule], 3, null));
 				}
 			}
-
-			if ($this->name === 'security') {
-				$builder->addAlias('nette.authorizator', $this->prefix('authorizator'));
-			}
-		}
-
-		if ($this->name === 'security') {
-			$builder->addAlias('user', $this->prefix('user'));
-			$builder->addAlias('nette.userStorage', $this->prefix('userStorage'));
 		}
 	}
 
