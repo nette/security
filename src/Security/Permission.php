@@ -573,8 +573,8 @@ class Permission implements Authorizator
 
 				if ($privilege === self::All) {
 					if ($rules = $this->getRules($resource, self::All)) { // look for rule on 'allRoles' psuedo-parent
-						foreach ($rules['byPrivilege'] as $privilege => $rule) {
-							if (($result = $this->getRuleType($resource, null, $privilege)) === self::Deny) {
+						foreach ($rules['byPrivilege'] as $privilege2 => $rule) {
+							if (($result = $this->getRuleType($resource, null, $privilege2)) === self::Deny) {
 								break 2;
 							}
 						}
