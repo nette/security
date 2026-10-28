@@ -33,6 +33,12 @@ function testIIdentityGetId(IIdentity $identity): void
 }
 
 
+function testIIdentityGetData(IIdentity $identity): void
+{
+	assertType('array<string, mixed>', $identity->getData());
+}
+
+
 function testUserGetId(User $user): void
 {
 	assertType('int|string|null', $user->getId());

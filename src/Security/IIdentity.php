@@ -10,7 +10,6 @@ namespace Nette\Security;
 
 /**
  * Represents the user of application.
- * @method array<string, mixed> getData()
  */
 interface IIdentity
 {
@@ -27,6 +26,7 @@ interface IIdentity
 
 	/**
 	 * Returns user data.
+	 * @return array<string, mixed>
 	 */
-	// function getData(): array;
+	function getData(): array;
 }
