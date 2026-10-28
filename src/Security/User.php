@@ -65,12 +65,18 @@ class User
 	private ?IIdentity $guestIdentity = null;
 	private bool $guestIdentityResolved = false;
 
+	/** @var list<Voter> */
+	private array $voters;
+	private ?Authorizator $authorizator = null;
+	private ?Voter $authorizatorVoter = null;
+
 
 	public function __construct(
 		private readonly UserStorage $storage,
 		private ?Authenticator $authenticator = null,
-		private ?Authorizator $authorizator = null,
+		Voter ...$voters,
 	) {
+		$this->voters = array_values($voters);
 	}
 
 
@@ -280,8 +286,7 @@ class User
 	public function getRoles(): array
 	{
 		if (!$this->isLoggedIn()) {
-			$identity = $this->resolveGuestIdentity();
-			return $identity ? $this->getIdentityRoles($identity) : [$this->guestRole];
+			return $this->getGuestRoles();
 		}
 
 		$identity = $this->getIdentity();
@@ -294,23 +299,45 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		return in_array($role, $this->getRoles(), true);
+		return $this->getPrincipal()->isInRole($role);
 	}
 
 
 	/**
-	 * Checks whether the user has access to the given resource and privilege.
-	 * Null means all resources or all privileges.
+	 * Checks whether a voter allows the user access to the given resource (a name, an object or a class name)
+	 * and privilege and none forbids it. Null means all resources or all privileges.
 	 */
-	public function isAllowed(mixed $resource = Authorizator::All, mixed $privilege = Authorizator::All): bool
+	public function isAllowed(mixed $resource = Authorizator::All, ?string $privilege = Authorizator::All): bool
 	{
-		foreach ($this->getRoles() as $role) {
-			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
-				return true;
-			}
-		}
+		return $this->getPrincipal()->isAllowed($resource, $privilege);
+	}
 
-		return false;
+
+	/**
+	 * Returns the user as the voters see them: the identity only while logged in, and the effective roles.
+	 */
+	public function getPrincipal(): Principal
+	{
+		return $this->createPrincipal($this->isLoggedIn() ? $this->getIdentity() : null);
+	}
+
+
+	/**
+	 * Returns the principal of the given identity as if it were logged in, or of a guest for null, to decide about
+	 * someone else than the current user. The identity is taken as it is; nothing is called or stored.
+	 */
+	final public function createPrincipal(?IIdentity $identity): Principal
+	{
+		$roles = $identity ? $this->getIdentityRoles($identity) : $this->getGuestRoles();
+		return new Principal($identity, $roles, $this->getVoters());
+	}
+
+
+	/** @return list<string> */
+	private function getGuestRoles(): array
+	{
+		$identity = $this->resolveGuestIdentity();
+		return $identity ? $this->getIdentityRoles($identity) : [$this->guestRole];
 	}
 
 
@@ -335,19 +362,56 @@ class User
 	}
 
 
-	/**
-	 * Sets authorization handler.
-	 */
-	public function setAuthorizator(Authorizator $handler): static
+	/** @return list<Voter> */
+	private function getVoters(): array
 	{
-		$this->authorizator = $handler;
+		return $this->authorizatorVoter ? [...$this->voters, $this->authorizatorVoter] : $this->voters;
+	}
+
+
+	/**
+	 * Adds a voter deciding on authorization.
+	 */
+	public function addVoter(Voter $voter): static
+	{
+		$this->voters[] = $voter;
 		return $this;
 	}
 
 
 	/**
-	 * Returns current authorization handler.
+	 * Sets the role-based authorization handler, asked for each effective role.
 	 */
+	#[\Deprecated('use User::addVoter()')]
+	public function setAuthorizator(Authorizator $handler): static
+	{
+		$this->authorizator = $handler;
+		$this->authorizatorVoter = new readonly class ($handler) implements Voter {
+			public function __construct(
+				private Authorizator $authorizator,
+			) {
+			}
+
+
+			public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+			{
+				foreach ($principal->getRoles() as $role) {
+					if ($this->authorizator->isAllowed($role, $resource, $privilege)) {
+						return Vote::Allow;
+					}
+				}
+
+				return Vote::Abstain;
+			}
+		};
+		return $this;
+	}
+
+
+	/**
+	 * Returns the role-based authorization handler.
+	 */
+	#[\Deprecated]
 	final public function getAuthorizator(): Authorizator
 	{
 		if (!$this->authorizator) {
@@ -359,8 +423,9 @@ class User
 
 
 	/**
-	 * Returns authorization handler, or null if none is set.
+	 * Returns the role-based authorization handler, or null if none is set.
 	 */
+	#[\Deprecated]
 	final public function getAuthorizatorIfExists(): ?Authorizator
 	{
 		return $this->authorizator;

@@ -79,11 +79,11 @@ Assert::false($user->isInRole('guest'));
 Assert::exception(
 	fn() => $user->isAllowed('delete_file'),
 	Nette\InvalidStateException::class,
-	'Authorizator has not been set.',
+	'No voter has been added.',
 );
 
 $handler = new Authorizator;
-$user->setAuthorizator($handler);
+@$user->setAuthorizator($handler); // @ deprecated
 
 Assert::true($user->isAllowed('delete_file'));
 Assert::false($user->isAllowed('sleep_with_jany'));

@@ -10,7 +10,7 @@ namespace Nette\Bridges\SecurityDI;
 use Nette;
 use Nette\Schema\Expect;
 use Tracy;
-use function is_array;
+use function count, is_array;
 
 
 /**
@@ -124,7 +124,6 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 
 		if ($config->roles || $config->resources || $config->rules->allow || $config->rules->deny) {
 			$authorizator = $builder->addDefinition($this->prefix('authorizator'))
-				->setType(Nette\Security\Authorizator::class)
 				->setFactory(Nette\Security\Permission::class);
 
 			foreach ($config->roles as $role => $parents) {
@@ -147,14 +146,27 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
+		$user = $builder->getDefinition($this->prefix('user'));
+		assert($user instanceof Nette\DI\Definitions\ServiceDefinition);
+
+		$voters = $builder->findByType(Nette\Security\Voter::class);
+		foreach (array_keys($voters) as $name) {
+			$user->addSetup('addVoter', [new Nette\DI\Definitions\Reference($name)]);
+		}
+
+		// a role-based authorizator of the application, until it becomes a voter
+		$authorizators = array_diff_key($builder->findAutowired(Nette\Security\Authorizator::class), $voters);
+		if (count($authorizators) > 1) {
+			throw new Nette\DI\InvalidConfigurationException('Multiple services implement Nette\Security\Authorizator: ' . implode(', ', array_keys($authorizators)) . '. Turn them into voters.');
+		} elseif ($authorizators) {
+			$user->addSetup('setAuthorizator', [new Nette\DI\Definitions\Reference(array_key_first($authorizators))]);
+		}
 
 		if (
 			$this->debugMode
 			&& ($this->config->debugger ?? $builder->getByType(Tracy\Bar::class))
 		) {
-			$definition = $builder->getDefinition($this->prefix('user'));
-			assert($definition instanceof Nette\DI\Definitions\ServiceDefinition);
-			$definition->addSetup('@Tracy\Bar::addPanel', [
+			$user->addSetup('@Tracy\Bar::addPanel', [
 				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
 			]);
 		}

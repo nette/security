@@ -16,7 +16,7 @@ use function count, is_array, is_string;
  *
  * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (https://www.zend.com), new BSD license
  */
-class Permission implements Authorizator
+class Permission implements Authorizator, Voter
 {
 	/** @var array<string, array{parents: array<string, true>, children: array<string, true>}> */
 	private array $roles = [];
@@ -540,6 +540,16 @@ class Permission implements Authorizator
 		?string $privilege = self::All,
 	): bool
 	{
+		return $this->decide($role, $resource, $privilege) ?? self::Deny;
+	}
+
+
+	/**
+	 * Resolves the query like isAllowed(), but returns null when the default deny-all rule denies it,
+	 * so that an explicit deny can be told from the default one.
+	 */
+	private function decide(?string $role, string|Resource|null $resource, ?string $privilege): ?bool
+	{
 		$prevQueriedRole = $this->queriedRole;
 		$prevQueriedResource = $this->queriedResource;
 
@@ -558,6 +568,7 @@ class Permission implements Authorizator
 				$this->checkResource($resource);
 			}
 
+			$byDefault = false;
 			do {
 				// depth-first search on $role if it is not 'allRoles' pseudo-parent
 				if (
@@ -576,12 +587,14 @@ class Permission implements Authorizator
 						}
 
 						if (($result = $this->getRuleType($resource, null, null)) !== null) {
+							$byDefault = $resource === self::All;
 							break;
 						}
 					}
 				} elseif (($result = $this->getRuleType($resource, null, $privilege)) !== null) { // look for rule on 'allRoles' pseudo-parent
 					break;
 				} elseif (($result = $this->getRuleType($resource, null, null)) !== null) {
+					$byDefault = $resource === self::All;
 					break;
 				}
 
@@ -589,7 +602,7 @@ class Permission implements Authorizator
 				$resource = $this->resources[$resource]['parent']; // try next Resource
 			} while (true);
 
-			return $result;
+			return $byDefault && $result === self::Deny ? null : $result;
 
 		} finally {
 			// restores previous values to keep the method re-entrant (assertions may call isAllowed() again)
@@ -616,6 +629,34 @@ class Permission implements Authorizator
 	public function getQueriedResource(): ?string
 	{
 		return $this->queriedResource;
+	}
+
+
+	/**
+	 * Allows the principal if any of their roles is allowed. Otherwise it forbids when an explicit deny rule
+	 * stopped some role, and abstains when only the default deny-all did, which must not override other voters.
+	 * Unlike isAllowed(), a role or resource the ACL does not know makes it abstain instead of throwing.
+	 */
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		$id = $resource instanceof Resource ? $resource->getResourceId() : $resource;
+		if ($id !== self::All && !(is_string($id) && $this->hasResource($id))) {
+			return Vote::Abstain;
+		}
+
+		$denied = false;
+		foreach ($principal->getRoles() as $role) {
+			if ($this->hasRole($role)) {
+				$result = $this->decide($role, $resource, $privilege);
+				if ($result === self::Allow) {
+					return Vote::Allow;
+				}
+
+				$denied = $denied || $result === self::Deny;
+			}
+		}
+
+		return $denied ? Vote::Forbid : Vote::Abstain;
 	}
 
 

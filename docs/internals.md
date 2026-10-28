@@ -81,7 +81,8 @@ A rule may carry an `assert` callback. In `getRuleType()`:
 - Assertions receive the role and resource **of the matching rule**, which under
   inheritance are ancestors of the queried ones; `getQueriedRole()` /
   `getQueriedResource()` return the names that were queried. Both are strings
-  only.
+  only: deciding by the data of a user or an entity is a voter's job, not an
+  assertion's.
 - `isAllowed()` stores the queried role/resource in object state and **saves and
   restores the previous values in a `finally`**. The method is therefore
   re-entrant (an assertion may call `isAllowed()` again and the outer queried
@@ -90,7 +91,7 @@ A rule may carry an `assert` callback. In `getRuleType()`:
 
 ## User: effective roles come from login state, not the retained identity
 
-`User` is a thin facade over `UserStorage` + an `Authenticator`/`Authorizator`.
+`User` is a thin facade over `UserStorage` + an `Authenticator` and voters.
 The few non-obvious invariants:
 
 - **Effective roles track the login state, not the identity object**
@@ -101,7 +102,7 @@ The few non-obvious invariants:
   `isInRole()`/`isAllowed()` need no prior `isLoggedIn()` check — and why a
   retained identity never leaks its privileges.
 - **Roles read from an identity must be strings** (`User::getIdentityRoles()`,
-  for the logged-in and the guest identity). A `Role`
+  for the logged-in, the guest and a `createPrincipal()` identity). A `Role`
   object throws `InvalidStateException` instead of flowing on, because the
   `list<string>` of `IIdentity::getRoles()` is only phpDoc; the rest of the core
   relies on it.
@@ -120,11 +121,60 @@ The few non-obvious invariants:
   It comes from `getGuestIdentity()` on the `IdentityHandler` authenticator — an
   **optional** method declared only as `@method` phpDoc and detected via
   `method_exists`, not part of the interface proper.
-- **`User::isAllowed()` is a disjunction over effective roles**: the user
-  is allowed if **any single** of their roles is allowed — a deny resolved for
-  one role never vetoes another role's allow. Single-role resolution lives in
-  `Permission`; the multi-role OR lives only here. This is the opposite polarity
-  of the deny-veto inside a whole-resource query, which applies per role.
+
+## Voters decide about a `Principal`, never about the `User`
+
+- **`User::isAllowed()` is `getPrincipal()->isAllowed()`.** The `Principal`
+  voters receive is the **effective** state: the identity only while logged in
+  (`null` for a guest, even when `User` retains an identity) and `getRoles()`.
+  This is the point of the class, not a copy of `User`: `User::getId()` returns
+  the retained identity's ID after `logout()` or inactivity, so an ownership
+  check written against `User` would let a logged-out user through. Don't hand
+  voters the `User`. A guest identity contributes its roles, not itself.
+- **Ownership is `hasId($id)`, and there is deliberately no `getId()`**:
+  `$resource->authorId === $principal->getId()` would be `null === null` for a
+  guest and a record without an owner. `hasId()` is false for a guest whatever
+  it is given, and compares strictly, so an ID of another type (`'1'` against
+  `1`) does not match.
+- **`createPrincipal(?IIdentity)` is the primitive, `getPrincipal()` is
+  `createPrincipal()` of the effective identity.** It decides about someone else
+  (CLI, queues, notifications; `null` asks about a visitor) with the same voters
+  and the same role rule, and takes the identity **as it is**, like
+  `login(IIdentity)`: no `IdentityHandler` hook is called, because
+  `wakeupIdentity()` belongs to the current request and may have side effects.
+  Such an identity usually comes fresh from the database, so it is not stale; a
+  ban that must hold everywhere is a voter returning `Vote::Forbid`, as
+  `wakeupIdentity()` covers only the session. The method is `final`, so an
+  optional parameter can be added later without a BC break.
+- **`Principal::isAllowed()` is the only place combining votes**, by one fixed
+  rule: a single `Vote::Forbid` wins, otherwise a single `Vote::Allow` suffices,
+  otherwise not allowed (also when every voter abstains). The order of voters
+  does not matter and every voter is asked, as a later one may forbid. A voter
+  that merely does not allow must **abstain, never forbid**; `Vote::allowIf()` is
+  the form for that, so a forbid is always written on purpose. Voters delegate
+  through `$principal->isAllowed()`, which is why the principal carries the
+  voters: injecting the user or an engine would make a DI cycle. With no voter,
+  it throws rather than denying silently.
+- **`Permission` is one of the voters; an explicit deny forbids, the default
+  deny-all abstains.** Its `vote()` allows if any of the principal's roles is
+  allowed (so a deny resolved for one role never vetoes another role's allow
+  within the ACL, the opposite polarity of the deny-veto inside a whole-resource
+  query, which applies per role). Otherwise it returns `Vote::Forbid` when an
+  explicit deny rule stopped some role, and `Vote::Abstain` when only the default
+  rule did: a forbidding default would override every other voter. The default
+  rule is the one cell all resources × all roles × all privileges, so a
+  `deny()` with no arguments, which writes that cell, abstains as well, and so
+  does a failed assertion on it that inverts it to a deny. `Permission::decide()`
+  tells the two apart by returning `null` for the default deny; `isAllowed()`
+  maps that to `false`, so its answers are unchanged. Unlike its
+  role-based `isAllowed()` it is **lenient**: a role or resource the ACL does not
+  know (an object that is not a `Resource`, a class name, a role used only by
+  other voters) makes it abstain instead of throwing. So a rule on `'article'`
+  does not apply to an `Article` entity unless the entity implements `Resource`.
+- The deprecated `setAuthorizator()` keeps the old per-role path with its strict
+  exceptions, wrapped by `User` into a voter that allows or abstains.
+  `SecurityExtension` hands every service implementing `Voter` to `addVoter()`
+  and an autowired `Authorizator` that is not a voter to `setAuthorizator()`.
 
 ## Storages: session and cookie are not interchangeable
 
@@ -172,7 +222,8 @@ logoutReason]`; everything else differs between the two implementations:
 | ACL state shape | `Permission::$rules`, `getRules` |
 | Resolution order (resource × role × privilege) | `Permission::isAllowed`, `searchRolePrivileges` |
 | Assertions, queried role/resource | `Permission::getRuleType`, `getQueriedRole`/`getQueriedResource` |
-| Effective roles, login state, multi-role OR | `User::getRoles`, `isInRole`, `isAllowed` |
+| Effective roles, login state | `User::getRoles`, `isInRole` |
+| Voters, the principal, combining votes, the ACL as a voter | `Voter`, `Vote`, `Principal::isAllowed`, `User::getPrincipal`, `Permission::vote`, `SecurityExtension::beforeCompile` |
 | Identity lifecycle, veto, seams | `User::loadStoredData`, `login`/`logout`, `IdentityHandler` |
 | Sliding expiration, fixation defence, namespaces | `SessionStorage` |
 | Token-only persistence, `persistIdentity` no-op | `CookieStorage` |
