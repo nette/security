@@ -27,7 +27,7 @@ class Authenticator implements Nette\Security\Authenticator
 			throw new Nette\Security\AuthenticationException('Password not match', self::InvalidCredential);
 
 		} else {
-			return new SimpleIdentity('John Doe', ['admin', new TesterRole]);
+			return new SimpleIdentity('John Doe', ['admin', 'tester']);
 		}
 	}
 }
@@ -69,7 +69,7 @@ $user->setAuthenticator($handler);
 $user->login('john', 'xxx');
 
 Assert::true($user->isLoggedIn());
-Assert::equal(['admin', new TesterRole], $user->getRoles());
+Assert::same(['admin', 'tester'], $user->getRoles());
 Assert::true($user->isInRole('admin'));
 Assert::true($user->isInRole('tester'));
 Assert::false($user->isInRole('guest'));
@@ -94,3 +94,16 @@ Assert::false($user->isAllowed('sleep_with_jany'));
 $user->logout();
 
 Assert::false($user->isAllowed('delete_file'));
+
+
+// a Role object in the identity is no longer supported
+$user->login(new SimpleIdentity('John Doe', ['admin', new TesterRole]));
+Assert::exception(
+	fn() => $user->getRoles(),
+	Nette\InvalidStateException::class,
+	'Roles of Nette\Security\SimpleIdentity must be names, TesterRole given. Role objects are no longer supported.',
+);
+Assert::exception(
+	fn() => $user->isInRole('admin'),
+	Nette\InvalidStateException::class,
+);

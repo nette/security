@@ -10,6 +10,7 @@ namespace Nette\Security;
 
 /**
  * Represents a role that can be granted access to resources.
+ * @deprecated roles are names; a voter reaches the user through Principal
  */
 interface Role
 {
