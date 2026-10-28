@@ -9,7 +9,7 @@ namespace Nette\Security;
 
 use Nette;
 use Nette\Utils\Arrays;
-use function func_get_args;
+use function func_get_args, is_string, sprintf;
 
 
 /**
@@ -280,11 +280,12 @@ class User
 	public function getRoles(): array
 	{
 		if (!$this->isLoggedIn()) {
-			return $this->resolveGuestIdentity()?->getRoles() ?? [$this->guestRole];
+			$identity = $this->resolveGuestIdentity();
+			return $identity ? $this->getIdentityRoles($identity) : [$this->guestRole];
 		}
 
 		$identity = $this->getIdentity();
-		return $identity?->getRoles() ?? [$this->authenticatedRole];
+		return $identity ? $this->getIdentityRoles($identity) : [$this->authenticatedRole];
 	}
 
 
@@ -293,7 +294,7 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		return array_any($this->getRoles(), fn($r) => $role === ($r instanceof Role ? $r->getRoleId() : $r));
+		return in_array($role, $this->getRoles(), true);
 	}
 
 
@@ -304,6 +305,27 @@ class User
 	public function isAllowed(mixed $resource = Authorizator::All, mixed $privilege = Authorizator::All): bool
 	{
 		return array_any($this->getRoles(), fn($role) => $this->getAuthorizator()->isAllowed($role, $resource, $privilege));
+	}
+
+
+	/**
+	 * Returns the roles of the identity, which must be names.
+	 * @return list<string>
+	 */
+	private function getIdentityRoles(IIdentity $identity): array
+	{
+		$roles = $identity->getRoles();
+		foreach ($roles as $role) {
+			if (!is_string($role)) {
+				throw new Nette\InvalidStateException(sprintf(
+					'Roles of %s must be names, %s given. Role objects are no longer supported.',
+					$identity::class,
+					get_debug_type($role),
+				));
+			}
+		}
+
+		return $roles;
 	}
 
 
