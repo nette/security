@@ -39,8 +39,8 @@ class Permission implements Authorizator
 		'byResource' => [],
 	];
 
-	private string|Role|null $queriedRole = null;
-	private string|Resource|null $queriedResource = null;
+	private ?string $queriedRole = null;
+	private ?string $queriedResource = null;
 
 
 	/********************* roles ****************d*g**/
@@ -535,7 +535,7 @@ class Permission implements Authorizator
 	 * @throws Nette\InvalidStateException
 	 */
 	public function isAllowed(
-		string|Role|null $role = self::All,
+		?string $role = self::All,
 		string|Resource|null $resource = self::All,
 		?string $privilege = self::All,
 	): bool
@@ -546,19 +546,15 @@ class Permission implements Authorizator
 		try {
 			$this->queriedRole = $role;
 			if ($role !== self::All) {
-				if ($role instanceof Role) {
-					$role = $role->getRoleId();
-				}
-
 				$this->checkRole($role);
+			}
+
+			if ($resource instanceof Resource) {
+				$resource = $resource->getResourceId();
 			}
 
 			$this->queriedResource = $resource;
 			if ($resource !== self::All) {
-				if ($resource instanceof Resource) {
-					$resource = $resource->getResourceId();
-				}
-
 				$this->checkResource($resource);
 			}
 
@@ -604,18 +600,20 @@ class Permission implements Authorizator
 
 
 	/**
-	 * Returns the role currently being queried. Used by assertion callbacks.
+	 * Returns the role currently being queried. Used by assertion callbacks, whose role argument is the role
+	 * of the matching rule, an ancestor of the queried one when the rule is inherited.
 	 */
-	public function getQueriedRole(): string|Role|null
+	public function getQueriedRole(): ?string
 	{
 		return $this->queriedRole;
 	}
 
 
 	/**
-	 * Returns the resource currently being queried. Used by assertion callbacks.
+	 * Returns the name of the resource currently being queried. Used by assertion callbacks, whose resource
+	 * argument is the resource of the matching rule, an ancestor of the queried one when the rule is inherited.
 	 */
-	public function getQueriedResource(): string|Resource|null
+	public function getQueriedResource(): ?string
 	{
 		return $this->queriedResource;
 	}

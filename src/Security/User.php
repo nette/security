@@ -9,7 +9,7 @@ namespace Nette\Security;
 
 use Nette;
 use Nette\Utils\Arrays;
-use function func_get_args;
+use function func_get_args, is_string, sprintf;
 
 
 /**
@@ -280,11 +280,12 @@ class User
 	public function getRoles(): array
 	{
 		if (!$this->isLoggedIn()) {
-			return $this->resolveGuestIdentity()?->getRoles() ?? [$this->guestRole];
+			$identity = $this->resolveGuestIdentity();
+			return $identity ? $this->getIdentityRoles($identity) : [$this->guestRole];
 		}
 
 		$identity = $this->getIdentity();
-		return $identity?->getRoles() ?? [$this->authenticatedRole];
+		return $identity ? $this->getIdentityRoles($identity) : [$this->authenticatedRole];
 	}
 
 
@@ -293,13 +294,7 @@ class User
 	 */
 	final public function isInRole(string $role): bool
 	{
-		foreach ($this->getRoles() as $r) {
-			if ($role === ($r instanceof Role ? $r->getRoleId() : $r)) {
-				return true;
-			}
-		}
-
-		return false;
+		return in_array($role, $this->getRoles(), true);
 	}
 
 
@@ -316,6 +311,27 @@ class User
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Returns the roles of the identity, which must be names.
+	 * @return list<string>
+	 */
+	private function getIdentityRoles(IIdentity $identity): array
+	{
+		$roles = $identity->getRoles();
+		foreach ($roles as $role) {
+			if (!is_string($role)) {
+				throw new Nette\InvalidStateException(sprintf(
+					'Roles of %s must be names, %s given. Role objects are no longer supported.',
+					$identity::class,
+					get_debug_type($role),
+				));
+			}
+		}
+
+		return $roles;
 	}
 
 

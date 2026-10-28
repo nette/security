@@ -64,8 +64,10 @@ composer phpstan
   deny vetoes** the blanket allow.
 - **A failed `assert` callback makes the rule *not apply*** (falls through as if
   absent) - except on the ultimate default rule, where it returns the **inverted**
-  type. Assertions receive string IDs and reach objects via
-  `getQueriedRole()`/`getQueriedResource()`; `isAllowed()` saves and restores the
+  type. Assertions receive the role and resource of the matching rule (ancestors
+  under inheritance), `getQueriedRole()`/`getQueriedResource()` the queried names;
+  all are strings, `Role` objects are refused and a `Resource` object only maps an
+  entity to a name. `isAllowed()` saves and restores the
   queried role/resource in a `finally`, so it is re-entrant (an assertion may call
   `isAllowed()` again) and exception-safe.
 - **Effective roles come from login state, not the retained identity.** After

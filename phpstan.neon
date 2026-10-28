@@ -18,8 +18,7 @@ parameters:
 			count: 2
 			path: src/Bridges/SecurityTracy/dist/tab.phtml
 
-		-
-			message: '#^Instanceof between string and Nette\\Security\\Role will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
+		-   # runtime guard of the IIdentity::getRoles() contract, which PHP does not enforce: an identity may still return Role objects
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Security/User.php

@@ -36,8 +36,9 @@ reference** (so callers mutate in place). The `all*` string keys are magic
 sentinels that cannot collide with user IDs: user-supplied names live one level
 deeper, under the sibling `byResource`/`byRole`/`byPrivilege` subarrays, so even
 a role literally named `allRoles` lands in `byRole['allRoles']`. Roles and
-resources are stored as **string IDs**; the
-`Role`/`Resource` objects passed to `isAllowed()` are reduced to IDs immediately.
+resources are **names**: a role is a string everywhere (the deprecated `Role`
+objects are refused, see User below), and a `Resource` object is only a mapping
+of an entity to a resource name, reduced to it immediately.
 
 ## `isAllowed()`: the resolution algorithm (the emergent model)
 
@@ -77,9 +78,10 @@ A rule may carry an `assert` callback. In `getRuleType()`:
   all privileges). A failed assertion there has nothing left to fall back to, so
   it returns the **inverted** type (`Allow`→`Deny`, `Deny`→`Allow`) to force a
   definite answer.
-- Assertions receive **string IDs**, not objects. To reach the actual queried
-  object they call `getQueriedRole()` / `getQueriedResource()`, which return
-  whatever was passed to `isAllowed()`.
+- Assertions receive the role and resource **of the matching rule**, which under
+  inheritance are ancestors of the queried ones; `getQueriedRole()` /
+  `getQueriedResource()` return the names that were queried. Both are strings
+  only.
 - `isAllowed()` stores the queried role/resource in object state and **saves and
   restores the previous values in a `finally`**. The method is therefore
   re-entrant (an assertion may call `isAllowed()` again and the outer queried
@@ -98,6 +100,11 @@ The few non-obvious invariants:
   (`persistIdentity`), the user drops to guest roles. This is why
   `isInRole()`/`isAllowed()` need no prior `isLoggedIn()` check — and why a
   retained identity never leaks its privileges.
+- **Roles read from an identity must be strings** (`User::getIdentityRoles()`,
+  for the logged-in and the guest identity). A `Role`
+  object throws `InvalidStateException` instead of flowing on, because the
+  `list<string>` of `IIdentity::getRoles()` is only phpDoc; the rest of the core
+  relies on it.
 - **State is loaded lazily once, and can be vetoed on load.**
   `loadStoredData()` runs a single time (guarded by `$authenticated !== null`),
   reads the storage state, and — if the authenticator is an `IdentityHandler` —
