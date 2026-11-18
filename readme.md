@@ -15,7 +15,7 @@ Authentication & Authorization library for Nette.
 - user login and logout
 - verifying user privileges
 - securing against vulnerabilities
-- how to create custom authenticators and authorizators
+- how to create custom authenticators and voters
 - Access Control List
 
 Documentation can be found on the [website](https://doc.nette.org/access-control).
@@ -90,7 +90,7 @@ protected function startup()
 Authenticator
 -------------
 
-It is an object that verifies the login data, ie usually the name and password. The trivial implementation is the class [Nette\Security\SimpleAuthenticator](https://api.nette.org/3.0/Nette/Security/SimpleAuthenticator.html), which can be defined this way
+It is an object that verifies the login data, ie usually the name and password. The trivial implementation is the class `Nette\Security\SimpleAuthenticator`, which can be defined this way
 
 ```php
 $authenticator = new Nette\Security\SimpleAuthenticator([
@@ -102,34 +102,31 @@ $authenticator = new Nette\Security\SimpleAuthenticator([
 
 This solution is more suitable for testing purposes. We will show you how to create an authenticator that will verify credentials against a database table.
 
-An authenticator is an object that implements the [Nette\Security\Authenticator](https://api.nette.org/security/master/Nette/Security/Authenticator.html) interface with method `authenticate()`. Its task is either to return the so-called [identity](#Identity) or to throw an exception `Nette\Security\AuthenticationException`. It would also be possible to provide an fine-grain error code `Authenticator::IDENTITY_NOT_FOUND` or `Authenticator::INVALID_CREDENTIAL`.
+An authenticator is an object that implements the `Nette\Security\Authenticator` interface with method `authenticate()`. Its task is either to return the so-called [identity](#Identity) or to throw an exception `Nette\Security\AuthenticationException`. It would also be possible to provide a fine-grained error code `Authenticator::IdentityNotFound` or `Authenticator::InvalidCredential`.
 
 ```php
 use Nette;
 
 class MyAuthenticator implements Nette\Security\Authenticator
 {
-	private $database;
-	private $passwords;
-
-	public function __construct(Nette\Database\Context $database, Nette\Security\Passwords $passwords)
-	{
-		$this->database = $database;
-		$this->passwords = $passwords;
+	public function __construct(
+		private Nette\Database\Explorer $database,
+		private Nette\Security\Passwords $passwords,
+	) {
 	}
 
-	public function authenticate($username, $password): Nette\Security\IIdentity
+	public function authenticate(string $username, string $password): Nette\Security\IIdentity
 	{
 		$row = $this->database->table('users')
 			->where('username', $username)
 			->fetch();
 
 		if (!$row) {
-			throw new Nette\Security\AuthenticationException('User not found.');
+			throw new Nette\Security\AuthenticationException('User not found.', self::IdentityNotFound);
 		}
 
 		if (!$this->passwords->verify($password, $row->password)) {
-			throw new Nette\Security\AuthenticationException('Invalid password.');
+			throw new Nette\Security\AuthenticationException('Invalid password.', self::InvalidCredential);
 		}
 
 		return new Nette\Security\SimpleIdentity(
@@ -174,19 +171,21 @@ $user->getIdentity()->getRoles();
 $user->getIdentity()->name;
 ```
 
-Importantly, **when user logs out, identity is not deleted** and is still available. So, if identity exists, it by itself does not grant that the user is also logged in. If we want to explicitly delete the identity, we logout the user by `$user->logout(true)`.
+Reading a key that was not passed throws `Nette\MemberAccessException`, so a typo does not go unnoticed.
+
+Importantly, **when user logs out, identity is not deleted** and is still available. So, if identity exists, it by itself does not grant that the user is also logged in. The same holds for `$user->getId()`, which returns the ID of the retained identity even after logout, so never compare it to decide about ownership; that is what [voters](#voters) are for. If we want to explicitly delete the identity, we logout the user by `$user->logout(true)`.
 
 Thanks to this, you can still assume which user is at the computer and, for example, display personalized offers in the e-shop, however, you can only display his personal data after logging in.
 
 If you prefer the identity to be discarded on every logout and expiration, set `$user->persistIdentity = false`. Retaining the identity is best-effort and depends on the storage implementation.
 
-Identity is an object that implements the [Nette\Security\IIdentity](https://api.nette.org/master/Nette/Security/IIdentity.html) interface, the default implementation is [Nette\Security\SimpleIdentity](https://api.nette.org/3.0/Nette/Security/SimpleIdentity.html). And as mentioned, identity is stored in the session, so if, for example, we change the role of some of the logged-in users, old data will be kept in the identity until he logs in again.
+Identity is an object that implements the `Nette\Security\IIdentity` interface, the default implementation is `Nette\Security\SimpleIdentity`. And as mentioned, identity is stored in the session, so if, for example, we change the role of some of the logged-in users, old data will be kept in the identity until he logs in again.
 
 
 Guest Identity
 --------------
 
-You can provide an identity even for users who are not logged in. If the authenticator implements `IdentityHandler` and its optional method `getGuestIdentity()`, the returned identity is used as a fallback for `getIdentity()`, `getId()` and `getRoles()`. So anonymous visitors can carry their own roles and data instead of the plain `guest` role:
+You can provide an identity even for users who are not logged in. If the authenticator implements `IdentityHandler`, the identity returned by its method `getGuestIdentity()` is used as a fallback for `getIdentity()`, `getId()` and `getRoles()`. So anonymous visitors can carry their own roles and data instead of the plain `guest` role:
 
 ```php
 public function getGuestIdentity(): ?Nette\Security\IIdentity
@@ -195,7 +194,7 @@ public function getGuestIdentity(): ?Nette\Security\IIdentity
 }
 ```
 
-The guest identity is resolved only when reading and is never stored.
+An authenticator without a guest identity returns `null` from this method. The guest identity is resolved only when reading and is never stored.
 
 
 
@@ -216,7 +215,7 @@ if ($user->isLoggedIn()) { // is user logged in?
 Roles
 -----
 
-The purpose of roles is to offer a more precise permission management and remain independent on the user name. As soon as user logs in, he is assigned one or more roles. Roles themselves may be simple strings, for example, `admin`, `member`, `guest`, etc. They are specified in the second argument of `SimpleIdentity` constructor, either as a string or an array.
+The purpose of roles is to offer a more precise permission management and remain independent on the user name. As soon as user logs in, he is assigned one or more roles. Roles are simple names, for example, `admin`, `member`, `guest`, etc. They are specified in the second argument of `SimpleIdentity` constructor, either as a string or an array.
 
 As an authorization criterion, we will now use the method `isInRole()`, which checks whether the user is in the given role:
 
@@ -226,40 +225,19 @@ if ($user->isInRole('admin')) { // is the admin role assigned to the user?
 }
 ```
 
-As you already know, logging the user out does not erase his identity. Thus, method `getIdentity()` still returns object `SimpleIdentity`, including all granted roles. The Nette Framework adheres to the principle of "less code, more security", so when you are checking roles, you do not have to check whether the user is logged in too. Method `isInRole()` works with **effective roles**, ie if the user is logged in, roles assigned to identity are used, if he is not logged in, an automatic special role `guest` is used instead.
+As you already know, logging the user out does not erase his identity. Thus, method `getIdentity()` still returns object `SimpleIdentity`, including all granted roles. The Nette Framework adheres to the principle of "less code, more security", so when you are checking roles, you do not have to check whether the user is logged in too. Method `isInRole()` works with **effective roles**, ie if the user is logged in, roles assigned to identity are used, if he is not logged in, an automatic special role `guest` (or the roles of the [guest identity](#guest-identity)) is used instead.
 
 
-Authorizator
-------------
+Voters
+------
 
-In addition to roles, we will introduce the terms resource and operation:
+In addition to roles, we will introduce the terms resource and privilege:
 
 - **role** is a user attribute - for example moderator, editor, visitor, registered user, administrator, ...
 - **resource** is a logical unit of the application - article, page, user, menu item, poll, presenter, ...
-- **operation** is a specific activity, which user may or may not do with *resource* - view, edit, delete, vote, ...
+- **privilege** is a specific activity, which user may or may not do with *resource* - view, edit, delete, vote, ...
 
-An authorizer is an object that decides whether a given *role* has permission to perform a certain *operation* with specific *resource*. It is an object implementing the [Nette\Security\Authorizator](https://api.nette.org/master/Nette/Security/Authorizator.html) interface with only one method `isAllowed()`:
-
-```php
-class MyAuthorizator implements Nette\Security\Authorizator
-{
-	public function isAllowed($role, $resource, $operation): bool
-	{
-		if ($role === 'admin') {
-			return true;
-		}
-		if ($role === 'user' && $resource === 'article') {
-			return true;
-		}
-
-		...
-
-		return false;
-	}
-}
-```
-
-And the following is an example of use. Note that this time we call the method `Nette\Security\User::isAllowed()`, not the authorizator's one, so there is not first parameter `$role`. This method calls `MyAuthorizator::isAllowed()` sequentially for all user roles and returns true if at least one of them has permission.
+Whether the user may perform a privilege with a resource is asked by the method `isAllowed()`:
 
 ```php
 if ($user->isAllowed('file')) { // is user allowed to do everything with resource 'file'?
@@ -269,16 +247,144 @@ if ($user->isAllowed('file')) { // is user allowed to do everything with resourc
 if ($user->isAllowed('file', 'delete')) { // is user allowed to delete a resource 'file'?
 	deleteFile();
 }
+
+if ($user->isAllowed($article, 'edit')) { // is user allowed to edit this very article?
+	editArticle($article);
+}
+
+if ($user->isAllowed(Article::class, 'create')) { // is user allowed to create articles?
+	createArticle();
+}
 ```
 
-Both arguments are optional and their default value means *everything*.
+Both arguments are optional and their default value `null` means that no particular resource or privilege is asked about; what that means is up to the voters, for the ACL it is *everything*. The resource may be a name, an object or a class name.
+
+The answer is decided by voters. A voter is an object implementing the `Nette\Security\Voter` interface with only one method `vote()`. It receives the user in the form of a [principal](#principal), the resource and the privilege, and returns one of the three cases of the enum `Nette\Security\Vote`: `Allow`, `Forbid`, or `Abstain` when it has nothing to allow. A voter usually takes care of one kind of resource and abstains on everything else. This one decides about articles, ie entities with properties `authorId` and `published`:
+
+```php
+use Nette\Security\{Principal, Vote, Voter};
+
+class ArticleVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		if ($resource === Article::class) { // articles in general, such as whether one may create them
+			return Vote::allowIf($privilege === 'create' && $principal->isInRole('registered'));
+
+		} elseif (!$resource instanceof Article) { // not my business
+			return Vote::Abstain;
+		}
+
+		return Vote::allowIf(match ($privilege) {
+			'view' => $resource->published || $principal->hasId($resource->authorId),
+			'edit', 'delete' => $principal->hasId($resource->authorId),
+			default => false,
+		});
+	}
+}
+```
+
+The guest may not edit the article, its author may:
+
+```php
+$article = new Article(authorId: 10);
+$user->isAllowed($article, 'edit'); // false
+
+$user->login($username, $password); // the author with ID 10
+$user->isAllowed($article, 'edit'); // true
+$user->isAllowed(new Article(authorId: 20), 'edit'); // false
+```
+
+`Vote::allowIf()` returns `Allow` if the condition holds and `Abstain` otherwise. That is the right answer of an ordinary voter, because "I do not allow it" is not "nobody may allow it". So an administrator may edit someone else's article thanks to another voter:
+
+```php
+class AdminVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		return Vote::allowIf($principal->isInRole('admin'));
+	}
+}
+```
+
+Keep in mind that a voter is asked about every resource and privilege, so an unconditional allow like this one really allows everything, including the resources of another kind of user and operations nobody should do. Narrow it to the resources it is meant for, or let the specific voters forbid what must not happen.
+
+`Vote::Forbid` is written on purpose and rarely, for example for a banned user, who may do nothing whatever the other voters say:
+
+```php
+class BannedVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		return $principal->isInRole('banned') ? Vote::Forbid : Vote::Abstain;
+	}
+}
+```
+
+The votes are combined by one fixed rule: a single `Forbid` wins, otherwise a single `Allow` suffices, otherwise (also when all voters abstain) the access is not allowed. The order of voters therefore does not matter.
+
+Voters are passed to the constructor of `User` or added by the method `addVoter()`. If there is no voter, `isAllowed()` throws `Nette\InvalidStateException` rather than silently denying everything.
+
+```php
+$user = new Nette\Security\User($storage, $authenticator, new ArticleVoter, new AdminVoter);
+$user->addVoter(new BannedVoter);
+```
+
+In the DI container, every service implementing `Voter` is a voter automatically, even one with `autowired: false`, so it is enough to register it:
+
+```neon
+services:
+	- ArticleVoter
+	- AdminVoter
+	- BannedVoter
+```
+
+A role-based authorizator implementing `Nette\Security\Authorizator`, which is asked about each role of the user, can still be set by the deprecated method `setAuthorizator()`, and an autowired service implementing it is used this way automatically. Write a voter instead.
+
+
+Principal
+---------
+
+Voters do not receive the `User` object but `Nette\Security\Principal`, the user as authorization sees him:
+
+- `getIdentity()` returns the identity only while the user is logged in, `null` for a guest, even when `User` retains the identity after logout or provides a guest identity
+- `getRoles()` and `isInRole()` work with the effective roles
+- `hasId($id)` checks whether this is the logged-in user with the given ID; it is always false for a guest, even for an article without an author (`null`), and it compares strictly, so `'10'` does not match `10`
+- `isAllowed()` asks the voters, so a voter can delegate the decision:
+
+```php
+class CommentVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		// a comment may be viewed by whoever may view its article
+		return Vote::allowIf(
+			$resource instanceof Comment
+			&& $privilege === 'view'
+			&& $principal->isAllowed($resource->article, 'view'),
+		);
+	}
+}
+```
+
+The principal of the current user is returned by `$user->getPrincipal()`. To decide about someone else, for example to whom to send a notification, or whether an anonymous visitor would see a page, create a principal of any identity by `createPrincipal()`, where `null` stands for a guest. It uses the same voters and roles, and the current user stays as he is:
+
+```php
+foreach ($subscribers as $identity) {
+	if ($user->createPrincipal($identity)->isAllowed($article, 'view')) {
+		sendNotification($identity, $article);
+	}
+}
+
+$user->createPrincipal(null)->isAllowed($article, 'view'); // would a visitor see it?
+```
 
 
 
 Permission ACL
 --------------
 
-Nette comes with a built-in implementation of the authorizer, the [Nette\Security\Permission](https://api.nette.org/3.0/Nette/Security/Permission.html) class, which offers a lightweight and flexible ACL (Access Control List) layer for permission and access control. When we work with this class, we define roles, resources, and individual permissions. And roles and resources may form hierarchies. To explain, we will show an example of a web application:
+Nette comes with a built-in voter, the `Nette\Security\Permission` class, which offers a lightweight and flexible ACL (Access Control List) layer for permission and access control. When we work with this class, we define roles, resources, and individual permissions. And roles and resources may form hierarchies. To explain, we will show an example of a web application:
 
 - `guest`: visitor that is not logged in, allowed to read and browse public part of the web, ie. read articles, comment and vote in polls
 - `registered`: logged-in user, which may on top of that post comments
@@ -362,34 +468,18 @@ $acl->isAllowed('administrator', 'poll', 'edit'); // false
 $acl->isAllowed('administrator', 'comment', 'edit'); // true
 ```
 
-Permissions can also be evaluated dynamically and we can leave the decision to our own callback, to which all parameters are passed:
+The ACL is a voter, so we pass it to the `User` like any other voter. In the DI container the sections `roles`, `resources` and `rules` of the `security` configuration create it and make it a voter by themselves. Then the ACL votes:
+
+- `Allow` if any of the user's roles is allowed,
+- `Forbid` if an explicit `deny()` rule stopped a role, so the rule `deny('administrator', 'poll', 'edit')` holds even when another voter allows it,
+- `Abstain` if only the default deny-all applies, leaving the decision to the other voters,
+- `Abstain` for a role or a resource it does not know, so it does not get in the way of the other voters, whereas calling `$acl->isAllowed()` directly with an unknown name throws an exception.
+
+So the rules for the resource `article` do not apply to an `Article` object, unless the object implements `Nette\Security\Resource`, whose method `getResourceId()` returns the name of the resource:
 
 ```php
-$assertion = function (Permission $acl, string $role, string $resource, string $privilege): bool {
-	return ...;
-};
-
-$acl->allow('registered', 'comment', null, $assertion);
-```
-
-But how to solve a situation where the names of roles and resources are not enough, ie we would like to define that, for example, a role `registered` can edit a resource `article` only if it is its author? We will use objects instead of strings, the role will be the object [Nette\Security\IRole](https://api.nette.org/3.0/Nette/Security/IRole.html) and the source [Nette\Security\IResource](https://api.nette.org/3.0/Nette/Security/IResource.html). Their methods `getRoleId()` resp. `getResourceId()` will return the original strings:
-
-```php
-class Registered implements Nette\Security\IRole
+class Article implements Nette\Security\Resource
 {
-	public $id;
-
-	public function getRoleId(): string
-	{
-		return 'registered';
-	}
-}
-
-
-class Article implements Nette\Security\IResource
-{
-	public $authorId;
-
 	public function getResourceId(): string
 	{
 		return 'article';
@@ -397,27 +487,19 @@ class Article implements Nette\Security\IResource
 }
 ```
 
-And now let's create a rule:
+Permissions can also be evaluated dynamically and we can leave the decision to our own callback. It receives the role and the resource of the rule that matched, which under inheritance may be ancestors of the queried ones; the queried names are returned by `$acl->getQueriedRole()` and `$acl->getQueriedResource()`:
 
 ```php
-$assertion = function (Permission $acl, string $role, string $resource, string $privilege): bool {
-	$role = $acl->getQueriedRole(); // object Registered
-	$resource = $acl->getQueriedResource(); // object Article
-	return $role->id === $resource->authorId;
+$assertion = function (Permission $acl, ?string $role, ?string $resource, ?string $privilege): bool {
+	return ...;
 };
 
-$acl->allow('registered', 'article', 'edit', $assertion);
+$acl->allow('registered', 'comment', null, $assertion);
 ```
 
-The ACL is queried by passing objects:
+But the names of roles and resources are not enough when we would like to define that, for example, a user can edit an article only if he is its author. Such a decision depends on the data of the user and of the article, and it is the job of a voter like the `ArticleVoter` above, which works side by side with the ACL.
 
-```php
-$user = new Registered(...);
-$article = new Article(...);
-$acl->isAllowed($user, $article, 'edit');
-```
-
-A role may inherit form one or more other roles. But what happens, if one ancestor has certain action allowed and the other one has it denied? Then the *role weight* comes into play - the last role in the array of roles to inherit has the greatest weight, first one the lowest:
+A role may inherit from one or more other roles. But what happens, if one ancestor has certain action allowed and the other one has it denied? Then the *role weight* comes into play - the last role in the array of roles to inherit has the greatest weight, first one the lowest:
 
 ```php
 $acl = new Nette\Security\Permission;
@@ -448,6 +530,7 @@ It is possible to have several independent logged users within one site and one 
 
 ```php
 $user->getStorage()->setNamespace('forum');
+$user->refreshStorage(); // if the user state was already read
 ```
 
 [Continue...](https://doc.nette.org/en/security/authentication)
