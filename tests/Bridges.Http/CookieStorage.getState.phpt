@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 use Nette\Bridges\SecurityHttp\CookieStorage;
-use Nette\Security\SimpleIdentity;
+use Nette\Security\TokenIdentity;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -21,10 +21,10 @@ Assert::same([false, null, null], $storage->getState());
 $id = '123456789123456';
 $request = new Nette\Http\Request(new Nette\Http\UrlScript, cookies: ['userid' => $id]);
 $storage = new CookieStorage($request, $response);
-Assert::equal([true, new SimpleIdentity($id), null], $storage->getState());
+Assert::equal([true, new TokenIdentity($id), null], $storage->getState());
 
 // custom cookie
 $request = new Nette\Http\Request(new Nette\Http\UrlScript, cookies: ['foo' => $id]);
 $storage = new CookieStorage($request, $response);
 $storage->setCookieParameters('foo');
-Assert::equal([true, new SimpleIdentity($id), null], $storage->getState());
+Assert::equal([true, new TokenIdentity($id), null], $storage->getState());

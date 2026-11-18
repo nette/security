@@ -105,6 +105,11 @@ The few non-obvious invariants:
   `null` to revoke authentication** on this request. `wakeupIdentity` is the
   per-request role-refresh / token-revalidation seam; `sleepIdentity` is its
   counterpart at `login()` time (e.g. storing only a token for cookie storage).
+  The properties are assigned only after the hook returned, so a hook that
+  throws leaves nothing cached and the next call loads (and asks the hook)
+  again; the same holds for the guest identity provider. An identity still
+  a `TokenIdentity` after this step throws `InvalidStateException`: a token
+  from the client never becomes the user's identity unverified.
 - **`refreshStorage()` discards the cached state.** Switching the storage
   **namespace** (multiple independent logins per session) without calling
   `refreshStorage()` leaves `User` serving stale authentication.
@@ -134,9 +139,10 @@ logoutReason]`; everything else differs between the two implementations:
   cached section; the `User`-side counterpart it needs is `refreshStorage()`.
 - **`CookieStorage` stores only `$identity->getId()`** and requires it to be at
   least 13 chars — i.e. a random token, never a database ID. `getState()`
-  reconstructs a bare `SimpleIdentity` (no roles, no data), so cookie storage is
-  usable only with an `IdentityHandler`: `sleepIdentity()` returns the token
-  identity, `wakeupIdentity()` resolves it back to the real one.
+  returns the cookie value as a `TokenIdentity` (reading its roles or data throws), which
+  `User` refuses to accept as an identity, so cookie storage is usable only with
+  an `IdentityHandler`: `sleepIdentity()` returns the token identity,
+  `wakeupIdentity()` verifies it and returns the real one.
   `clearAuthentication()` **ignores `$clearIdentity`** — the cookie is always
   deleted, so **`persistIdentity` has no effect with cookie storage**.
 - In the DI bridge (`SecurityExtension`), `cookieDomain: 'domain'` is a magic
@@ -168,5 +174,5 @@ logoutReason]`; everything else differs between the two implementations:
 | Effective roles, login state, multi-role OR | `User::getRoles`, `isInRole`, `isAllowed` |
 | Identity lifecycle, veto, seams | `User::loadStoredData`, `login`/`logout`, `IdentityHandler` |
 | Sliding expiration, fixation defence, namespaces | `SessionStorage` |
-| Token-only persistence, `persistIdentity` no-op | `CookieStorage` |
+| Token-only persistence, `persistIdentity` no-op | `CookieStorage`, `TokenIdentity` |
 | Legacy authenticator dispatch, BC aliases | `User::login`, `IAuthenticator`, `compatibility.php` |

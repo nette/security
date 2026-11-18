@@ -170,6 +170,10 @@ class User
 		$identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
 			: $identity;
+		if ($identity instanceof TokenIdentity) {
+			throw new Nette\InvalidStateException('The user storage provides only a token, the authenticator must implement Nette\Security\IdentityHandler and exchange the token for the identity in wakeupIdentity().');
+		}
+
 		$this->authenticated = $authenticated && $identity !== null;
 		$this->logoutReason = $logoutReason;
 		$this->identity = !$this->authenticated && !$this->persistIdentity ? null : $identity;

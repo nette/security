@@ -62,7 +62,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 		}
 
 		return $this->uid
-			? [true, new Nette\Security\SimpleIdentity($this->uid), null]
+			? [true, new Nette\Security\TokenIdentity($this->uid), null]
 			: [false, null, null];
 	}
 
