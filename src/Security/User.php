@@ -35,14 +35,8 @@ class User
 	#[\Deprecated('use User::LogoutManual', since: '3.2')]
 	public const LOGOUT_MANUAL = self::LogoutManual;
 
-	#[\Deprecated('use User::LogoutManual', since: '2.2')]
-	public const MANUAL = self::LogoutManual;
-
 	#[\Deprecated('use User::LogoutInactivity', since: '3.2')]
 	public const LOGOUT_INACTIVITY = self::LogoutInactivity;
-
-	#[\Deprecated('use User::LogoutInactivity', since: '2.2')]
-	public const INACTIVITY = self::LogoutInactivity;
 
 	/** role for an unauthenticated user, unless a guest identity provides its own roles */
 	public string $guestRole = 'guest';
