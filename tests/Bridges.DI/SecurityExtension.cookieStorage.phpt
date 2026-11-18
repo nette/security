@@ -44,5 +44,5 @@ Assert::with($storage, function () {
 	Assert::same('1 week', $this->cookieExpiration);
 	Assert::same('abc', $this->cookieName);
 	Assert::same('nette.org', $this->cookieDomain);
-	Assert::same('Strict', $this->cookieSameSite);
+	Assert::same(Nette\Http\SameSite::Strict, $this->cookieSameSite);
 });

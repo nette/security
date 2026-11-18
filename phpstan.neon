@@ -16,12 +16,6 @@ parameters:
 			identifier: identical.alwaysFalse
 			count: 2
 			path: src/Bridges/SecurityTracy/dist/tab.phtml
-		-   # nette/http < 3.4.2 declares no $partitioned parameter
-			message: '#^Method Nette\\Http\\IResponse\:\:setCookie\(\) invoked with 8 parameters, 3\-7 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Bridges/SecurityHttp/CookieStorage.php
-			reportUnmatched: false
 
 		-
 			message: '#^Instanceof between string and Nette\\Security\\Role will always evaluate to false\.$#'

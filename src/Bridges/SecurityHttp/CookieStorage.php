@@ -22,7 +22,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	private ?string $uid = null;
 	private string $cookieName = 'userid';
 	private ?string $cookieDomain = null;
-	private string $cookieSameSite = 'Lax';
+	private Http\SameSite $cookieSameSite = Http\SameSite::Lax;
 	private ?string $cookieExpiration = null;
 
 
@@ -50,7 +50,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	public function clearAuthentication(bool $clearIdentity): void
 	{
 		$this->uid = '';
-		$this->response->deleteCookie($this->cookieName, null, $this->cookieDomain);
+		$this->response->deleteCookie($this->cookieName, domain: $this->cookieDomain);
 	}
 
 
@@ -73,15 +73,15 @@ final class CookieStorage implements Nette\Security\UserStorage
 	}
 
 
-	/** @param  'Lax'|'Strict'|'None'|null  $sameSite */
+	/** @param  Http\SameSite|'Lax'|'Strict'|'None'|null  $sameSite */
 	public function setCookieParameters(
 		?string $name = null,
 		?string $domain = null,
-		?string $sameSite = null,
+		Http\SameSite|string|null $sameSite = null,
 	): void
 	{
 		$this->cookieName = $name ?? $this->cookieName;
 		$this->cookieDomain = $domain ?? $this->cookieDomain;
-		$this->cookieSameSite = $sameSite ?? $this->cookieSameSite;
+		$this->cookieSameSite = is_string($sameSite) ? Http\SameSite::from($sameSite) : $sameSite ?? $this->cookieSameSite;
 	}
 }
