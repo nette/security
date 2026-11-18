@@ -23,7 +23,7 @@ is extended at release time from the git history.
 ## Project Overview
 
 Nette Security provides authentication (login/logout via pluggable
-`Authenticator`s), authorization (role-based ACL via `Permission`), and identity
+`Authenticator`s), authorization (`Voter`s, the role-based ACL `Permission` being one of them), and identity
 persistence (`UserStorage`: session or cookie). Standalone library. Developers
 **implement the interfaces, never extend the concrete classes**.
 
@@ -54,6 +54,17 @@ composer phpstan
 
 ## Working in this repo
 
+- **Voters receive a `Principal`, never the `User`:** its identity is `null` unless
+  logged in, whereas `User::getId()` keeps returning the retained identity's ID
+  after logout. Ownership is `hasId()` (false for a guest), never a comparison
+  with an ID; `createPrincipal()` takes an identity as it is and calls no hook
+  (`getPrincipal()` is built on it).
+  `Principal::isAllowed()` combines the votes: one `Vote::Forbid`
+  wins, else one `Vote::Allow` suffices, else not allowed. A voter that does not
+  allow abstains (`Vote::allowIf()`); forbidding is always deliberate. `Permission`
+  is a voter: its `vote()` ORs the roles, forbids on an explicit deny rule but
+  abstains on the default deny-all, and abstains on roles and resources the ACL
+  does not know, unlike the throwing `isAllowed()`.
 - **`Permission` rule types are plain booleans, not an enum:** `Allow = true`,
   `Deny = false`, `All = null` (wildcard), and `getRuleType()` returns `?bool`
   (`null` = no rule). The default state is **deny-all (whitelist)**.
@@ -73,7 +84,9 @@ composer phpstan
 - **Effective roles come from login state, not the retained identity.** After
   `logout()` the identity is kept by default (`persistIdentity`), but roles drop to
   guest - which is why `isInRole()`/`isAllowed()` need no prior `isLoggedIn()` check
-  and a retained identity never leaks its privileges.
+  and a retained identity never leaks its privileges. The rule lives only in
+  `createPrincipal()`; the final `getRoles()` reads the principal, and
+  `Permission::isAllowed()` is final because `vote()` does not go through it.
 - **`loadStoredData()` runs once; `wakeupIdentity()` may return `null` to revoke
   auth** on a request (the per-request role-refresh/token seam); `sleepIdentity()`
   is its `login()`-time counterpart. **Switching the storage namespace requires
