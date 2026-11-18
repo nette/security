@@ -165,12 +165,13 @@ class User
 			return;
 		}
 
-		[$this->authenticated, $identity, $this->logoutReason] = $this->storage->getState();
+		[$authenticated, $identity, $logoutReason] = $this->storage->getState();
 
 		$identity = $identity && $this->authenticator instanceof IdentityHandler
 			? $this->authenticator->wakeupIdentity($identity)
 			: $identity;
-		$this->authenticated = $this->authenticated && $identity !== null;
+		$this->authenticated = $authenticated && $identity !== null;
+		$this->logoutReason = $logoutReason;
 		$this->identity = !$this->authenticated && !$this->persistIdentity ? null : $identity;
 	}
 
@@ -179,11 +180,11 @@ class User
 	private function resolveGuestIdentity(): ?IIdentity
 	{
 		if (!$this->guestIdentityResolved) {
-			$this->guestIdentityResolved = true;
 			$this->guestIdentity = $this->authenticator instanceof IdentityHandler
 				&& method_exists($this->authenticator, 'getGuestIdentity')
 				? $this->authenticator->getGuestIdentity()
 				: null;
+			$this->guestIdentityResolved = true;
 		}
 
 		return $this->guestIdentity;

@@ -134,6 +134,30 @@ test('without a guest identity provider the behaviour is unchanged', function ()
 });
 
 
+test('a failed guest identity provider is asked again', function () {
+	$authenticator = new class extends GuestAuthenticator {
+		public bool $fail = true;
+
+
+		public function getGuestIdentity(): ?IIdentity
+		{
+			if ($this->fail) {
+				throw new RuntimeException('Database is down');
+			}
+
+			return parent::getGuestIdentity();
+		}
+	};
+	$user = new User(new MockUserStorage, $authenticator);
+
+	Assert::exception(fn() => $user->getIdentity(), RuntimeException::class);
+	Assert::exception(fn() => $user->getIdentity(), RuntimeException::class);
+
+	$authenticator->fail = false;
+	Assert::same('guest', $user->getId());
+});
+
+
 test('guest identity is never written to storage', function () {
 	$storage = new RecordingStorage;
 	$user = new User($storage, new GuestAuthenticator);

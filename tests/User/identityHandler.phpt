@@ -188,6 +188,47 @@ test('logout() clears the storage even when wakeupIdentity() vetoed the authenti
 });
 
 
+test('a failed wakeupIdentity() leaves the user not loaded', function () {
+	$handler = new class implements Nette\Security\Authenticator, Nette\Security\IdentityHandler {
+		public bool $fail = true;
+
+
+		public function authenticate(string $username, string $password): IIdentity
+		{
+			return new SimpleIdentity('john', ['user']);
+		}
+
+
+		public function sleepIdentity(IIdentity $identity): IIdentity
+		{
+			return $identity;
+		}
+
+
+		public function wakeupIdentity(IIdentity $identity): ?IIdentity
+		{
+			if ($this->fail) {
+				throw new RuntimeException('Database is down');
+			}
+
+			return new SimpleIdentity('john', ['admin']);
+		}
+	};
+
+	$storage = new MockUserStorage;
+	$storage->saveAuthentication(new SimpleIdentity('john'));
+	$user = new Nette\Security\User($storage, $handler);
+
+	Assert::exception(fn() => $user->isLoggedIn(), RuntimeException::class);
+	Assert::exception(fn() => $user->isLoggedIn(), RuntimeException::class);
+	Assert::exception(fn() => $user->getIdentity(), RuntimeException::class);
+
+	$handler->fail = false;
+	Assert::true($user->isLoggedIn());
+	Assert::same(['admin'], $user->getRoles());
+});
+
+
 test('IdentityHandler is not called when authenticator does not implement it', function () {
 	$handler = new class implements Nette\Security\Authenticator {
 		public int $authCount = 0;
