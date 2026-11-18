@@ -1,5 +1,10 @@
 # Upgrading nette/security
 
+## 3.2.8
+
+- **Changed** `Nette\Bridges\SecurityHttp\CookieStorage::getState()` now returns the cookie token as a `Nette\Security\TokenIdentity`, which has no roles and no data and throws `Nette\NotSupportedException` when they are read; previously it returned a `Nette\Security\SimpleIdentity` with the token as its id; exchange the token for the real identity in `Nette\Security\IdentityHandler::wakeupIdentity()` (3d2c6747)
+- **Changed** `Nette\Security\User` now throws `Nette\InvalidStateException` when it loads the stored state and the identity is still a `Nette\Security\TokenIdentity`, i.e. the authenticator does not implement `Nette\Security\IdentityHandler` or its `wakeupIdentity()` does not exchange the token; previously the token became the identity of the logged-in user; affects applications using `Nette\Bridges\SecurityHttp\CookieStorage` (3d2c6747)
+
 ## 3.2.6
 
 - **Changed** `Nette\Security\Permission::getQueriedRole()` now returns `null` when called before the first `Nette\Security\Permission::isAllowed()` call; previously it threw an `Error` about an uninitialized property (676e4c0d)
@@ -10,10 +15,10 @@
 
 - **Changed** `Nette\Security\Identity::setId()` now converts to int only a string of plain digits without a leading zero; a numeric string with a sign, decimal point, whitespace or exponent stays a string; also affects `Nette\Security\SimpleIdentity`, which inherits the method (50ce3c4b)
 
-## 3.2.3
+## 3.2.4
 
 - **Signature** `Nette\Security\User::setExpiration()` now declares the return type `static`; affects subclasses overriding it (25091e96)
-- **Signature** `Nette\Security\Identity::__construct()`: `$id` is now typed `string|int` and `$roles` `string|array|null`; another type throws `TypeError` (25091e96, cf89e178)
+- **Signature** `Nette\Security\Identity::__construct()`: `$id` is now typed `string|int` and `$roles` `string|array|null`; another type throws `TypeError` (25091e96, bf1170e7)
 - **Changed** `Nette\Security\User::getRoles()` now returns an empty array when the identity returns no roles; previously it fell back to `Nette\Security\User::$authenticatedRole` (25091e96)
 
 ## 3.2.1
