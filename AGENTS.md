@@ -74,7 +74,10 @@ composer phpstan
   and a retained identity never leaks its privileges.
 - **`loadStoredData()` runs once; `wakeupIdentity()` may return `null` to revoke
   auth** on a request (the per-request role-refresh/token seam); `sleepIdentity()`
-  is its `login()`-time counterpart. **Switching the storage namespace requires
+  is its `login()`-time counterpart. The state is assigned only after the hook
+  returned, so a throwing hook leaves nothing cached. A `TokenIdentity` (what the
+  cookie storage returns) **never becomes the user's identity**: unless
+  `wakeupIdentity()` exchanges it, `User` throws. **Switching the storage namespace requires
   `refreshStorage()`** or `User` serves stale authentication.
 - User-facing how-to (fluent ACL API, `IdentityHandler`/guest identity, password
   hashing, NEON config, presenter integration, multiple authenticators) is manual
