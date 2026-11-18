@@ -41,7 +41,7 @@ class User
 	/** role for an unauthenticated user, unless a guest identity provides its own roles */
 	public string $guestRole = 'guest';
 
-	/** default role for authenticated user without own identity */
+	/** @deprecated an authenticated user always has an identity, so the role is never used */
 	public string $authenticatedRole = 'authenticated';
 
 	/** keep identity available (via getIdentity() and getId()) after logout or expiration; depends on the storage implementation */
