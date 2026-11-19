@@ -37,7 +37,8 @@ final readonly class Principal
 
 
 	/**
-	 * Checks whether the principal has an identity, also one created by User::createPrincipal() for someone else.
+	 * Checks whether this is a logged-in user, or an identity given to User::createPrincipal(). False for a guest,
+	 * even when the User retains an identity after logout or provides a guest identity.
 	 */
 	public function isLoggedIn(): bool
 	{
