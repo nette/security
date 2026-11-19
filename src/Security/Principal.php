@@ -81,10 +81,11 @@ final readonly class Principal
 
 	/**
 	 * Checks whether a voter allows access to the given resource (a name, an object or a class name)
-	 * and privilege and none forbids it. Null means no particular resource or privilege is asked about;
-	 * what that means is up to the voters (for the ACL all resources or all privileges).
+	 * and privilege (a name or a case of an enum, which voters receive as it is) and none forbids it. Null means
+	 * no particular resource or privilege is asked about; what that means is up to the voters (for the ACL
+	 * all resources or all privileges).
 	 */
-	public function isAllowed(mixed $resource = null, ?string $privilege = null): bool
+	public function isAllowed(mixed $resource = null, string|\UnitEnum|null $privilege = null): bool
 	{
 		if (!$this->voters) {
 			throw new Nette\InvalidStateException('No voter has been added. Register a service implementing Nette\Security\Voter, or call User::addVoter().');

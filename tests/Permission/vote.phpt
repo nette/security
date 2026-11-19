@@ -20,6 +20,25 @@ class Page implements Resource
 }
 
 
+enum ArticlePrivilege: string
+{
+	case Edit = 'edit';
+	case Delete = 'delete';
+}
+
+
+enum Feature
+{
+	case Export;
+}
+
+
+enum Level: int
+{
+	case High = 1;
+}
+
+
 function createAcl(): Permission
 {
 	$acl = new Permission;
@@ -33,7 +52,7 @@ function createAcl(): Permission
 }
 
 
-function vote(Permission $acl, array $roles, mixed $resource, ?string $privilege = null): Vote
+function vote(Permission $acl, array $roles, mixed $resource, string|UnitEnum|null $privilege = null): Vote
 {
 	return $acl->vote(new Principal(null, $roles), $resource, $privilege);
 }
@@ -173,7 +192,7 @@ test('an explicit deny of the ACL overrides other voters', function () {
 	$acl = createAcl();
 	$acl->deny('editor', 'article', 'delete');
 	$adminVoter = new class implements Voter {
-		public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+		public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
 		{
 			return Vote::allowIf($principal->isInRole('admin'));
 		}
@@ -201,4 +220,33 @@ test('a Resource object is voted on by its name, also with an explicit deny', fu
 	Assert::same(Vote::Allow, vote($acl, ['editor'], new Page, 'edit'));
 	Assert::same('page', $queried);
 	Assert::same(Vote::Forbid, vote($acl, ['editor'], new Page, 'delete'));
+});
+
+
+test('a rule for a privilege name applies to the case of an enum', function () {
+	$acl = createAcl();
+	$acl->allow('editor', 'article', 'edit');
+	$acl->deny('editor', 'article', 'delete');
+	$acl->allow('admin', 'article');
+
+	$principal = new Principal(null, ['editor'], [$acl]);
+	Assert::true($principal->isAllowed('article', ArticlePrivilege::Edit));
+	Assert::false($principal->isAllowed('article', ArticlePrivilege::Delete));
+
+	$principal = new Principal(null, ['editor', 'admin'], [$acl]);
+	Assert::true($principal->isAllowed('article', ArticlePrivilege::Delete));
+	Assert::same(Vote::Allow, vote($acl, ['editor'], 'article', ArticlePrivilege::Edit));
+	Assert::same(Vote::Forbid, vote($acl, ['editor'], 'article', ArticlePrivilege::Delete));
+});
+
+
+test('a privilege without a name abstains instead of throwing', function () {
+	$acl = createAcl();
+	$acl->allow('admin');
+	$acl->deny('editor', 'article');
+	Assert::same(Vote::Abstain, vote($acl, ['admin'], 'article', Feature::Export));
+	Assert::same(Vote::Abstain, vote($acl, ['editor'], 'article', Feature::Export));
+	Assert::same(Vote::Abstain, vote($acl, ['admin'], 'article', Level::High));
+	Assert::same(Vote::Abstain, vote($acl, ['editor'], 'article', Level::High));
+	Assert::false(new Principal(null, ['admin'], [$acl])->isAllowed('article', Feature::Export));
 });

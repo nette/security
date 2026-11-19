@@ -630,11 +630,15 @@ class Permission implements Authorizator, Voter
 	 * Allows the principal if any of their roles is allowed. Otherwise it forbids when an explicit deny rule
 	 * stopped some role, and abstains when only the default deny-all did, which must not override other voters.
 	 * Unlike isAllowed(), a role or resource the ACL does not know makes it abstain instead of throwing.
+	 * A privilege given as a case of a string-backed enum is its value; any other case makes it abstain.
 	 */
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
 	{
 		$id = $resource instanceof Resource ? $resource->getResourceId() : $resource;
-		if ($id !== self::All && !(is_string($id) && $this->hasResource($id))) {
+		$privilege = $privilege instanceof \BackedEnum ? $privilege->value : $privilege;
+		if (($id !== self::All && !(is_string($id) && $this->hasResource($id)))
+			|| ($privilege !== self::All && !is_string($privilege))
+		) {
 			return Vote::Abstain;
 		}
 

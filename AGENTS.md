@@ -67,6 +67,10 @@ composer phpstan
   is a voter: its `vote()` ORs the roles, forbids on an explicit deny rule but
   abstains on the default deny-all, and abstains on roles and resources the ACL
   does not know, unlike the throwing `isAllowed()`.
+- **The privilege reaches voters unchanged** (`string|\UnitEnum|null`): a voter
+  checks `instanceof` its own enum, so a case of another enum abstains.
+  `Permission::vote()` and the `setAuthorizator()` wrapper reduce a string-backed
+  case to its name and abstain on any other privilege that is not a string.
 - **`Permission` rule types are plain booleans, not an enum:** `Allow = true`,
   `Deny = false`, `All = null` (wildcard), and `getRuleType()` returns `?bool`
   (`null` = no rule). The default state is **deny-all (whitelist)**.

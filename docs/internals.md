@@ -165,6 +165,14 @@ The few non-obvious invariants:
   through `$principal->isAllowed()`, which is why the principal carries the
   voters: injecting the user or an engine would make a DI cycle. With no voter,
   it throws rather than denying silently.
+- **The privilege reaches the voters unchanged**, a name or a case of any
+  enum, as does the resource. A voter checks `instanceof` its own enum, so a
+  case of another enum with the same value abstains instead of passing, and a
+  name and a case are different privileges for it. Only the name-based voters
+  reduce it: `Permission::vote()` and the wrapper of a deprecated
+  `Authorizator` turn a case of a string-backed enum into its value, the name
+  their rules are keyed by, and abstain on any other privilege that is not a
+  string (a pure or int-backed case), as on a resource they do not know.
 - **`Permission` is one of the voters; an explicit deny forbids, the default
   deny-all abstains.** Its `vote()` allows if any of the principal's roles is
   allowed (so a deny resolved for one role never vetoes another role's allow
