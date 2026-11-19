@@ -304,7 +304,7 @@ class User
 	 * or privilege is asked about; what that means is up to the voters (for the ACL all resources
 	 * or all privileges).
 	 */
-	public function isAllowed(mixed $resource = null, string|\UnitEnum|null $privilege = null): bool
+	final public function isAllowed(mixed $resource = null, string|\UnitEnum|null $privilege = null): bool
 	{
 		return $this->getPrincipal()->isAllowed($resource, $privilege);
 	}
