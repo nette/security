@@ -137,6 +137,17 @@ test('refreshStorage() updates authentication state', function () {
 });
 
 
+test('getLogoutReason() loads the state from storage', function () {
+	$storage = new MutableStorage;
+	$storage->saveAuthentication(new SimpleIdentity('john'));
+	$storage->externallyLogout();
+
+	$user = new Nette\Security\User($storage);
+	Assert::same(Nette\Security\User::LogoutInactivity, $user->getLogoutReason());
+	Assert::false($user->isLoggedIn());
+});
+
+
 test('refreshStorage() reloads data from storage', function () {
 	$storage = new MutableStorage;
 	$user = new Nette\Security\User($storage);

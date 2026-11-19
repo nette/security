@@ -273,6 +273,7 @@ class User
 	 */
 	final public function getLogoutReason(): ?int
 	{
+		$this->loadStoredData();
 		return $this->logoutReason;
 	}
 
