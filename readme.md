@@ -353,6 +353,40 @@ class LoggedInVoter implements Voter
 
 For such a site, plain `$user->isLoggedIn()` remains a legitimate authorization criterion too; the voter is needed only where something asks `isAllowed()`.
 
+To avoid names written as string literals, the privilege may be a case of a string-backed enum. The voters and the ACL still receive its value, the name, so `PostPrivilege::Edit` and `'edit'` mean the same, and a voter turns the name back into the enum to get an exhaustive `match`:
+
+```php
+enum PostPrivilege: string
+{
+	case View = 'view';
+	case Edit = 'edit';
+}
+
+$user->isAllowed($post, PostPrivilege::Edit);
+
+// in the voter, once it knows the resource is a Post
+return Vote::allowIf(match (PostPrivilege::tryFrom($privilege ?? '')) {
+	PostPrivilege::View => $resource->published || $principal->hasId($resource->authorId),
+	PostPrivilege::Edit => $principal->hasId($resource->authorId),
+	null => false, // another privilege, or none
+});
+```
+
+A permission that has no object, such as an area of the site or a feature, can be asked about with a case of an enum as the resource, which the voter compares by identity. A kind of entity is still asked about by its class name, like `Article::class` above.
+
+```php
+enum Access
+{
+	case Admin;
+	case Reports;
+}
+
+$user->isAllowed(Access::Admin);
+
+// in the voter
+return Vote::allowIf($resource === Access::Admin && $principal->isInRole('admin'));
+```
+
 A role-based authorizator implementing `Nette\Security\Authorizator`, which is asked about each role of the user, can still be set by the deprecated method `setAuthorizator()`, and an autowired service implementing it is used this way automatically. Write a voter instead.
 
 

@@ -300,10 +300,11 @@ class User
 
 	/**
 	 * Checks whether a voter allows the user access to the given resource (a name, an object or a class name)
-	 * and privilege and none forbids it. Null means no particular resource or privilege is asked about;
-	 * what that means is up to the voters (for the ACL all resources or all privileges).
+	 * and privilege (a name or a case of a string-backed enum) and none forbids it. Null means no particular
+	 * resource or privilege is asked about; what that means is up to the voters (for the ACL all resources
+	 * or all privileges).
 	 */
-	public function isAllowed(mixed $resource = null, ?string $privilege = null): bool
+	public function isAllowed(mixed $resource = null, string|\BackedEnum|null $privilege = null): bool
 	{
 		return $this->getPrincipal()->isAllowed($resource, $privilege);
 	}

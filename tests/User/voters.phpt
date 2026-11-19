@@ -20,6 +20,12 @@ class Article
 }
 
 
+enum ArticlePrivilege: string
+{
+	case Edit = 'edit';
+}
+
+
 class ArticleVoter implements Voter
 {
 	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
@@ -79,7 +85,8 @@ test('the voter receives the principal, the resource and the privilege', functio
 
 	Assert::false($user->isAllowed());
 	Assert::false($user->isAllowed('backend', 'view'));
-	Assert::same([[['guest'], null, null], [['guest'], 'backend', 'view']], $log);
+	Assert::false($user->isAllowed('backend', ArticlePrivilege::Edit));
+	Assert::same([[['guest'], null, null], [['guest'], 'backend', 'view'], [['guest'], 'backend', 'edit']], $log);
 });
 
 

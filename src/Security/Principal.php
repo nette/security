@@ -8,6 +8,7 @@
 namespace Nette\Security;
 
 use Nette;
+use function is_string;
 
 
 /**
@@ -81,13 +82,20 @@ final readonly class Principal
 
 	/**
 	 * Checks whether a voter allows access to the given resource (a name, an object or a class name)
-	 * and privilege and none forbids it. Null means no particular resource or privilege is asked about;
-	 * what that means is up to the voters (for the ACL all resources or all privileges).
+	 * and privilege (a name or a case of a string-backed enum, which voters receive as its value) and none
+	 * forbids it. Null means no particular resource or privilege is asked about; what that means is up to
+	 * the voters (for the ACL all resources or all privileges).
 	 */
-	public function isAllowed(mixed $resource = null, ?string $privilege = null): bool
+	public function isAllowed(mixed $resource = null, string|\BackedEnum|null $privilege = null): bool
 	{
 		if (!$this->voters) {
 			throw new Nette\InvalidStateException('No voter has been added. Register a service implementing Nette\Security\Voter, or call User::addVoter().');
+		}
+
+		if ($privilege instanceof \BackedEnum) {
+			$privilege = is_string($privilege->value)
+				? $privilege->value
+				: throw new Nette\InvalidArgumentException('Privilege must be a case of a string-backed enum, ' . $privilege::class . ' is backed by int.');
 		}
 
 		$allowed = false;

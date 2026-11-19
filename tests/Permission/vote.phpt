@@ -20,6 +20,13 @@ class Page implements Resource
 }
 
 
+enum ArticlePrivilege: string
+{
+	case Edit = 'edit';
+	case Delete = 'delete';
+}
+
+
 function createAcl(): Permission
 {
 	$acl = new Permission;
@@ -201,4 +208,19 @@ test('a Resource object is voted on by its name, also with an explicit deny', fu
 	Assert::same(Vote::Allow, vote($acl, ['editor'], new Page, 'edit'));
 	Assert::same('page', $queried);
 	Assert::same(Vote::Forbid, vote($acl, ['editor'], new Page, 'delete'));
+});
+
+
+test('a rule for a privilege name applies to the case of an enum', function () {
+	$acl = createAcl();
+	$acl->allow('editor', 'article', 'edit');
+	$acl->deny('editor', 'article', 'delete');
+	$acl->allow('admin', 'article');
+
+	$principal = new Principal(null, ['editor'], [$acl]);
+	Assert::true($principal->isAllowed('article', ArticlePrivilege::Edit));
+	Assert::false($principal->isAllowed('article', ArticlePrivilege::Delete));
+
+	$principal = new Principal(null, ['editor', 'admin'], [$acl]);
+	Assert::true($principal->isAllowed('article', ArticlePrivilege::Delete));
 });
