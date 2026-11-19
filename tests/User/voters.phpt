@@ -26,9 +26,21 @@ enum ArticlePrivilege: string
 }
 
 
+enum Level: int
+{
+	case High = 1;
+}
+
+
+enum Access
+{
+	case Admin;
+}
+
+
 class ArticleVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
 	{
 		return Vote::allowIf($resource instanceof Article && match ($privilege) {
 			'edit' => $principal->hasId($resource->authorId),
@@ -40,7 +52,7 @@ class ArticleVoter implements Voter
 
 class AdminVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
 	{
 		return Vote::allowIf($principal->isInRole('admin'));
 	}
@@ -49,7 +61,7 @@ class AdminVoter implements Voter
 
 class BannedVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
 	{
 		return $principal->isInRole('banned') ? Vote::Forbid : Vote::Abstain;
 	}
@@ -75,7 +87,7 @@ test('the voter receives the principal, the resource and the privilege', functio
 		}
 
 
-		public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+		public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
 		{
 			$this->log[] = [$principal->getRoles(), $resource, $privilege];
 			return Vote::Abstain;
@@ -86,7 +98,15 @@ test('the voter receives the principal, the resource and the privilege', functio
 	Assert::false($user->isAllowed());
 	Assert::false($user->isAllowed('backend', 'view'));
 	Assert::false($user->isAllowed('backend', ArticlePrivilege::Edit));
-	Assert::same([[['guest'], null, null], [['guest'], 'backend', 'view'], [['guest'], 'backend', 'edit']], $log);
+	Assert::false($user->isAllowed('backend', Access::Admin));
+	Assert::false($user->isAllowed(Access::Admin));
+	Assert::same([
+		[['guest'], null, null],
+		[['guest'], 'backend', 'view'],
+		[['guest'], 'backend', ArticlePrivilege::Edit],
+		[['guest'], 'backend', Access::Admin],
+		[['guest'], Access::Admin, null],
+	], $log);
 });
 
 
@@ -279,4 +299,30 @@ test('the role-based authorizator is asked only about resource names', function 
 	Assert::false($user->isAllowed('frontend'));
 	Assert::false($user->isAllowed());
 	Assert::same(['backend', 'backend', 'frontend', null], $authorizator->log);
+});
+
+
+test('the role-based authorizator is asked only about privilege names', function () {
+	$authorizator = new class implements Nette\Security\Authorizator {
+		public array $log = [];
+
+
+		public function isAllowed(?string $role, ?string $resource, ?string $privilege): bool
+		{
+			$this->log[] = $privilege;
+			return $privilege === 'edit';
+		}
+	};
+	$user = new User(new MockUserStorage, null, new BannedVoter);
+	@$user->setAuthorizator($authorizator); // @ deprecated
+	$user->login(new SimpleIdentity(1, ['member']));
+
+	Assert::true($user->isAllowed('backend', ArticlePrivilege::Edit));
+	Assert::true($user->isAllowed('backend', 'edit'));
+	Assert::false($user->isAllowed('backend'));
+	Assert::same(['edit', 'edit', null], $authorizator->log);
+
+	Assert::false($user->isAllowed('backend', Access::Admin));
+	Assert::false($user->isAllowed('backend', Level::High));
+	Assert::same(['edit', 'edit', null], $authorizator->log);
 });

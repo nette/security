@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 class AdminVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
 	{
 		return Vote::allowIf($principal->isInRole('admin'));
 	}

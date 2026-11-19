@@ -266,7 +266,7 @@ use Nette\Security\{Principal, Vote, Voter};
 
 class ArticleVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
 	{
 		if ($resource === Article::class) { // articles in general, such as whether one may create them
 			return Vote::allowIf($privilege === 'create' && $principal->isInRole('registered'));
@@ -300,7 +300,7 @@ $user->isAllowed(new Article(authorId: 20), 'edit'); // false
 ```php
 class AdminVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
 	{
 		return Vote::allowIf($principal->isInRole('admin'));
 	}
@@ -314,7 +314,7 @@ Keep in mind that a voter is asked about every resource and privilege, so an unc
 ```php
 class BannedVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
 	{
 		return $principal->isInRole('banned') ? Vote::Forbid : Vote::Abstain;
 	}
@@ -344,7 +344,7 @@ The smallest site, with one administrator account defined in the `security: user
 ```php
 class LoggedInVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
 	{
 		return Vote::allowIf($principal->isLoggedIn());
 	}
@@ -353,26 +353,36 @@ class LoggedInVoter implements Voter
 
 For such a site, plain `$user->isLoggedIn()` remains a legitimate authorization criterion too; the voter is needed only where something asks `isAllowed()`.
 
-To avoid names written as string literals, the privilege may be a case of a string-backed enum. The voters and the ACL still receive its value, the name, so `PostPrivilege::Edit` and `'edit'` mean the same, and a voter turns the name back into the enum to get an exhaustive `match`:
+To avoid names written as string literals, the privilege may be a case of an enum, which the voters receive as it is. The enum need not be backed; give it string values only when the rules of the [ACL](#permission-acl), which are names, should apply to it. The voter checks the privilege together with the resource and decides in a `match` that static analysis checks for completeness:
 
 ```php
-enum PostPrivilege: string
+enum PostPrivilege
 {
-	case View = 'view';
-	case Edit = 'edit';
+	case View;
+	case Edit;
 }
 
 $user->isAllowed($post, PostPrivilege::Edit);
 
-// in the voter, once it knows the resource is a Post
-return Vote::allowIf(match (PostPrivilege::tryFrom($privilege ?? '')) {
-	PostPrivilege::View => $resource->published || $principal->hasId($resource->authorId),
-	PostPrivilege::Edit => $principal->hasId($resource->authorId),
-	null => false, // another privilege, or none
-});
+class PostVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
+	{
+		if (!$resource instanceof Post || !$privilege instanceof PostPrivilege) {
+			return Vote::Abstain;
+		}
+
+		return Vote::allowIf(match ($privilege) {
+			PostPrivilege::View => $resource->published || $principal->hasId($resource->authorId),
+			PostPrivilege::Edit => $principal->hasId($resource->authorId),
+		});
+	}
+}
 ```
 
-A permission that has no object, such as an area of the site or a feature, can be asked about with a case of an enum as the resource, which the voter compares by identity. A kind of entity is still asked about by its class name, like `Article::class` above.
+A case of another enum, such as `ProfilePrivilege::Edit`, makes the voter abstain, so a mix-up cannot pass. For the same reason, the name `'edit'` and the case `PostPrivilege::Edit` are different things for a voter; use one or the other consistently.
+
+A permission that has no object, such as an area of the site or a feature, can be asked about with a case of an enum as the resource, which the voter compares by identity. A concrete thing is asked about by the object and a kind of entity by its class name, like `Article::class` above, each with an enum privilege.
 
 ```php
 enum Access
@@ -405,7 +415,7 @@ Voters do not receive the `User` object but `Nette\Security\Principal`, the user
 ```php
 class CommentVoter implements Voter
 {
-	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	public function vote(Principal $principal, mixed $resource, string|\UnitEnum|null $privilege): Vote
 	{
 		// a comment may be viewed by whoever may view its article
 		return Vote::allowIf(
