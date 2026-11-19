@@ -58,7 +58,9 @@ composer phpstan
   logged in, whereas `User::getId()` keeps returning the retained identity's ID
   after logout. Ownership is `hasId()` (false for a guest), never a comparison
   with an ID; `createPrincipal()` takes an identity as it is and calls no hook
-  (`getPrincipal()` is built on it).
+  (`getPrincipal()` is built on it). `isLoggedIn()` is `identity !== null`. The guest
+  identity is exposed only by `getGuestIdentity()`, never through `getIdentity()`
+  or `hasId()`.
   `Principal::isAllowed()` combines the votes: one `Vote::Forbid`
   wins, else one `Vote::Allow` suffices, else not allowed. A voter that does not
   allow abstains (`Vote::allowIf()`); forbidding is always deliberate. `Permission`

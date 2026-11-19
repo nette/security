@@ -257,7 +257,7 @@ if ($user->isAllowed(Article::class, 'create')) { // is user allowed to create a
 }
 ```
 
-Both arguments are optional and their default value means *everything*. The resource may be a name, an object or a class name.
+Both arguments are optional and their default value `null` means that no particular resource or privilege is asked about; what that means is up to the voters, for the ACL it is *everything*. The resource may be a name, an object or a class name.
 
 The answer is decided by voters. A voter is an object implementing the `Nette\Security\Voter` interface with only one method `vote()`. It receives the user in the form of a [principal](#principal), the resource and the privilege, and returns one of the three cases of the enum `Nette\Security\Vote`: `Allow`, `Forbid`, or `Abstain` when it has nothing to allow. A voter usually takes care of one kind of resource and abstains on everything else. This one decides about articles, ie entities with properties `authorId` and `published`:
 
@@ -307,6 +307,8 @@ class AdminVoter implements Voter
 }
 ```
 
+Keep in mind that a voter is asked about every resource and privilege, so an unconditional allow like this one really allows everything, including the resources of another kind of user and operations nobody should do. Narrow it to the resources it is meant for, or let the specific voters forbid what must not happen.
+
 `Vote::Forbid` is written on purpose and rarely, for example for a banned user, who may do nothing whatever the other voters say:
 
 ```php
@@ -337,6 +339,20 @@ services:
 	- BannedVoter
 ```
 
+The smallest site, with one administrator account defined in the `security: users:` section of the configuration and no roles, needs a single voter that allows everything to whoever is logged in:
+
+```php
+class LoggedInVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		return Vote::allowIf($principal->isLoggedIn());
+	}
+}
+```
+
+For such a site, plain `$user->isLoggedIn()` remains a legitimate authorization criterion too; the voter is needed only where something asks `isAllowed()`.
+
 A role-based authorizator implementing `Nette\Security\Authorizator`, which is asked about each role of the user, can still be set by the deprecated method `setAuthorizator()`, and an autowired service implementing it is used this way automatically. Write a voter instead.
 
 
@@ -346,6 +362,8 @@ Principal
 Voters do not receive the `User` object but `Nette\Security\Principal`, the user as authorization sees him:
 
 - `getIdentity()` returns the identity only while the user is logged in, `null` for a guest, even when `User` retains the identity after logout or provides a guest identity
+- `isLoggedIn()` checks whether the principal has an identity, ie the user is logged in or the principal was created for an identity by `createPrincipal()`
+- `getGuestIdentity()` returns the [guest identity](#guest-identity) of a guest, `null` for a logged-in user, so a voter that needs the data of whoever it decides about reads `$principal->getIdentity() ?? $principal->getGuestIdentity()`
 - `getRoles()` and `isInRole()` work with the effective roles
 - `hasId($id)` checks whether this is the logged-in user with the given ID; it is always false for a guest, even for an article without an author (`null`), and it compares strictly, so `'10'` does not match `10`
 - `isAllowed()` asks the voters, so a voter can delegate the decision:

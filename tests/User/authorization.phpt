@@ -79,7 +79,7 @@ Assert::false($user->isInRole('guest'));
 Assert::exception(
 	fn() => $user->isAllowed('delete_file'),
 	Nette\InvalidStateException::class,
-	'No voter has been added.',
+	'No voter has been added. Register a service implementing Nette\Security\Voter, or call User::addVoter().',
 );
 
 $handler = new Authorizator;

@@ -22,6 +22,7 @@ final readonly class Principal
 		private array $roles,
 		/** @var list<Voter> */
 		private array $voters = [],
+		private ?IIdentity $guestIdentity = null,
 	) {
 	}
 
@@ -32,6 +33,24 @@ final readonly class Principal
 	public function getIdentity(): ?IIdentity
 	{
 		return $this->identity;
+	}
+
+
+	/**
+	 * Checks whether the principal has an identity, also one created by User::createPrincipal() for someone else.
+	 */
+	public function isLoggedIn(): bool
+	{
+		return $this->identity !== null;
+	}
+
+
+	/**
+	 * Returns the guest identity provided by the authenticator, null for a logged-in user or when there is none.
+	 */
+	public function getGuestIdentity(): ?IIdentity
+	{
+		return $this->identity === null ? $this->guestIdentity : null;
 	}
 
 
@@ -61,12 +80,13 @@ final readonly class Principal
 
 	/**
 	 * Checks whether a voter allows access to the given resource (a name, an object or a class name)
-	 * and privilege and none forbids it. Null means all resources or all privileges.
+	 * and privilege and none forbids it. Null means no particular resource or privilege is asked about;
+	 * what that means is up to the voters (for the ACL all resources or all privileges).
 	 */
-	public function isAllowed(mixed $resource = Authorizator::All, ?string $privilege = Authorizator::All): bool
+	public function isAllowed(mixed $resource = null, ?string $privilege = null): bool
 	{
 		if (!$this->voters) {
-			throw new Nette\InvalidStateException('No voter has been added.');
+			throw new Nette\InvalidStateException('No voter has been added. Register a service implementing Nette\Security\Voter, or call User::addVoter().');
 		}
 
 		$allowed = false;

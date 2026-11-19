@@ -37,7 +37,7 @@ final class CookieStorage implements Nette\Security\UserStorage
 	{
 		$uid = (string) $identity->getId();
 		if (strlen($uid) < self::MinLength) {
-			throw new \LogicException('UID is too short.');
+			throw new \LogicException('UID is too short, it must have at least ' . self::MinLength . ' characters.');
 		}
 
 		$this->uid = $uid;

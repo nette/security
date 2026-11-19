@@ -300,9 +300,10 @@ class User
 
 	/**
 	 * Checks whether a voter allows the user access to the given resource (a name, an object or a class name)
-	 * and privilege and none forbids it. Null means all resources or all privileges.
+	 * and privilege and none forbids it. Null means no particular resource or privilege is asked about;
+	 * what that means is up to the voters (for the ACL all resources or all privileges).
 	 */
-	public function isAllowed(mixed $resource = Authorizator::All, ?string $privilege = Authorizator::All): bool
+	public function isAllowed(mixed $resource = null, ?string $privilege = null): bool
 	{
 		return $this->getPrincipal()->isAllowed($resource, $privilege);
 	}
@@ -324,7 +325,7 @@ class User
 	final public function createPrincipal(?IIdentity $identity): Principal
 	{
 		$roles = $identity ? $this->getIdentityRoles($identity) : $this->getGuestRoles();
-		return new Principal($identity, $roles, $this->getVoters());
+		return new Principal($identity, $roles, $this->getVoters(), $identity ? null : $this->resolveGuestIdentity());
 	}
 
 

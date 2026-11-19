@@ -40,7 +40,12 @@ test('reading an undeclared data key throws and does not pollute data', function
 	Assert::exception(
 		fn() => $id->undeclared,
 		Nette\MemberAccessException::class,
-		'Cannot read an undeclared property Nette\Security\SimpleIdentity::$undeclared.',
+		"Identity has no data 'undeclared'.",
+	);
+	Assert::exception(
+		fn() => $id->nme,
+		Nette\MemberAccessException::class,
+		"Identity has no data 'nme', did you mean 'name'?",
 	);
 	Assert::same(['name' => 'John', 'note' => null], $id->getData());
 });

@@ -117,7 +117,8 @@ class SimpleIdentity implements IIdentity
 			return $this->data[$key];
 
 		} else {
-			Nette\Utils\ObjectHelpers::strictGet(static::class, $key);
+			$hint = Nette\Utils\Helpers::getSuggestion(array_map(strval(...), array_keys($this->data)), $key);
+			throw new Nette\MemberAccessException("Identity has no data '$key'" . ($hint ? ", did you mean '$hint'?" : '.'));
 		}
 	}
 

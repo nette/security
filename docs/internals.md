@@ -135,7 +135,11 @@ The few non-obvious invariants:
   This is the point of the class, not a copy of `User`: `User::getId()` returns
   the retained identity's ID after `logout()` or inactivity, so an ownership
   check written against `User` would let a logged-out user through. Don't hand
-  voters the `User`. A guest identity contributes its roles, not itself.
+  voters the `User`. A guest identity contributes its roles, and is exposed
+  separately by `getGuestIdentity()` (only for a guest, `null` otherwise), never
+  through `getIdentity()` or `hasId()`, so a guest never passes for a logged-in
+  user or an owner. `isLoggedIn()` is exactly `getIdentity() !== null`, so it is
+  also true for a principal of someone else from `createPrincipal()`.
 - **Ownership is `hasId($id)`, and there is deliberately no `getId()`**:
   `$resource->authorId === $principal->getId()` would be `null === null` for a
   guest and a record without an owner. `hasId()` is false for a guest whatever
