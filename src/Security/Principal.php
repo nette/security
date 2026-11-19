@@ -22,6 +22,7 @@ final readonly class Principal
 		private array $roles,
 		/** @var list<Voter> */
 		private array $voters = [],
+		private ?IIdentity $guestIdentity = null,
 	) {
 	}
 
@@ -32,6 +33,25 @@ final readonly class Principal
 	public function getIdentity(): ?IIdentity
 	{
 		return $this->identity;
+	}
+
+
+	/**
+	 * Checks whether this is a logged-in user, or an identity given to User::createPrincipal(). False for a guest,
+	 * even when the User retains an identity after logout or provides a guest identity.
+	 */
+	public function isLoggedIn(): bool
+	{
+		return $this->identity !== null;
+	}
+
+
+	/**
+	 * Returns the guest identity provided by the authenticator, null for a logged-in user or when there is none.
+	 */
+	public function getGuestIdentity(): ?IIdentity
+	{
+		return $this->identity === null ? $this->guestIdentity : null;
 	}
 
 

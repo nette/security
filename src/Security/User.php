@@ -325,7 +325,7 @@ class User
 	final public function createPrincipal(?IIdentity $identity): Principal
 	{
 		$roles = $identity ? $this->getIdentityRoles($identity) : $this->getGuestRoles();
-		return new Principal($identity, $roles, $this->getVoters());
+		return new Principal($identity, $roles, $this->getVoters(), $identity ? null : $this->resolveGuestIdentity());
 	}
 
 

@@ -153,6 +153,8 @@ test('a guest identity gives the principal its roles, not itself', function () {
 
 	Assert::null($user->getPrincipal()->getIdentity());
 	Assert::same(['admin'], $user->getPrincipal()->getRoles());
+	Assert::equal(new SimpleIdentity(1, ['admin']), $user->getPrincipal()->getGuestIdentity());
+	Assert::false($user->getPrincipal()->hasId(1));
 	Assert::true($user->isAllowed('backend'));
 	Assert::true($user->isInRole('admin'));
 });
@@ -209,10 +211,12 @@ test('a principal for someone else takes the identity as it is, null is a guest'
 	$principal = $user->createPrincipal($identity);
 	Assert::same($identity, $principal->getIdentity());
 	Assert::same(['member'], $principal->getRoles());
+	Assert::null($principal->getGuestIdentity());
 
 	$principal = $user->createPrincipal(null);
 	Assert::null($principal->getIdentity());
 	Assert::same(['visitor'], $principal->getRoles());
+	Assert::equal(new SimpleIdentity('guest', ['visitor']), $principal->getGuestIdentity());
 	Assert::false($principal->isAllowed(new Article(authorId: null), 'edit'));
 	Assert::false($user->isLoggedIn());
 });

@@ -339,6 +339,20 @@ services:
 	- BannedVoter
 ```
 
+The smallest site, with one administrator account defined in the `security: users:` section of the configuration and no roles, needs a single voter that allows everything to whoever is logged in:
+
+```php
+class LoggedInVoter implements Voter
+{
+	public function vote(Principal $principal, mixed $resource, ?string $privilege): Vote
+	{
+		return Vote::allowIf($principal->isLoggedIn());
+	}
+}
+```
+
+For such a site, plain `$user->isLoggedIn()` remains a legitimate authorization criterion too; the voter is needed only where something asks `isAllowed()`.
+
 A role-based authorizator implementing `Nette\Security\Authorizator`, which is asked about each role of the user, can still be set by the deprecated method `setAuthorizator()`, and an autowired service implementing it is used this way automatically. Write a voter instead.
 
 
@@ -348,6 +362,8 @@ Principal
 Voters do not receive the `User` object but `Nette\Security\Principal`, the user as authorization sees him:
 
 - `getIdentity()` returns the identity only while the user is logged in, `null` for a guest, even when `User` retains the identity after logout or provides a guest identity
+- `isLoggedIn()` checks whether the principal has an identity, ie the user is logged in or the principal was created for an identity by `createPrincipal()`
+- `getGuestIdentity()` returns the [guest identity](#guest-identity) of a guest, `null` for a logged-in user, so a voter that needs the data of whoever it decides about reads `$principal->getIdentity() ?? $principal->getGuestIdentity()`
 - `getRoles()` and `isInRole()` work with the effective roles
 - `hasId($id)` checks whether this is the logged-in user with the given ID; it is always false for a guest, even for an article without an author (`null`), and it compares strictly, so `'10'` does not match `10`
 - `isAllowed()` asks the voters, so a voter can delegate the decision:

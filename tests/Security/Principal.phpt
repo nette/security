@@ -40,6 +40,8 @@ class CommentVoter implements Voter
 test('a guest', function () {
 	$principal = new Principal(null, ['guest']);
 	Assert::null($principal->getIdentity());
+	Assert::false($principal->isLoggedIn());
+	Assert::null($principal->getGuestIdentity());
 	Assert::false($principal->hasId(null));
 	Assert::same(['guest'], $principal->getRoles());
 	Assert::true($principal->isInRole('guest'));
@@ -47,14 +49,31 @@ test('a guest', function () {
 });
 
 
+test('a guest with a guest identity', function () {
+	$guest = new SimpleIdentity(1, ['visitor']);
+	$principal = new Principal(null, ['visitor'], [], $guest);
+	Assert::same($guest, $principal->getGuestIdentity());
+	Assert::null($principal->getIdentity());
+	Assert::false($principal->isLoggedIn());
+	Assert::false($principal->hasId(1));
+});
+
+
 test('a logged-in user', function () {
 	$identity = new SimpleIdentity(1, ['admin']);
 	$principal = new Principal($identity, ['admin']);
 	Assert::same($identity, $principal->getIdentity());
+	Assert::true($principal->isLoggedIn());
 	Assert::true($principal->hasId(1));
 	Assert::false($principal->hasId('1'));
 	Assert::false($principal->hasId(null));
 	Assert::true($principal->isInRole('admin'));
+});
+
+
+test('a logged-in user has no guest identity', function () {
+	$principal = new Principal(new SimpleIdentity(1), [], [], new SimpleIdentity('guest'));
+	Assert::null($principal->getGuestIdentity());
 });
 
 
