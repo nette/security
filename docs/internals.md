@@ -197,7 +197,10 @@ The few non-obvious invariants:
   `?string $resource` of the interface would throw a `TypeError`.
   `SecurityExtension` hands every service implementing `Voter` to `addVoter()`
   and an autowired `Authorizator` that is not a voter to `setAuthorizator()`,
-  with a deprecation at compile time naming the service.
+  with a deprecation at compile time naming the service. Voter services are made
+  lazy (a ghost until the first `vote()`), unless their configuration says
+  otherwise, so a voter may depend on a service that needs `User` without a
+  circular reference; a voter created by a factory instead of `new` stays eager.
 
 ## Storages: session and cookie are not interchangeable
 

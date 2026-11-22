@@ -151,7 +151,10 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 		assert($user instanceof Nette\DI\Definitions\ServiceDefinition);
 
 		$voters = $builder->findByType(Nette\Security\Voter::class);
-		foreach (array_keys($voters) as $name) {
+		foreach ($voters as $name => $voter) {
+			if ($voter instanceof Nette\DI\Definitions\ServiceDefinition) {
+				self::makeLazy($voter); // created on the first vote, so it may depend on the User
+			}
 			$user->addSetup('addVoter', [new Nette\DI\Definitions\Reference($name)]);
 		}
 
@@ -175,6 +178,19 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			$user->addSetup('@Tracy\Bar::addPanel', [
 				new Nette\DI\Definitions\Statement(Nette\Bridges\SecurityTracy\UserPanel::class),
 			]);
+		}
+	}
+
+
+	/** Makes the service lazy unless its configuration decides; nette/di 4 sets it through methods, 3.2 through a property. */
+	private static function makeLazy(Nette\DI\Definitions\ServiceDefinition $definition): void
+	{
+		if (method_exists($definition, 'isLazy')) {
+			if ($definition->isLazy() === null) {
+				$definition->lazy();
+			}
+		} else {
+			$definition->lazy ??= true;
 		}
 	}
 }

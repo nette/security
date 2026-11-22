@@ -22,3 +22,13 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Security/User.php
+
+		-   # nette/di 3.2 makes a service lazy through a property, the installed dev version through methods
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Bridges/SecurityDI/SecurityExtension.php
+
+		-   # the same: the property of nette/di 3.2 is private in the installed dev version
+			identifier: property.private
+			count: 1
+			path: src/Bridges/SecurityDI/SecurityExtension.php

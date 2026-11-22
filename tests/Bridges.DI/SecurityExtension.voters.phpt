@@ -22,6 +22,25 @@ class AdminVoter implements Voter
 }
 
 
+class OwnerVoter implements Voter
+{
+	public static int $created = 0;
+
+
+	public function __construct(
+		private User $user,
+	) {
+		self::$created++;
+	}
+
+
+	public function vote(Principal $principal, mixed $resource, string|UnitEnum|null $privilege): Vote
+	{
+		return Vote::allowIf($resource === 'own' && $principal->hasId($this->user->getId()));
+	}
+}
+
+
 class LegacyAuthorizator implements Nette\Security\Authorizator
 {
 	public function isAllowed(?string $role, ?string $resource, ?string $privilege): bool
@@ -67,6 +86,19 @@ test('the ACL and the voter services', function () {
 	$user->login(new SimpleIdentity(1, ['admin']));
 	Assert::true($user->isAllowed('article', 'edit'));
 	Assert::true($user->isAllowed(new stdClass));
+});
+
+
+test('a voter is created on the first vote, so it may depend on the user', function () {
+	$user = createContainer(<<<'XX'
+		services:
+			- OwnerVoter
+		XX, 'Container4');
+
+	Assert::same(0, OwnerVoter::$created);
+	$user->login(new SimpleIdentity(1));
+	Assert::true($user->isAllowed('own'));
+	Assert::same(1, OwnerVoter::$created);
 });
 
 
