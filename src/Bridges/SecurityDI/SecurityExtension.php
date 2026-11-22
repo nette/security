@@ -62,7 +62,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 				'deny' => Expect::listOf($rule),
 			]),
 			'authentication' => Expect::structure([
-				'storage' => Expect::anyOf('session', 'cookie')->default('session'),
+				'storage' => Expect::anyOf('session', 'cookie', 'memory')->default('session'),
 				'expiration' => Expect::string()->dynamic(),
 				'persistIdentity' => Expect::bool(true),
 				'cookieName' => Expect::string(),
@@ -87,6 +87,7 @@ class SecurityExtension extends Nette\DI\CompilerExtension
 			->setFactory([
 				'session' => Nette\Bridges\SecurityHttp\SessionStorage::class,
 				'cookie' => Nette\Bridges\SecurityHttp\CookieStorage::class,
+				'memory' => Nette\Security\MemoryStorage::class,
 			][$auth->storage]);
 
 		if ($auth->storage === 'cookie') {
