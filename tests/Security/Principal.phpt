@@ -177,6 +177,14 @@ test('a logged-in user has no guest identity', function () {
 });
 
 
+test('without roles, those of the identity are used', function () {
+	Assert::same(['admin', 'editor'], new Principal(new SimpleIdentity(1, ['admin', 'editor']))->getRoles());
+	Assert::same(['visitor'], new Principal(null, guestIdentity: new SimpleIdentity('guest', ['visitor']))->getRoles());
+	Assert::same(['guest'], new Principal(null)->getRoles());
+	Assert::same([], new Principal(new SimpleIdentity(1, ['admin']), [])->getRoles());
+});
+
+
 test('no voter', function () {
 	Assert::exception(
 		fn() => new Principal(null, [])->isAllowed('article'),

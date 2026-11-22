@@ -16,14 +16,22 @@ use Nette;
  */
 final readonly class Principal
 {
+	/** @var list<string> */
+	private array $roles;
+
+
+	/**
+	 * Without roles, those of the identity are used, for a guest those of the guest identity, or 'guest'.
+	 * @param  ?list<string>  $roles
+	 */
 	public function __construct(
 		private ?IIdentity $identity,
-		/** @var list<string> */
-		private array $roles,
+		?array $roles = null,
 		/** @var list<Voter> */
 		private array $voters = [],
 		private ?IIdentity $guestIdentity = null,
 	) {
+		$this->roles = $roles ?? ($identity ?? $guestIdentity)?->getRoles() ?? ['guest'];
 	}
 
 
