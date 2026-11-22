@@ -8,7 +8,6 @@ use Nette\Security\{IIdentity, Role, SimpleIdentity};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 
 // Setup environment
@@ -49,7 +48,7 @@ class TesterRole implements Role
 	}
 }
 
-$user = new Nette\Security\User(new MockUserStorage);
+$user = new Nette\Security\User(new Nette\Security\MemoryStorage);
 
 // guest
 Assert::false($user->isLoggedIn());

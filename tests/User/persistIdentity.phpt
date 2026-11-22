@@ -8,11 +8,10 @@ use Nette\Security\{SimpleIdentity, User};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 
 test('identity is kept after logout by default', function () {
-	$user = new User(new MockUserStorage);
+	$user = new User(new Nette\Security\MemoryStorage);
 	$user->login(new SimpleIdentity('John Doe', 'admin'));
 
 	$user->logout();
@@ -24,7 +23,7 @@ test('identity is kept after logout by default', function () {
 
 
 test('identity is discarded after logout when persistIdentity is off', function () {
-	$user = new User(new MockUserStorage);
+	$user = new User(new Nette\Security\MemoryStorage);
 	$user->persistIdentity = false;
 	$user->login(new SimpleIdentity('John Doe', 'admin'));
 
@@ -37,7 +36,7 @@ test('identity is discarded after logout when persistIdentity is off', function 
 
 
 test('identity already stored without authentication is not exposed when persistIdentity is off', function () {
-	$storage = new MockUserStorage;
+	$storage = new Nette\Security\MemoryStorage;
 	$user = new User($storage);
 	$user->login(new SimpleIdentity('John Doe', 'admin'));
 	$user->logout(); // identity stays in storage, not authenticated

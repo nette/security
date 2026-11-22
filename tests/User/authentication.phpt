@@ -8,7 +8,6 @@ use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 // Setup environment
 $_COOKIE = [];
@@ -32,7 +31,7 @@ class Authenticator implements Nette\Security\Authenticator
 }
 
 
-$user = new Nette\Security\User(new MockUserStorage);
+$user = new Nette\Security\User(new Nette\Security\MemoryStorage);
 
 $counter = (object) [
 	'login' => 0,

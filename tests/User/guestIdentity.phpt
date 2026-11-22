@@ -8,7 +8,6 @@ use Nette\Security\{IIdentity, SimpleIdentity, User};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 
 class GuestAuthenticator implements Nette\Security\Authenticator, Nette\Security\IdentityHandler
@@ -74,7 +73,7 @@ class RecordingStorage implements Nette\Security\UserStorage
 
 
 test('guest identity is exposed when not logged in', function () {
-	$user = new User(new MockUserStorage, new GuestAuthenticator);
+	$user = new User(new Nette\Security\MemoryStorage, new GuestAuthenticator);
 
 	Assert::false($user->isLoggedIn());
 	Assert::equal(new SimpleIdentity('guest', ['guest-role'], ['name' => 'Guest']), $user->getIdentity());
@@ -86,7 +85,7 @@ test('guest identity is exposed when not logged in', function () {
 
 
 test('login overrides the guest identity', function () {
-	$user = new User(new MockUserStorage, new GuestAuthenticator);
+	$user = new User(new Nette\Security\MemoryStorage, new GuestAuthenticator);
 	$user->login('john', 'pass');
 
 	Assert::true($user->isLoggedIn());
@@ -96,7 +95,7 @@ test('login overrides the guest identity', function () {
 
 
 test('guest identity returns after logout that clears identity', function () {
-	$user = new User(new MockUserStorage, new GuestAuthenticator);
+	$user = new User(new Nette\Security\MemoryStorage, new GuestAuthenticator);
 	$user->login('john', 'pass');
 
 	$user->logout(clearIdentity: true);
@@ -108,7 +107,7 @@ test('guest identity returns after logout that clears identity', function () {
 
 
 test('retained identity stays for personalization but roles fall back to the guest identity', function () {
-	$user = new User(new MockUserStorage, new GuestAuthenticator);
+	$user = new User(new Nette\Security\MemoryStorage, new GuestAuthenticator);
 	$user->login('john', 'pass');
 
 	$user->logout(); // persistIdentity is on by default -> identity is retained
@@ -126,7 +125,7 @@ test('without a guest identity provider the behaviour is unchanged', function ()
 			return new SimpleIdentity('john', ['admin']);
 		}
 	};
-	$user = new User(new MockUserStorage, $authenticator);
+	$user = new User(new Nette\Security\MemoryStorage, $authenticator);
 
 	Assert::false($user->isLoggedIn());
 	Assert::null($user->getIdentity());
@@ -148,7 +147,7 @@ test('a failed guest identity provider is asked again', function () {
 			return parent::getGuestIdentity();
 		}
 	};
-	$user = new User(new MockUserStorage, $authenticator);
+	$user = new User(new Nette\Security\MemoryStorage, $authenticator);
 
 	Assert::exception(fn() => $user->getIdentity(), RuntimeException::class);
 	Assert::exception(fn() => $user->getIdentity(), RuntimeException::class);

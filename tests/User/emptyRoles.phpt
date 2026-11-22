@@ -9,7 +9,6 @@ use Nette\Security\{IIdentity, SimpleIdentity, User};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 
 test('logged-in identity with empty roles is returned as-is (no authenticatedRole)', function () {
@@ -19,7 +18,7 @@ test('logged-in identity with empty roles is returned as-is (no authenticatedRol
 			return new SimpleIdentity('john', []);
 		}
 	};
-	$user = new User(new MockUserStorage, $authenticator);
+	$user = new User(new Nette\Security\MemoryStorage, $authenticator);
 	$user->login('john', 'pass');
 
 	Assert::true($user->isLoggedIn());
@@ -52,7 +51,7 @@ test('guest identity with empty roles is returned as-is (no guestRole)', functio
 			return new SimpleIdentity('guest', []);
 		}
 	};
-	$user = new User(new MockUserStorage, $authenticator);
+	$user = new User(new Nette\Security\MemoryStorage, $authenticator);
 
 	Assert::false($user->isLoggedIn());
 	Assert::same([], $user->getRoles());

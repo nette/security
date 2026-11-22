@@ -8,7 +8,6 @@ use Nette\Security\{Principal, SimpleIdentity, User, Vote, Voter};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 
 class Article
@@ -69,7 +68,7 @@ class BannedVoter implements Voter
 
 
 test('no voter', function () {
-	$user = new User(new MockUserStorage);
+	$user = new User(new Nette\Security\MemoryStorage);
 	Assert::exception(
 		fn() => $user->isAllowed('backend'),
 		Nette\InvalidStateException::class,
@@ -93,7 +92,7 @@ test('the voter receives the principal, the resource and the privilege', functio
 			return Vote::Abstain;
 		}
 	};
-	$user = new User(new MockUserStorage, null, $voter);
+	$user = new User(new Nette\Security\MemoryStorage, null, $voter);
 
 	Assert::false($user->isAllowed());
 	Assert::false($user->isAllowed('backend', 'view'));
@@ -112,7 +111,7 @@ test('the voter receives the principal, the resource and the privilege', functio
 
 test('a voter allows', function () {
 	$article = new Article(authorId: 1);
-	$user = new User(new MockUserStorage, null, new ArticleVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new ArticleVoter);
 	$user->addVoter(new AdminVoter);
 
 	Assert::false($user->isAllowed($article, 'edit'));
@@ -128,7 +127,7 @@ test('a voter allows', function () {
 
 
 test('a voter forbids whatever the others allow', function () {
-	$user = new User(new MockUserStorage, null, new AdminVoter, new BannedVoter, new AdminVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new AdminVoter, new BannedVoter, new AdminVoter);
 
 	$user->login(new SimpleIdentity(1, ['admin']));
 	Assert::true($user->isAllowed('backend'));
@@ -140,7 +139,7 @@ test('a voter forbids whatever the others allow', function () {
 
 test('the retained identity is not the principal', function () {
 	$article = new Article(authorId: 1);
-	$user = new User(new MockUserStorage, null, new ArticleVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new ArticleVoter);
 	$user->login(new SimpleIdentity(1));
 	$user->logout();
 
@@ -176,7 +175,7 @@ test('a guest identity gives the principal its roles, not itself', function () {
 			return new SimpleIdentity(1, ['admin']);
 		}
 	};
-	$user = new User(new MockUserStorage, $authenticator, new ArticleVoter, new AdminVoter);
+	$user = new User(new Nette\Security\MemoryStorage, $authenticator, new ArticleVoter, new AdminVoter);
 
 	Assert::null($user->getPrincipal()->getIdentity());
 	Assert::same(['admin'], $user->getPrincipal()->getRoles());
@@ -189,7 +188,7 @@ test('a guest identity gives the principal its roles, not itself', function () {
 
 test('a principal for someone else than the current user', function () {
 	$article = new Article(authorId: 1);
-	$user = new User(new MockUserStorage, null, new ArticleVoter, new AdminVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new ArticleVoter, new AdminVoter);
 
 	Assert::true($user->createPrincipal(new SimpleIdentity(1))->isAllowed($article, 'edit'));
 	Assert::false($user->createPrincipal(new SimpleIdentity(2))->isAllowed($article, 'edit'));
@@ -199,7 +198,7 @@ test('a principal for someone else than the current user', function () {
 
 
 test('a guest owns no record, not even one without an owner', function () {
-	$user = new User(new MockUserStorage, null, new ArticleVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new ArticleVoter);
 	Assert::false($user->isAllowed(new Article(authorId: null), 'edit'));
 
 	$user->login(new SimpleIdentity(1));
@@ -232,7 +231,7 @@ test('a principal for someone else takes the identity as it is, null is a guest'
 			return new SimpleIdentity('guest', ['visitor']);
 		}
 	};
-	$user = new User(new MockUserStorage, $authenticator, new ArticleVoter, new AdminVoter);
+	$user = new User(new Nette\Security\MemoryStorage, $authenticator, new ArticleVoter, new AdminVoter);
 
 	$identity = new SimpleIdentity(1, ['member']);
 	$principal = $user->createPrincipal($identity);
@@ -256,7 +255,7 @@ test('the role-based authorizator is asked for each role', function () {
 			return $role === 'editor' && $resource === 'backend';
 		}
 	};
-	$user = new User(new MockUserStorage, null, new ArticleVoter, new BannedVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new ArticleVoter, new BannedVoter);
 	@$user->setAuthorizator($authorizator); // @ deprecated
 
 	$user->login(new SimpleIdentity(1, ['member', 'editor']));
@@ -286,7 +285,7 @@ test('the role-based authorizator is asked only about resource names', function 
 			return 'backend';
 		}
 	};
-	$user = new User(new MockUserStorage, null, new ArticleVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new ArticleVoter);
 	@$user->setAuthorizator($authorizator); // @ deprecated
 	$user->login(new SimpleIdentity(1, ['member']));
 
@@ -313,7 +312,7 @@ test('the role-based authorizator is asked only about privilege names', function
 			return $privilege === 'edit';
 		}
 	};
-	$user = new User(new MockUserStorage, null, new BannedVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, new BannedVoter);
 	@$user->setAuthorizator($authorizator); // @ deprecated
 	$user->login(new SimpleIdentity(1, ['member']));
 

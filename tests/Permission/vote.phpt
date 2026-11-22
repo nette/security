@@ -8,7 +8,6 @@ use Nette\Security\{Permission, Principal, Resource, SimpleIdentity, User, Vote,
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../User/MockUserStorage.php';
 
 
 class Page implements Resource
@@ -198,7 +197,7 @@ test('an explicit deny of the ACL overrides other voters', function () {
 		}
 	};
 
-	$user = new User(new MockUserStorage, null, $acl, $adminVoter);
+	$user = new User(new Nette\Security\MemoryStorage, null, $acl, $adminVoter);
 	$user->login(new SimpleIdentity(1, ['admin']));
 	Assert::true($user->isAllowed('article', 'delete'));
 

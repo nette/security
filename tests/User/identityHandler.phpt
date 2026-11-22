@@ -8,7 +8,6 @@ use Nette\Security\{IIdentity, SimpleIdentity};
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/MockUserStorage.php';
 
 
 // Setup environment
@@ -61,7 +60,7 @@ class AuthenticatorWithHandler implements Nette\Security\Authenticator, Nette\Se
 
 test('IdentityHandler.sleepIdentity() is called on login', function () {
 	$handler = new AuthenticatorWithHandler;
-	$user = new Nette\Security\User(new MockUserStorage);
+	$user = new Nette\Security\User(new Nette\Security\MemoryStorage);
 	$user->setAuthenticator($handler);
 
 	Assert::count(0, $handler->sleepCalls);
@@ -78,7 +77,7 @@ test('IdentityHandler.sleepIdentity() is called on login', function () {
 
 
 test('IdentityHandler.wakeupIdentity() is called when accessing identity', function () {
-	$storage = new MockUserStorage;
+	$storage = new Nette\Security\MemoryStorage;
 	$handler = new AuthenticatorWithHandler;
 	$user = new Nette\Security\User($storage);
 	$user->setAuthenticator($handler);
@@ -136,7 +135,7 @@ test('IdentityHandler.wakeupIdentity() returning null logs user out', function (
 		}
 	};
 
-	$storage = new MockUserStorage;
+	$storage = new Nette\Security\MemoryStorage;
 	$user = new Nette\Security\User($storage);
 	$user->setAuthenticator($handler);
 
@@ -179,7 +178,7 @@ test('logout() clears the storage even when wakeupIdentity() vetoed the authenti
 		}
 	};
 
-	$storage = new MockUserStorage;
+	$storage = new Nette\Security\MemoryStorage;
 	$user = new Nette\Security\User($storage);
 	$user->setAuthenticator($handler);
 	$user->login('john', 'xxx');
@@ -227,7 +226,7 @@ test('a failed wakeupIdentity() leaves the user not loaded', function () {
 		}
 	};
 
-	$storage = new MockUserStorage;
+	$storage = new Nette\Security\MemoryStorage;
 	$storage->saveAuthentication(new SimpleIdentity('john'));
 	$user = new Nette\Security\User($storage, $handler);
 
@@ -253,7 +252,7 @@ test('IdentityHandler is not called when authenticator does not implement it', f
 		}
 	};
 
-	$storage = new MockUserStorage;
+	$storage = new Nette\Security\MemoryStorage;
 	$user = new Nette\Security\User($storage);
 	$user->setAuthenticator($handler);
 
