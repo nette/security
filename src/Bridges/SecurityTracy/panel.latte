@@ -1,4 +1,5 @@
 {varType Nette\Security\User $user}
+{varType array<array{principal: string, resource: string, privilege: string, votes: string, allowed: bool, undecided: bool, count: int}> $decisions}
 <h1>{if $user->isLoggedIn()}Logged in{else}Unlogged{/if}</h1>
 
 <div class="tracy-inner nette-UserPanel">
@@ -6,5 +7,20 @@
 		{Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true])}
 	{else}
 		<p>no identity</p>
+	{/if}
+
+	{if $decisions}
+		<h2>Authorization</h2>
+		<table class="tracy-sortable">
+			<tr><th>Resource</th><th>Privilege</th><th>Result</th><th>Votes</th><th>Principal</th><th>Count</th></tr>
+			<tr n:foreach="$decisions as $decision">
+				<td>{$decision[resource]}</td>
+				<td>{$decision[privilege]}</td>
+				<td>{if $decision[undecided]}<b>nobody decided</b>{elseif $decision[allowed]}allowed{else}denied{/if}</td>
+				<td>{$decision[votes]}</td>
+				<td>{$decision[principal]}</td>
+				<td>{$decision[count]}</td>
+			</tr>
+		</table>
 	{/if}
 </div>

@@ -201,6 +201,9 @@ The few non-obvious invariants:
   lazy (a ghost until the first `vote()`), unless their configuration says
   otherwise, so a voter may depend on a service that needs `User` without a
   circular reference; a voter created by a factory instead of `new` stays eager.
+- `Principal::isAllowed()` reports each decision with the votes cast to its
+  observer, which `User` passes only while `$onDecided` has listeners; the Tracy
+  `UserPanel` is one, which is why the panel shows even without a session.
 
 ## Storages: session and cookie are not interchangeable
 

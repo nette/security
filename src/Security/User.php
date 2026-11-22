@@ -53,6 +53,12 @@ class User
 	/** @var array<callable(static): void>  Occurs when the user is logged out */
 	public array $onLoggedOut = [];
 
+	/**
+	 * Occurs when access is decided, with the votes cast
+	 * @var array<callable(Principal, mixed, string|\UnitEnum|null, list<array{Voter, Vote}>, bool): void>
+	 */
+	public array $onDecided = [];
+
 	private ?IIdentity $identity = null;
 	private ?bool $authenticated = null;
 	private ?int $logoutReason = null;
@@ -326,7 +332,26 @@ class User
 	final public function createPrincipal(?IIdentity $identity): Principal
 	{
 		$roles = $identity ? $this->getIdentityRoles($identity) : $this->getGuestRoles();
-		return new Principal($identity, $roles, $this->getVoters(), $identity ? null : $this->resolveGuestIdentity());
+		return new Principal(
+			$identity,
+			$roles,
+			$this->getVoters(),
+			$identity ? null : $this->resolveGuestIdentity(),
+			$this->onDecided ? $this->reportDecision(...) : null,
+		);
+	}
+
+
+	/** @param  list<array{Voter, Vote}>  $votes */
+	private function reportDecision(
+		Principal $principal,
+		mixed $resource,
+		string|\UnitEnum|null $privilege,
+		array $votes,
+		bool $allowed,
+	): void
+	{
+		Arrays::invoke($this->onDecided, $principal, $resource, $privilege, $votes, $allowed);
 	}
 
 

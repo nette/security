@@ -22,6 +22,7 @@ final readonly class Principal
 
 	/**
 	 * Without roles, those of the identity are used, for a guest those of the guest identity, or 'guest'.
+	 * The observer is told every decision with the votes cast, as the Tracy panel shows them.
 	 * @param  ?list<string>  $roles
 	 */
 	public function __construct(
@@ -30,6 +31,8 @@ final readonly class Principal
 		/** @var list<Voter> */
 		private array $voters = [],
 		private ?IIdentity $guestIdentity = null,
+		/** @var ?\Closure(self, mixed, string|\UnitEnum|null, list<array{Voter, Vote}>, bool): void */
+		private ?\Closure $observer = null,
 	) {
 		$this->roles = $roles ?? ($identity ?? $guestIdentity)?->getRoles() ?? ['guest'];
 	}
@@ -100,13 +103,20 @@ final readonly class Principal
 		}
 
 		$allowed = false;
+		$votes = [];
 		foreach ($this->voters as $voter) {
 			$vote = $voter->vote($this, $resource, $privilege);
+			$votes[] = [$voter, $vote];
 			if ($vote === Vote::Forbid) {
-				return false;
+				$allowed = false;
+				break;
 			}
 
 			$allowed = $allowed || $vote === Vote::Allow;
+		}
+
+		if ($this->observer) {
+			($this->observer)($this, $resource, $privilege, $votes, $allowed);
 		}
 
 		return $allowed;

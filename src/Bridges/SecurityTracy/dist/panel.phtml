@@ -1,22 +1,64 @@
 <?php declare(strict_types=1);
 
 /** @var Nette\Security\User $user */
+/** @var array<array{principal:string,resource:string,privilege:string,votes:string,allowed:bool,undecided:bool,count:int}> $decisions */
 echo '<h1>';
-if ($user->isLoggedIn()) /* pos 2:5 */ {
+if ($user->isLoggedIn()) /* pos 3:5 */ {
 	echo 'Logged in';
-} else /* pos 2:38 */ {
+} else /* pos 3:38 */ {
 	echo 'Unlogged';
 }
 echo '</h1>
 
 <div class="tracy-inner nette-UserPanel">
 ';
-if ($user->getIdentity()) /* pos 5:2 */ {
+if ($user->getIdentity()) /* pos 6:2 */ {
 	echo '	';
-	echo Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true]) /* pos 6:3 */;
+	echo Tracy\Dumper::toHtml($user->getIdentity(), [Tracy\Dumper::LIVE => true]) /* pos 7:3 */;
 	echo "\n";
-} else /* pos 7:2 */ {
+} else /* pos 8:2 */ {
 	echo '	<p>no identity</p>
+';
+}
+echo "\n";
+if ($decisions) /* pos 12:2 */ {
+	echo '	<h2>Authorization</h2>
+	<table class="tracy-sortable">
+		<tr><th>Resource</th><th>Privilege</th><th>Result</th><th>Votes</th><th>Principal</th><th>Count</th></tr>
+';
+	foreach ($decisions as $decision) /* pos 16:8 */ {
+		echo '		<tr>
+			<td>';
+		echo Tracy\Helpers::escapeHtml($decision['resource']) /* pos 17:9 */;
+		echo '</td>
+			<td>';
+		echo Tracy\Helpers::escapeHtml($decision['privilege']) /* pos 18:9 */;
+		echo '</td>
+			<td>';
+		if ($decision['undecided']) /* pos 19:9 */ {
+			echo '<b>nobody decided</b>';
+		} elseif ($decision['allowed']) /* pos 19:55 */ {
+			echo 'allowed';
+		} else /* pos 19:89 */ {
+			echo 'denied';
+		}
+
+		echo '</td>
+			<td>';
+		echo Tracy\Helpers::escapeHtml($decision['votes']) /* pos 20:9 */;
+		echo '</td>
+			<td>';
+		echo Tracy\Helpers::escapeHtml($decision['principal']) /* pos 21:9 */;
+		echo '</td>
+			<td>';
+		echo Tracy\Helpers::escapeHtml($decision['count']) /* pos 22:9 */;
+		echo '</td>
+		</tr>
+';
+
+	}
+
+	echo '	</table>
 ';
 }
 echo '</div>
